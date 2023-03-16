@@ -42,17 +42,15 @@
                 </a-form-item>
             </a-col>
             <a-col :span="10">
-                <a-button type="danger"><router-link to="/signUp">{{ $store.getters.localizedStrings.register }} </router-link></a-button>
+                <a-button type="danger"><router-link to="/signUp">{{ $store.getters.localizedStrings.register }}
+                    </router-link></a-button>
             </a-col>
             <a-button type="primary" html-type="submit" class="login-form-button"
                 :disabled="hasErrors(form.getFieldsError())">
-                {{ $store.getters.localizedStrings.login }} 
+                {{ $store.getters.localizedStrings.login }}
             </a-button>
-            <div class="social">
-                <a class="go mr-2" href='/api/redirect/google' onclick="getURL"><font-awesome-icon :icon="['fab', 'google']"
-                        class="mr-1" />Google
-                </a>
-                <a class="fb"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a>
+            <div class="social text-align-end">
+                <a ><b><router-link to="/forgot">Forgot Password</router-link></b></a>
             </div>
         </a-form>
     </div>
@@ -76,9 +74,9 @@ export default {
                 password: '',
             },
             errorMessage: '',
-            isActive: false,
             hasErrors,
             textError: '',
+            isShowPassword: false,
         }
     },
     methods: {
@@ -121,7 +119,7 @@ export default {
                 })
         },
         onToggleShowPassword() {
-            this.isActive = !this.isActive
+            this.isShowPassword = !this.isShowPassword
         },
         getURL() {
             Toast.fire({
@@ -131,8 +129,8 @@ export default {
         }
     },
     computed: {
-        currentLocale() {
-            return this.$store.state.currentLocale;
+        inputType() {
+            return this.isShowPassword ? 'text' : 'password'
         },
     },
 }

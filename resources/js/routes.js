@@ -14,6 +14,22 @@ const routes = [
     }
   },
   {
+    name: 'Forgot',
+    path: '/forgot',
+    component: require("./components/ForgotPassword.vue").default,
+    meta: {
+      middleware: [noAuth]
+    }
+  },
+  {
+    name: 'Reset',
+    path: '/reset/:token',
+    component: require("./components/ResetPassword.vue").default,
+    meta: {
+      middleware: [noAuth]
+    }
+  },
+  {
     name: 'SignUp',
     path: '/signUp',
     component: require("./components/SignUp.vue").default,

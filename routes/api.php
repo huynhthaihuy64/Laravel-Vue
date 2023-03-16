@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SocialAuthController;
@@ -93,9 +94,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('cart/remove/{id}', [App\Http\Controllers\CartController::class, 'remove']);
 });
 
+Route::post('reset-password', [ResetPasswordController::class,'sendMail']);
+Route::put('reset-password/{token}', [ResetPasswordController::class,'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
+Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
 Route::get('customers/view/{customer}', [CustomerController::class, 'show']);
 
 #Message

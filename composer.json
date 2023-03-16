@@ -19,6 +19,7 @@
         "laravel/vonage-notification-channel": "^3.2",
         "maatwebsite/excel": "^3.1",
         "mcamara/laravel-localization": "^1.8",
+        "nesbot/carbon": "^2.66",
         "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {
