@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    <IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "https://accounts.google.com/o/oauth2/auth?client_id=867907508492-bgr2og6orrollalmo3vrb5j8mvm0c20a.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fcallback%2Fgoogle%2F&scope=openid+profile+email&response_type=code"
+    Header set Access-Control-Allow-Methods "GET,POST,HEAD,DELETE,PUT,OPTIONS"
+    </IfModule>
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

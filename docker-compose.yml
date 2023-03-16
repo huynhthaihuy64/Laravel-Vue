@@ -1,0 +1,76 @@
+version: '3.1'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: shop
+    restart: always
+    tty: true
+    environment:
+      SERVICE_NAME: shop
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./:/var/www
+       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: shop-server
+    restart: always
+    tty: true
+    ports:
+      - "8083:80"
+        #  - "4431:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL Service
+  db:
+    image: mysql:8.0.17
+    container_name: shop-db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    tty: true
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_DATABASE: shop
+      MYSQL_ROOT_PASSWORD: 123456
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+        - db:mysql
+    ports:
+        - 8085:80
+    environment:
+        MYSQL_USERNAME: shop
+        MYSQL_ROOT_PASSWORD: 123456
+        PMA_HOST: mysql
+    networks:
+        - app-network
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local 
