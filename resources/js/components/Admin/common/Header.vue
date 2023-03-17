@@ -18,7 +18,7 @@
         <li class="nav-item ml-5">
           <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
         </li>
-        <li class="nav-item ml-5">
+        <li class="nav-item ml-5" v-if="initialValue.role === 0">
           <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
         </li>
 

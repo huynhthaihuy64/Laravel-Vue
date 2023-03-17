@@ -69,7 +69,8 @@
         </a-form-item>
       </a-col>
       <a-col :span="10">
-        <a-button type="primary"><router-link to="/signIn">{{ $store.getters.localizedStrings.login }}</router-link></a-button>
+        <a-button type="primary"><router-link to="/signIn">{{ $store.getters.localizedStrings.login
+        }}</router-link></a-button>
       </a-col>
       <a-button type="primary" html-type="submit" class="login-form-button" :disabled="hasErrors(form.getFieldsError())">
         {{ $store.getters.localizedStrings.register }}
@@ -126,20 +127,24 @@ export default {
               window.axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + response.data.success.access_token
             } else {
+              console.log('aaa')
               Toast.fire({
                 icon: 'error',
                 title: response.data.message
               });
             }
           }).catch(function (error) {
-            Toast.fire({
-              icon: 'error',
-              title: error
-            });
+            if (error.response.data.errors.email) {
+              Toast.fire({
+                icon: 'error',
+                title: error.response.data.errors.email
+              });
+            }
           });
         }
       })
         .catch(function (error) {
+          console.log('cc');
           Toast.fire({
             icon: 'error',
             title: error

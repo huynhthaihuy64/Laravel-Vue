@@ -50,7 +50,7 @@
                 {{ $store.getters.localizedStrings.login }}
             </a-button>
             <div class="social text-align-end">
-                <a ><b><router-link to="/forgot">Forgot Password</router-link></b></a>
+                <a><b><router-link to="/forgot">Forgot Password</router-link></b></a>
             </div>
         </a-form>
     </div>
@@ -87,7 +87,9 @@ export default {
                 if (!error) {
                     this.formData = { ...values }
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
+                        console.log(response);
                         if (response.data.user) {
+                            console.log(response);
                             setUserInfo(JSON.stringify(response.data.user))
                             setAccessToken(response.data.success.access_token)
                             Toast.fire({
@@ -106,12 +108,13 @@ export default {
                     }).catch(function (error) {
                         Toast.fire({
                             icon: 'error',
-                            title: 'Email Or Password ' + this.$store.getters.localizedStrings.login_error
+                            title: 'Email Or Password Incorrect'
                         });
                     });
                 }
             })
                 .catch(function (error) {
+                    console.log(error);
                     Toast.fire({
                         icon: 'error',
                         title: error

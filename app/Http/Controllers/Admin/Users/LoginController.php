@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\ResponseController;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Services\UploadService;
 use App\Http\Services\User\UserService;
@@ -40,17 +42,8 @@ class LoginController extends ResponseController
         return $auth;
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(self::validationError($validator));
-        }
-
         $email = $request->email;
         $password = $request->password;
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
@@ -77,19 +70,8 @@ class LoginController extends ResponseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6',
-            'phone' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(self::validationError($validator));
-        }
-
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
