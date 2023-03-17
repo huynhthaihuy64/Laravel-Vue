@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\ResponseController;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Users\LoginRequest;
+use App\Http\Requests\Users\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Services\UploadService;
 use App\Http\Services\User\UserService;
@@ -334,26 +334,5 @@ class LoginController extends ResponseController
             'expires_in' => auth('api')->factory()->getTTL() * 60,
             'user' => auth('api')->user()
         ]);
-    }
-    public function changePassWord(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'old_password' => 'required|string|min:6',
-            'new_password' => 'required|string|confirmed|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $userId = auth('api')->user()->id;
-
-        $user = User::where('id', $userId)->update(
-            ['password' => bcrypt($request->new_password)]
-        );
-
-        return response()->json([
-            'message' => 'User successfully changed password',
-            'user' => $user,
-        ], 201);
     }
 }

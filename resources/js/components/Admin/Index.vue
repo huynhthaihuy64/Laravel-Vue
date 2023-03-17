@@ -7,7 +7,7 @@
             <Bar id="my-chart-id" :options="chartOptions" :data="chartData" class="my-chart" height="400px" />
           </div>
           <div class="col-6">
-
+            <Bar id="my-chart-id" :options="chartOptions" :data="chartData1" class="my-chart" height="400px" />
           </div>
           <!-- <Bar id="my-chart-id" :options="chartOptions" :data="chartData" /> -->
         </div>
@@ -33,16 +33,30 @@ export default {
       chartOptions: {
         responsive: false
       },
+      chartData1: {
+        labels: [],
+        datasets: [{ data: [] }]
+      },
       chartCustomer: [],
+      chartRevenue: [],
       year: 2023,
     }
   },
   methods: {
     async getChartCustomer(year) {
-      await httpRequest.get('/api/customers/chart?' + year)
+      await httpRequest.get('/api/charts/customers/chart?' + year)
         .then((data) => {
           this.chartCustomer = data.data
+          
           this.createdChart()
+        })
+    },
+    async getChartRevenue(year) {
+      await httpRequest.get('/api/charts/customers/chart-revenue?' + year)
+        .then((data) => {
+          this.chartRevenue = data.data
+          console.log(this.chartRevenue);
+          this.createdChartRevenue()
         })
     },
     createdChart() {
@@ -68,11 +82,36 @@ export default {
           borderWidth: 1,
         }]
       }
-      console.log(this.chartData);
+      console.log(this.chartCustomer);
+    },createdChartRevenue() {
+      const labels = ["January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"];
+      const values = this.chartRevenue;
+      this.chartData1 = {
+        labels,
+        datasets: [{
+          label: "Revenue of year",
+          data: values,
+          backgroundColor: "#1E90FF",
+          borderWidth: 1,
+        }]
+      }
+      console.log(this.chartData1);
     }
   },
   mounted() {
     this.getChartCustomer()
+    this.getChartRevenue()
   }
 }
 </script>

@@ -43,4 +43,18 @@ class CustomerController extends Controller
         }
         return $dataCustomer;
     }
+
+    public function chartRevenue(Request $request) {
+        $data = $request->toArray();
+        $months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+        $dataCustomer = [];
+        $revenue = [];
+        $year = $data['year'] ?? Carbon::now()->year;
+        foreach ($months as $month) {
+            $revenue[] = array_column($this->customer->chartRevenue($month,$year)->toArray(),'amount');
+        }
+        dd($revenue.flat());
+        // dd($revenue);
+        return $revenue;
+    }
 }

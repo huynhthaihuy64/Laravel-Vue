@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\Users\UpdatePasswordRequest;
 use App\Mail\ForgotMail;
 use App\Models\PasswordReset;
 use App\Models\User;

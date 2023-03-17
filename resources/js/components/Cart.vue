@@ -31,10 +31,10 @@
                 </li>
             </ul>
             <div class="text-light h6 text-left mx-3">{{ $store.getters.localizedStrings.cart.total_price }}: <span class="text-success"
-                    id="sidecart-total-products">{{ totalPrice | formatNumber}}</span></div>
-            <div class="text-light h6 text-left mx-3">{{ $store.getters.localizedStrings.cart.tax }}: <span class="text-success" id="sidecart-frete">{{ tax | formatNumber}}</span></div>
+                    id="sidecart-total-products">{{ totalPrice ?? 0| formatNumber}}</span></div>
+            <div class="text-light h6 text-left mx-3">{{ $store.getters.localizedStrings.cart.tax }}: <span class="text-success" id="sidecart-frete">{{ tax ?? 0| formatNumber}}</span></div>
             <div class="text-light h5 text-left mx-3">{{ $store.getters.localizedStrings.cart.total_tax }}: <span class="text-success"
-                    id="sidecart-total">{{ total_tax | formatNumber}}</span></div>
+                    id="sidecart-total">{{ total_tax ?? 0| formatNumber}}</span></div>
             <div class="p-2">
                 <button type="button" @click="goToCart" class="btn btn-success w-100">{{ $store.getters.localizedStrings.cart.payment }}</button>
                 <button type="button" @click="removeAll()" class="btn btn-danger w-100">{{ $store.getters.localizedStrings.cart.delete_all }}</button>

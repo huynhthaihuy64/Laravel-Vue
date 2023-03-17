@@ -85,6 +85,10 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::put('edit/{user}', [LoginController::class, 'updateUser']);
         Route::delete('destroy/{user}', [LoginController::class, 'destroy']);
     });
+    Route::prefix('charts')->group(function () {
+        Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
+        Route::get('customers/chart-revenue', [CustomerController::class, 'chartRevenue']);
+    });
     Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart']);
     Route::get('cart/{id}', [App\Http\Controllers\CartController::class, 'show']);
@@ -99,7 +103,6 @@ Route::put('reset-password/{token}', [ResetPasswordController::class,'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
-Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
 Route::get('customers/view/{customer}', [CustomerController::class, 'show']);
 
 #Message
