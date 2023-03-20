@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Customer\CustomerService;
+use App\Models\Customer;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -53,5 +55,10 @@ class CustomerController extends Controller
             $revenue[] = array_column($this->customer->chartRevenue($month,$year)->toArray(),'amount');
         }
         return $revenue;
+    }
+
+    public function getYear() {
+        $years = Customer::select(DB::raw('YEAR(created_at) year'))->get();
+        return $years;
     }
 }

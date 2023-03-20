@@ -4,12 +4,25 @@
       <div class="container">
         <div class="row">
           <div class="col-6">
+            <a-select default-value="2023">
+          <i slot="suffixIcon" class="fas fa-sort-down dropdown-icon"></i>
+          <a-select-option v-for="(data, index) in years" :value="data.year" :key="`data_${index}`"
+            @click="getChartCustomer(data.year)">
+            {{ data.year }}
+          </a-select-option>
+        </a-select>
             <Bar id="my-chart-id" :options="chartOptions" :data="chartData" class="my-chart" height="400px" />
           </div>
           <div class="col-6">
+            <a-select default-value="2023">
+          <i slot="suffixIcon" class="fas fa-sort-down dropdown-icon"></i>
+          <a-select-option v-for="(data, index) in years" :value="data.year" :key="`data_${index}`"
+            @click="getChartRevenue(data.year)">
+            {{ data.year }}
+          </a-select-option>
+        </a-select>
             <Bar id="my-chart-id" :options="chartOptions" :data="chartData1" class="my-chart" height="400px" />
           </div>
-          <!-- <Bar id="my-chart-id" :options="chartOptions" :data="chartData" /> -->
         </div>
       </div>
     </div>
@@ -39,20 +52,20 @@ export default {
       },
       chartCustomer: [],
       chartRevenue: [],
-      year: 2023,
+      years: {},
     }
   },
   methods: {
-    async getChartCustomer(year) {
-      await httpRequest.get('/api/charts/customers/chart?' + year)
+    async getChartCustomer(year = 2023) {
+      await httpRequest.get('/api/charts/customers/chart?year=' + year)
         .then((data) => {
           this.chartCustomer = data.data
           
           this.createdChart()
         })
     },
-    async getChartRevenue(year) {
-      await httpRequest.get('/api/charts/customers/chart-revenue?' + year)
+    async getChartRevenue(year = 2023) {
+      await httpRequest.get('/api/charts/customers/chart-revenue?year=' + year)
         .then((data) => {
           this.chartRevenue = data.data
           console.log(this.chartRevenue);
@@ -83,7 +96,8 @@ export default {
         }]
       }
       console.log(this.chartCustomer);
-    },createdChartRevenue() {
+    },
+    createdChartRevenue() {
       const labels = ["January",
         "February",
         "March",
@@ -107,11 +121,19 @@ export default {
         }]
       }
       console.log(this.chartData1);
+    },
+    async getYear() {
+      await httpRequest.get('/api/charts/customers/years')
+      .then((data) => {
+          this.years = data.data
+          console.log(this.years);
+        })
     }
   },
   mounted() {
     this.getChartCustomer()
     this.getChartRevenue()
+    this.getYear()
   }
 }
 </script>

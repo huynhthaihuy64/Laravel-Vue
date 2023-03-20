@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('charts')->group(function () {
         Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
         Route::get('customers/chart-revenue', [CustomerController::class, 'chartRevenue']);
+        Route::get('customers/years', [CustomerController::class, 'getYear']);
     });
     Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart']);
