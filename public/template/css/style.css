@@ -2522,8 +2522,13 @@ input[type=submit]:hover {
 
 .scrollable-menu {
     height: auto;
-    max-height: 200px;
+    max-height: 70vh;
+    max-width: 500px;
     overflow-x: hidden;
+}
+
+.image-contain {
+    object-fit: contain;
 }
 
 .ribbon-wrapper {

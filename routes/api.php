@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\MainController as PageController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\ProductController as SearchProducts;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
@@ -70,6 +71,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('edit/{product}', [ProductController::class, 'show']);
         Route::put('edit/{product}', [ProductController::class, 'update']);
         Route::delete('destroy/{product}', [ProductController::class, 'destroy']);
+        Route::post('search', [SearchProducts::class, 'search']);
     });
     Route::prefix('sliders')->group(function () {
         Route::post('add', [SliderController::class, 'store']);

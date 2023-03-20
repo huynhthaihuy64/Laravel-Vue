@@ -25,4 +25,11 @@ class ProductController extends Controller
             'searchProducts' => $this->productService->getAll(),
         ]);
     }
+
+    public function search(Request $request) 
+    {
+        $data = $request->toArray();
+
+        return $this->productService->search($data); 
+    }
 }

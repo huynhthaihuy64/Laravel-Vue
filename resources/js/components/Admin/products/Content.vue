@@ -278,7 +278,7 @@
                 :headers="headers" @remove="handleRemove" :beforeUpload="beforeUpload">
                 <a-button> <a-icon type="upload" />Image</a-button>
               </a-upload>
-              <a :href="initialValue.edit_file" target="_blank"><img class="fileUpdate"
+              <a :href="initialValue.edit_file" target="_blank"><img class="image-contain fileUpdate"
                   :src="`${initialValue.edit_file}`" /></a>
             </a-form-item>
           </a-col>
@@ -907,9 +907,6 @@ td {
       color: rgba(0, 0, 0, 0.54);
     }
   }
-  .image-contain {
-    object-fit: contain;
-}
 }
 
 ::v-deep .ant-select-selection {

@@ -19,7 +19,7 @@
                                         <tr class="table_row" v-for="(item, index) in carts" :key="index">
                                             <td class="column-1">
                                                 <div class="how-itemcart1 mt-3">
-                                                    <img :src="item.options.image" alt="IMG">
+                                                    <img :src="item.options.image" alt="IMG" class="image-contain">
                                                 </div>
                                             </td>
                                             <td class="column-2">

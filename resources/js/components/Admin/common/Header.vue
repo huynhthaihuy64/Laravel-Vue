@@ -1,35 +1,59 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light header">
-    <router-link to="/">
-      <img src="../../../../../public/images/image.png" height="60px" width="80px">
-    </router-link>
-    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item ml-5">
-          <router-link to="/" class="nav-link">{{ $store.getters.localizedStrings.shop }}</router-link>
-        </li>
-        <li class="nav-item ml-5">
-          <router-link to="/about" class="nav-link">{{ $store.getters.localizedStrings.about }}</router-link>
-        </li>
-        <li class="nav-item ml-5">
-          <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
-        </li>
-        <li class="nav-item ml-5" v-if="initialValue.role === 0">
-          <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
-        </li>
-
-      </ul>
+    <div class="col-6 d-flex justify-content-center">
+      <router-link to="/">
+        <img src="../../../../../public/images/image.png" height="60px" width="80px" class="image-contain">
+      </router-link>
+      <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item ml-5">
+            <router-link to="/" class="nav-link">{{ $store.getters.localizedStrings.shop }}</router-link>
+          </li>
+          <li class="nav-item ml-5">
+            <router-link to="/about" class="nav-link">{{ $store.getters.localizedStrings.about }}</router-link>
+          </li>
+          <li class="nav-item ml-5">
+            <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
+          </li>
+          <li class="nav-item ml-5" v-if="initialValue.role === 0">
+            <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="d-flex text-black profile mr-5">
+    <div class="col-4">
+      <div class="dropdown w-50 d-flex justify-content-start w-100">
+        <button @click="searchToggle()">Search<i class="zmdi zmdi-search ml-2"></i></button>
+        <div id="myDropdown" class="dropdown-content scrollable-menu mt-4 w-100" role="menu">
+          <input type="text" placeholder="Search.." v-model="searchText" id="myInput" @keyup="search()">
+          <div class="content-dropdown container mt-4 w-100" v-for="(item) in searchArr" :key="item.id">
+            <a @click="goToDetail(item.id)" class="w-100 content-dropdown ">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-6">
+                    <img :src="item.file" class="image-contain h-50 w-100">
+                  </div>
+                  <div class="col-6">
+                    <b class="ml-4">{{ item.name }}</b><br />
+                    <p class="ml-4 mt-4">{{ item.price_sale }}</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex text-black profile mr-5 col-2 d-flex justify-content-end">
       <div class="flex-shrink-0" v-if="initialValue.edit_avatar">
         <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
       </div>
       <div class="flex-shrink-0" v-if="!initialValue.edit_avatar">
-        <img src="../../../../../public/images/avatar.png" alt="Generic placeholder image" class="avatar" />
+        <img src="../../../../../public/images/avatar.png" alt="Generic placeholder image" class="image-contain avatar" />
       </div>
       <div class="info">
         <a-dropdown>
@@ -82,6 +106,8 @@ export default {
         edit_avatar: [],
         role: 1,
       },
+      searchText: '',
+      searchArr: {},
     }
   },
   computed: {
@@ -94,6 +120,17 @@ export default {
     handleClick() {
       this.isActive = !this.isActive;
       this.$emit("updateActive", this.isActive);
+    },
+    searchToggle() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    },
+    search() {
+      httpRequest.post('/api/products/search', {
+        name: this.searchText
+      })
+        .then((response) => {
+          this.searchArr = response.data;
+        });
     },
     async handleLogout() {
       try {
@@ -114,6 +151,9 @@ export default {
           title: this.$store.getters.localizedStrings.error,
         });
       }
+    },
+    goToDetail(id) {
+      this.$router.push({ name: "productDetail", params: { id: id } });
     },
 
     getUser() {
@@ -179,5 +219,74 @@ export default {
 
 .ant-dropdown-link {
   cursor: pointer;
+}
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover,
+.dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+/* The search field */
+#myInput {
+  box-sizing: border-box;
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {
+  outline: 3px solid #ddd;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 999;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 300px;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+.content-dropdown {
+  max-height: 150px;
+}
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
 }
 </style>

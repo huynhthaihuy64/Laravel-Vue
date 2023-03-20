@@ -10,7 +10,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <carousel v-if="sliders.length">
-                                            <div v-for="slide in sliders" class="image-contain">
+                                            <div v-for="slide in sliders" :key="slide.id" class="image-contain">
                                                 <h5 style="text:center">{{ slide.name }}</h5>
                                                 <a :href="slide.url" target="_blank"><img :src="slide.file"
                                                         style="height:300px"></a>
@@ -73,7 +73,7 @@
 
                 <div>
                     <div class="row card-all">
-                        <div v-for="product in products" class="card-item">
+                        <div v-for="product in products" :key="product.id" class="card-item" >
                             <div>
                                 <div class="block2 w-100">
                                     <div class="block2-pic hov-img0">
@@ -240,7 +240,4 @@ export default {
     display: block;
     justify-content: center;
 }
-
-.image-contain {
-    object-fit: contain;
-}</style>
+</style>

@@ -16,7 +16,7 @@
                     <div class="col-4 p-0">
                         <img
                         :src="item.options.image"
-                            alt="" height="75px" width="100%">
+                            alt="" height="75px" width="100%" class="image-contain">
                     </div>
                     <div class="col-3 bg-primary text-light justify-content-around d-flex flex-column">
                         <div class="product-quantity m-0 p-0"><span class="text-dark"><b>Qty:</b></span> <span

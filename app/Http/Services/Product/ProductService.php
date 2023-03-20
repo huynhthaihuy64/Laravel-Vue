@@ -53,4 +53,12 @@ class ProductService
             ->limit(8)
             ->get();
     }
+
+    public function search($data) {
+        $textSearch = $data['name'] ?? null;
+        $products = Product::when(isset($textSearch), function($q) use($textSearch) {
+            $q->where('name', 'LIKE', "%$textSearch%");
+        })->get();
+        return $products;
+    }
 }

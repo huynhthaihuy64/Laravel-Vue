@@ -202,7 +202,7 @@
             <a-button> <a-icon type="upload" />{{ $store.getters.localizedStrings.user_management.edit_user.attachments }}</a-button>
           </a-upload>
           <div v-if="initialValue.edit_avatar != null">
-            <a :href="initialValue.edit_avatar" target="_blank"><img class="fileUpdate"
+            <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
                 :src="`${initialValue.edit_avatar}`" /></a>
           </div>
         </a-form-item>

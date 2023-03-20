@@ -32,7 +32,7 @@
                   <div class="card-body box-profile">
                     <div class="text-center">
                       <a :href="initialValue.edit_avatar" target="_blank"><img
-                          class="profile-user-img img-fluid img-circle" :src="`${initialValue.edit_avatar}`" /></a>
+                          class="image-contain profile-user-img img-fluid img-circle" :src="`${initialValue.edit_avatar}`" /></a>
                     </div>
 
                     <h3 class="profile-username text-center">{{ initialValue.edit_name }}</h3>
@@ -123,7 +123,7 @@
                         <!-- Post -->
                         <div class="post">
                           <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../../../../public/dist/img/user1-128x128.jpg"
+                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user1-128x128.jpg"
                               alt="user image">
                             <span class="username">
                               <a href="#">Jonathan Burke Jr.</a>
@@ -157,7 +157,7 @@
                         <!-- Post -->
                         <div class="post clearfix">
                           <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../../../../public/dist/img/user7-128x128.jpg"
+                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user7-128x128.jpg"
                               alt="User Image">
                             <span class="username">
                               <a href="#">Sarah Ross</a>
@@ -188,7 +188,7 @@
                         <!-- Post -->
                         <div class="post">
                           <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../../../../public/dist/img/user6-128x128.jpg"
+                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user6-128x128.jpg"
                               alt="User Image">
                             <span class="username">
                               <a href="#">Adam Jones</a>
@@ -199,19 +199,19 @@
                           <!-- /.user-block -->
                           <div class="row mb-3">
                             <div class="col-sm-6">
-                              <img class="img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                              <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
                             </div>
                             <!-- /.col -->
                             <div class="col-sm-6">
                               <div class="row">
                                 <div class="col-sm-6">
-                                  <img class="img-fluid mb-3" src="../../../../../public/dist/img/photo2.png" alt="Photo">
-                                  <img class="img-fluid" src="../../../../../public/dist/img/photo3.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo2.png" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg" alt="Photo">
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-6">
-                                  <img class="img-fluid mb-3" src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
-                                  <img class="img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
                                 </div>
                                 <!-- /.col -->
                               </div>
@@ -329,7 +329,7 @@
                               <a-button> <a-icon
                                   type="upload" />{{ $store.getters.localizedStrings.profile.profile.upload }}</a-button>
                             </a-upload>
-                            <a :href="initialValue.edit_avatar" target="_blank"><img class="fileUpdate"
+                            <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
                                 :src="`${initialValue.edit_avatar}`" height="100px" /></a>
                           </a-form-item>
                           <a-form-item :label="$store.getters.localizedStrings.profile.profile.gender.album">

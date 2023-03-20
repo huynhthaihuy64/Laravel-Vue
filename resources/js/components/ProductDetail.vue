@@ -196,7 +196,7 @@
                                     <!-- Review -->
                                     <div class="flex-w flex-t p-b-68">
                                         <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                            <img :src="initialValue.edit_img" alt="AVATAR">
+                                            <img :src="initialValue.edit_img" alt="AVATAR" class="image-contain">
                                         </div>
 
                                         <div class="size-207">
@@ -226,7 +226,7 @@
                                             style="margin-left:40px;">
                                             <div v-if="item.parent_id == 0">
                                                 <div class="col-12">
-                                                    <img :src="item.user.avatar" height="50px" width="50px">
+                                                    <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
                                                     <strong class="ml-2">
                                                         {{ item.user.name }}:
                                                     </strong>
@@ -258,7 +258,7 @@
                                                         style="margin-left:40px;">
                                                         <div v-if="item.parent_id != 0">
                                                             <div class="col-12">
-                                                                <img :src="item.user.avatar" height="50px" width="50px">
+                                                                <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
                                                                 <strong class="ml-2">
                                                                     {{ item.user.name }}:
                                                                 </strong>
@@ -313,7 +313,7 @@
 
             <div>
                 <div class="row card-all">
-                    <div v-for="product in products" class="card-item">
+                    <div v-for="product in products" :key="product.id" class="card-item">
                         <div>
                             <div class="block2 w-100">
                                 <div class="block2-pic hov-img0">
@@ -609,8 +609,5 @@ export default {
     justify-content: center;
 }
 
-.image-contain {
-    object-fit: contain;
-}
 
 </style>
