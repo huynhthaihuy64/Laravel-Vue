@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light header">
-    <div class="col-6 d-flex justify-content-center">
+    <div class="col-5 d-flex justify-content-center">
       <router-link to="/">
         <img src="../../../../../public/images/image.png" height="60px" width="80px" class="image-contain">
       </router-link>
@@ -25,8 +25,8 @@
         </ul>
       </div>
     </div>
-    <div class="col-4">
-      <div class="dropdown w-50 d-flex justify-content-start w-100">
+    <div class="col-5">
+      <div class="dropdown w-50 d-flex justify-content-center w-100">
         <button @click="searchToggle()">Search<i class="zmdi zmdi-search ml-2"></i></button>
         <div id="myDropdown" class="dropdown-content scrollable-menu mt-4 w-100" role="menu">
           <input type="text" placeholder="Search.." v-model="searchText" id="myInput" @keyup="search()">
@@ -154,6 +154,7 @@ export default {
     },
     goToDetail(id) {
       this.$router.push({ name: "productDetail", params: { id: id } });
+      this.$router.go();
     },
 
     getUser() {

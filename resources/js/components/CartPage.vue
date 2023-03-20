@@ -16,7 +16,7 @@
                                             <th class="column-5">{{ $store.getters.localizedStrings.cart_page.total }}</th>
                                             <th class="column-6">&nbsp;</th>
                                         </tr>
-                                        <tr class="table_row" v-for="(item, index) in carts" :key="index">
+                                        <tr class="table_row" v-for="(item, index) in carts" :key="item.id">
                                             <td class="column-1">
                                                 <div class="how-itemcart1 mt-3">
                                                     <img :src="item.options.image" alt="IMG" class="image-contain">
@@ -25,9 +25,7 @@
                                             <td class="column-2">
                                                 <p class="mt-4">{{ item.name }}</p>
                                                 <a-form-item class="mt-3" no-style>
-                                                    <a-input v-decorator="['rowId', {
-                                                        initialValue: item.rowId,
-                                                    }]" type="hidden" />
+                                                    <a-input v-decorator="['carts.' + index + '.rowId' , {initialValue: item.rowId,}]" type="hidden" />
                                                 </a-form-item>
                                             </td>
                                             <td class="column-3">
@@ -35,9 +33,7 @@
                                             </td>
                                             <td class="column-4">
                                                 <a-form-item class="mt-3" no-style>
-                                                    <a-input-number v-decorator="['qty', {
-                                                        initialValue: parseInt(item.qty),
-                                                    }]" :min="1" :max="100" />
+                                                    <a-input-number v-decorator="['carts.' + index + '.qty' , {initialValue: parseInt(item.qty),}]" :min="1" :max="100" />
                                                 </a-form-item>
                                             </td>
                                             <td class="column-5">
@@ -213,6 +209,11 @@ export default {
             },
         }
     },
+    computed: {
+        inputValues() {
+        return this.carts.map((item) => item.value);
+        }
+    },
     methods: {
         getCart() {
             httpRequest.get('/api/carts')
@@ -263,10 +264,7 @@ export default {
                 .validateFields((err, values) => {
                     console.log(values);
                     if (err) return;
-                    const formData = new FormData();
-                    formData.append("rowId", values.rowId);
-                    formData.append("qty", values.qty);
-                    httpRequest.post('/api/cart', formData).then((response) => {
+                    httpRequest.post('/api/cart', values).then((response) => {
                         this.info = response
                         this.flagModalAdd = false
                         Toast.fire({
@@ -274,6 +272,7 @@ export default {
                             title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
                         });
                     })
+                    this.getCart();
                     this.form.resetFields();
                 })
         },
@@ -296,15 +295,7 @@ export default {
                 .validateFields((err, values) => {
                     console.log(values);
                     if (err) return;
-                    const formData = new FormData();
-                    formData.append("rowId", values.rowId);
-                    formData.append("qty", values.qty);
-                    formData.append("name", values.name);
-                    formData.append("email", values.email);
-                    formData.append("phone", values.phone);
-                    formData.append("address", values.address);
-                    formData.append("content", values.content);
-                    httpRequest.post('/api/cart/payment', formData).then((response) => {
+                    httpRequest.post('/api/cart/payment', values).then((response) => {
                         this.info = response
                         this.flagModalAdd = false
                         Toast.fire({
@@ -312,6 +303,7 @@ export default {
                             title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
                         });
                     })
+                    this.getCart();
                     this.form.resetFields();
                 })
         }

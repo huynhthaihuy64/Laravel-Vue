@@ -37,28 +37,44 @@ class CustomerController extends Controller
 
     public function chartCustomer(Request $request) {
         $data = $request->toArray();
-        $months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
         $dataCustomer = [];
         $year = $data['year'] ?? Carbon::now()->year;
-        foreach ($months as $month) {
-            $dataCustomer[] = $this->customer->chart($month,$year);
+        //Dùng foreach cách này bị dư code ở months;
+        // $months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+        // foreach ($months as $month) {
+        //     $dataCustomer[] = $this->customer->chart($month,$year);
+        // }
+
+        //Cách này chuẩn hơn không bị dư code
+        $months = 1;
+        while($months <= 12) {
+            $dataCustomer[] = $this->customer->chart($months,$year);
+            $months += 1;
         }
         return $dataCustomer;
     }
 
     public function chartRevenue(Request $request) {
         $data = $request->toArray();
-        $months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
         $revenue = [];
         $year = $data['year'] ?? Carbon::now()->year;
-        foreach ($months as $month) {
-            $revenue[] = array_column($this->customer->chartRevenue($month,$year)->toArray(),'amount');
+        //Dùng foreach cách này bị dư code ở months;
+        // $months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+        // foreach ($months as $month) {
+        //     $revenue[] = array_column($this->customer->chartRevenue($month,$year)->toArray(),'amount');
+        // }
+
+        //Cách này chuẩn hơn không bị dư code
+        $months = 1;
+        while($months <= 12) {
+            $revenue[] = array_column($this->customer->chartRevenue($months,$year)->toArray(),'amount');
+            $months += 1;
         }
         return $revenue;
     }
 
     public function getYear() {
-        $years = Customer::select(DB::raw('YEAR(created_at) year'))->get();
+        $years = Customer::select(DB::raw('DISTINCT YEAR(created_at) year'))->get();
         return $years;
     }
 }

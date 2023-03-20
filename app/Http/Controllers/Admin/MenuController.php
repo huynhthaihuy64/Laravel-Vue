@@ -29,7 +29,7 @@ class MenuController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->limit ?? 5;
-        $menus = MenuResource::collection($this->menuService->getAll($paginate))->resource;
+        $menus = MenuResource::collection($this->menuService->getAll($request->toArray(),$paginate))->resource;
         return $menus;
     }
 

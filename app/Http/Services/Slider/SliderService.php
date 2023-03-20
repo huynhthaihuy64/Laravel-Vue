@@ -6,10 +6,13 @@ use App\Http\Services\UploadService;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\Sortable;
 
 class SliderService
 {
     protected $uploadService;
+
+    use Sortable;
     public function __construct(UploadService $uploadService)
     {
         $this->uploadService = $uploadService;
@@ -33,9 +36,9 @@ class SliderService
         }
     }
 
-    public function get($paginate,$sortBy)
+    public function get($data,$paginate)
     {
-        return Slider::sort(request(),$sortBy)->paginate($paginate);
+        return Slider::sort($data)->paginate($paginate);
     }
 
     public function update($data, $id)

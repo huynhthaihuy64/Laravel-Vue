@@ -21,10 +21,10 @@
         <thead>
           <tr>
             <th scope="col" class="category-order">{{ $store.getters.localizedStrings.user_management.no }}</th>
-            <th>{{ $store.getters.localizedStrings.user_management.name }}</th>
-            <th>{{ $store.getters.localizedStrings.user_management.email }}</th>
-            <th>{{ $store.getters.localizedStrings.user_management.phone }}</th>
-            <th>{{ $store.getters.localizedStrings.user_management.created }}</th>
+            <th class="sortType"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }} <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email }} <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone }}<i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('created_at')">{{ $store.getters.localizedStrings.user_management.created }} <i class="fas fa-sort"></i></a></th>
             <th></th>
           </tr>
         </thead>
@@ -251,13 +251,19 @@ export default {
         edit_phone: '',
         edit_id: 1,
         edit_avatar: []
-      }
+      },
+      isSorter: false,
     }
   },
+  computed: {
+      inputType() {
+          return this.isSorter ? 'asc' : 'desc'
+      },
+  },
   methods: {
-    getResuilt(row, page) {
+    getResuilt(row, page, name = '', sorter = 'desc') {
       httpRequest
-        .get('/api/users/list?limit=' + row + '&page=' + page)
+        .get('/api/users/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
           ({ data }) => (
             (this.users = data.data),
@@ -267,6 +273,10 @@ export default {
             (this.checkRow())
           )
         );
+    },
+    toggleSort(name) {
+      this.isSorter = !this.isSorter
+      this.getResuilt(this.row,this.page,name,this.inputType);
     },
     handleRemove(avatar) {
       const index = this.fileList.indexOf(avatar);

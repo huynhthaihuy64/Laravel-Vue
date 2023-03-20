@@ -3,13 +3,14 @@
 namespace App\Http\Services\Menu;
 
 use App\Models\Menu;
+use App\Traits\Sortable;
 
 class MenuService
 {
-
-    public function getAll($paginate)
+    use Sortable;
+    public function getAll($data,$paginate)
     {
-        return Menu::orderbyDesc('id')->paginate($paginate);
+        return Menu::sort($data)->paginate($paginate);
     }
 
     public function show($id)

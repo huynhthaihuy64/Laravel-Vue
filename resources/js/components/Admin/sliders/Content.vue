@@ -21,11 +21,11 @@
         <thead>
           <tr>
             <th scope="col" class="category-order">No</th>
-            <th>Name</th>
+            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
             <th>Url</th>
             <th>Image</th>
-            <th>Status</th>
-            <th>Created</th>
+            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
             <th>Action</th>
           </tr>
         </thead>
@@ -269,13 +269,19 @@ export default {
         edit_file: [],
         edit_active: 1,
         edit_id: 1
-      }
+      },
+      isSorter: false,
     }
   },
+  computed: {
+      inputType() {
+          return this.isSorter ? 'asc' : 'desc'
+      },
+  },
   methods: {
-    getResuilt(row, page) {
+    getResuilt(row, page, name = '', sorter = 'desc') {
       httpRequest
-        .get('/api/sliders/list?limit=' + row + '&page=' + page)
+        .get('/api/sliders/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
           ({ data }) => (
             (this.sliders = data.data),
@@ -285,6 +291,10 @@ export default {
             (this.checkRow())
           )
         );
+    },
+    toggleSort(name) {
+      this.isSorter = !this.isSorter
+      this.getResuilt(this.row,this.page,name,this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);

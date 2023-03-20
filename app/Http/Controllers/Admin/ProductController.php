@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->limit ?? 5;
-        $data = $this->productService->get($paginate);
+        $data = $this->productService->get($request->toArray(),$paginate);
         $listUsers = ProductResource::collection($data)->resource;
         return $listUsers;
     }

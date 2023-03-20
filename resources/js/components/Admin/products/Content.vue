@@ -20,14 +20,14 @@
         <thead>
           <tr>
             <th scope="col" class="category-order">No</th>
-            <th>Name</th>
+            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
             <th>Description</th>
             <th>Category</th>
-            <th>Price</th>
-            <th>Price_Sale</th>
-            <th>Status</th>
+            <th class="sortType"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('price_sale')">Price_Sale <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
             <th>Image</th>
-            <th>Created</th>
+            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
             <th>Action</th>
           </tr>
         </thead>
@@ -357,13 +357,20 @@ export default {
         menus: [],
         edit_active: 1,
         edit_id: 1
-      }
+      },
+      isSorter: false,
+      field: '',
     }
   },
+  computed: {
+      inputType() {
+          return this.isSorter ? 'asc' : 'desc'
+      },
+  },
   methods: {
-    getResuilt(row, page) {
+    getResuilt(row, page, name = '', sorter = 'desc') {
       httpRequest
-        .get('/api/products/list?limit=' + row + '&page=' + page)
+        .get('/api/products/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
           ({ data }) => (
             (this.products = data.data),
@@ -382,6 +389,10 @@ export default {
             (this.menus = data.data)
           )
         )
+    },
+    toggleSort(name) {
+      this.isSorter = !this.isSorter
+      this.getResuilt(this.row,this.page,name,this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -402,7 +413,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResuilt(this.row, this.page, this.field, this.inputType);
     },
     handleNextPage() {
       this.btn = false;
@@ -779,6 +790,9 @@ td {
   margin-bottom: 10px;
 }
 
+.sortType:hover {
+  background-color: yellow;
+}
 .category-value {
   display: flex;
   margin-bottom: 10px;

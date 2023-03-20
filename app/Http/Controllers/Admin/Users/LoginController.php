@@ -23,6 +23,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\JWTManager as JWT;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use App\Traits\Sortable;
 
 class LoginController extends ResponseController
 {
@@ -30,6 +31,8 @@ class LoginController extends ResponseController
     protected $userService;
 
     public $successStatus = 200;
+
+    use Sortable;
     public function __construct(UploadService $uploadService, UserService $userService)
     {
         $this->uploadService = $uploadService;
@@ -111,7 +114,7 @@ class LoginController extends ResponseController
     public function listUser(Request $request)
     {
         $paginate = $request->limit ?? 10;
-        $users = User::orderby('id', 'ASC')->paginate($paginate);
+        $users = User::sort($request->toArray())->paginate($paginate);
 
         $listUsers = UserResource::collection($users)->resource;
         return $listUsers;

@@ -11,11 +11,12 @@
                         </a-button>
                     </div>
                     <div class="col-4 d-flex justify-content-end">
-                        <a-upload :beforeUpload="beforeUpload" :headers="headers" action="//jsonplaceholder.typicode.com/posts/">
-                            <a-button  class="button-type">
-                            <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
-                            Import Excel
-                        </a-button>
+                        <a-upload :beforeUpload="beforeUpload" :headers="headers"
+                            action="//jsonplaceholder.typicode.com/posts/">
+                            <a-button class="button-type">
+                                <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
+                                Import Excel
+                            </a-button>
                         </a-upload>
                     </div>
                     <div class="col-2">
@@ -30,11 +31,12 @@
                 <thead>
                     <tr>
                         <th scope="col" class="category-order">No</th>
-                        <th>Name</th>
-                        <th>Level</th>
+                        <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+                        <th class="sortType"><a @click="toggleSort('parent_id')">Level <i class="fas fa-sort"></i></a></th>
                         <th>Description</th>
-                        <th>Status</th>
-                        <th>Created</th>
+                        <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+                        <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a>
+                        </th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -309,13 +311,19 @@ export default {
                 edit_description: '',
                 edit_active: 1,
                 edit_id: 1
-            }
+            },
+            isSorter: false
         }
     },
+    computed: {
+        inputType() {
+            return this.isSorter ? 'asc' : 'desc'
+        },
+    },
     methods: {
-        getResuilt(row, page) {
+        getResuilt(row, page, name = '', sorter = 'desc') {
             httpRequest
-                .get('/api/menus/list?limit=' + row + '&page=' + page)
+                .get('/api/menus/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
                 .then(
                     ({ data }) => (
                         (this.menus = data.data),
@@ -326,6 +334,10 @@ export default {
                     )
                 );
         },
+        toggleSort(name) {
+            this.isSorter = !this.isSorter
+            this.getResuilt(this.row, this.page, name, this.inputType);
+        },
         handleRemove(file) {
             const index = this.fileList.indexOf(file);
             const newFileList = this.fileList.slice();
@@ -335,7 +347,7 @@ export default {
         beforeUpload(file) {
             this.fileList = [...this.fileList, file];
             this.importMenu(this.fileList);
-            return new Promise((resolve) => {})
+            return new Promise((resolve) => { })
         },
         showModalEdit(id) {
             this.getMenu(id);

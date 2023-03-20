@@ -40,7 +40,7 @@ class CartController extends Controller
 
     public function update(Request $request) {
         $data = $request->toArray();
-        foreach($data['formData'] as $value) {
+        foreach($data['carts'] as $value) {
             Cart::update($value['rowId'], $value['qty']);
         }
         return Cart::content();
@@ -76,7 +76,6 @@ class CartController extends Controller
     }
 
     public function payment(Request $request) {
-        dd($request->all());
         $data = $request->toArray();
         return $this->cartService->payment($data);
     }

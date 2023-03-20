@@ -9,10 +9,14 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\Sortable;
 
 class ProductAdminService
 {
     protected $uploadService;
+
+    use Sortable;
+
     public function __construct(UploadService $uploadService)
     {
         $this->uploadService = $uploadService;
@@ -62,10 +66,9 @@ class ProductAdminService
         }
     }
 
-    public function get($paginate)
+    public function get($data,$paginate)
     {
-        return Product::with('menus')
-            ->orderByDesc('id')->paginate($paginate);
+        return Product::sort($data)->with('menus')->paginate($paginate);
     }
 
     public function getRelativeProduct($paginate,array $ids) {

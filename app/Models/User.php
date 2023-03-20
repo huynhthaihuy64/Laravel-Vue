@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,7 @@ use Exception;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
     /**
      * The attributes that are mass assignable.
      *
@@ -104,7 +105,7 @@ class User extends Authenticatable
     */
     public function routeNotificationForSlack($notification)
     {
-        return 'https://hooks.slack.com/services/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';
+        return 'https://hooks.slack.com/services/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';
     }
 
     // /**

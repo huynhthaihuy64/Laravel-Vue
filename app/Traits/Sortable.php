@@ -14,27 +14,12 @@ trait Sortable
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSort(Builder $query, Request $request, $sortBy)
+    public function scopeSort(Builder $query, $data)
     {
-        $sortables = data_get($this, 'sortables', []);
-
-        // Lấy column để Sort
-        $sort = $request->get('sort');
-
-        // Lấy cách sort ('desc','asc',)
-        $direction = $request->get('direction', $sortBy);
-
-        // Đảm bảo cột sắp xếp là một column sort ở model có thể sắp xếp của mô hình
-        // và giá trị là ('asc' or 'desc')
-        if ($sort
-            && in_array($sort, $sortables)
-            && $direction
-            && in_array($direction, ['asc', 'desc'])) {
-            // Trả về kết quả sort
-            return $query->orderBy($sort, $direction);
+        if (isset($data['field']) && isset($data['sortType'])) {
+            return $query->orderBy($data['field'], $data['sortType']);
+        } else {
+            return $query->orderBy('created_at', 'DESC');
         }
-
-        // Nếu ko có direction hoặc ghi bậy thì sẽ trả về kết quả mặc định
-        return $query;
     }
 }

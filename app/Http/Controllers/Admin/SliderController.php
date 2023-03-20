@@ -35,8 +35,7 @@ class SliderController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->limit ?? 5;
-        $sortBy = isset($request->sortBy) ? $request->sortBy : 'asc';
-        $slider = SlideResource::collection($this->slider->get($paginate,$sortBy))->resource;
+        $slider = SlideResource::collection($this->slider->get($request->toArray(),$paginate))->resource;
         return $slider;
     }
 

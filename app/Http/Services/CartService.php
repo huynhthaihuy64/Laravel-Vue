@@ -175,12 +175,12 @@ class CartService
                 'user_id' => auth()->user()->id,
                 'name' => auth()->user()->name,
                 'email' => auth()->user()->email,
-                'phone' => $data['phone'],
-                'address' => $data['address'],
-                'content' => $data['content'],
+                'phone' => $data['phone'] ?? null,
+                'address' => $data['address'] ?? null,
+                'content' => $data['content'] ?? null,
                 'total_tax' => intval($total_tax),
             ]);
-            foreach($data['formData'] as $val) {
+            foreach($data['carts'] as $val) {
                 $cart = Cart::get($val['rowId'])->toArray();
                 ModelsCart::create([
                     'customer_id' => $customer->id,
@@ -191,6 +191,7 @@ class CartService
                 ]);
             }
             DB::commit();
+            Cart::destroy();
             return response()->json(['message' => "Payment Success"]);
         } catch(\Exception $e) {
             DB::rollback();
