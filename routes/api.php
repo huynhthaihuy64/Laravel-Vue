@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('add', [MenuController::class, 'store']);
         Route::get('list', [MenuController::class, 'index']);
         Route::get('edit/{menu}', [MenuController::class, 'show']);
+        Route::get('menuProduct/{menu}', [MenuController::class, 'getProductsWithMenu']);
         Route::put('edit/{menu}', [MenuController::class, 'update']);
         Route::delete('destroy/{slider}', [MenuController::class, 'destroy']);
     });

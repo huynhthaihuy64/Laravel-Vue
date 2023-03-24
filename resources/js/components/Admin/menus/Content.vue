@@ -788,6 +788,9 @@ td {
     }
 }
 
+.sortType:hover {
+  background-color: yellow;
+}
 .content-body {
     width: 100%;
 }

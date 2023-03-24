@@ -567,6 +567,10 @@ td {
   padding-bottom: 20px;
 }
 
+.sortType:hover {
+  background-color: yellow;
+}
+
 .confirm-edit {
   .ant-modal-body {
     padding: 5px 14px 4px 14px;

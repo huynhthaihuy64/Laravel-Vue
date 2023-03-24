@@ -31,6 +31,7 @@ class MenuService
                 'parent_id' => $data['parent_id'],
                 'description' => $data['description'],
                 'content' => $data['content'],
+                'sub_id' => $data['sub_id'] ?? 0,
                 'active' => $data['active'],
             ]);
 
@@ -76,5 +77,12 @@ class MenuService
         }
         return $query->orderByDesc('id')
             ->paginate(12)->withQueryString();
+    }
+
+    public function getProductsWithMenu($id)
+    {
+        $menu = Menu::find($id);
+        $products = $menu->products()->get();
+        dd($products->toArray());
     }
 }

@@ -508,6 +508,10 @@ export default {
   // display: block;
 }
 
+.sortType:hover {
+  background-color: yellow;
+}
+
 table {
   border-collapse: collapse;
   width: 80%;

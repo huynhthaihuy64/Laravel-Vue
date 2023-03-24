@@ -59,4 +59,8 @@ class MenuController extends Controller
             'error' => true,
         ]);
     }
+
+    public function getProductsWithMenu(int $id) {
+        $menu = $this->menuService->getProductsWithMenu($id);
+    }
 }

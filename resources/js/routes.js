@@ -70,6 +70,14 @@ const routes = [
         },
       },
       {
+        name: 'Category',
+        path: '/categories/:id',
+        component: require("./components/CategoryPage.vue").default,
+        meta: {
+          middleware: [permissionHome],
+        },
+      },
+      {
         name: 'cart',
         path: '/cart',
         component: require("./components/CartPage.vue").default,
