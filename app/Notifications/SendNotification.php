@@ -31,7 +31,7 @@ class SendNotification extends Notification
         return (new MailMessage)
             ->greeting('Hello!')
             ->line('One of your invoices has been paid!')
-            ->action('View Invoice', 'http://127.0.0.1:8000/')
+            ->action('View Invoice', 'http://localhost:8083/')
             ->line('Thank ' . $this->user->name . ' for using our application!');
     }
     public function toSlack($notifiable)

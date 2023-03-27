@@ -45,9 +45,7 @@ class TwoFAController extends Controller
         $basic  = new \Vonage\Client\Credentials\Basic("18ecdbf2", "eVbulaJ47tN6CySj");
         $client = new \Vonage\Client($basic);
         $user = User::select('phone')->find($request->id);
-        dd($user);
         $test = new \Vonage\SMS\Message\SMS(auth()->user()->phone,$user, $request->code);
-        // dd($test);
         $response = $client->sms()->send(
             $test
         );

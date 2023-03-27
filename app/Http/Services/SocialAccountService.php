@@ -23,11 +23,12 @@ class SocialAccountService
             $details = [
                 'name' => $user->name,
                 'email' => $user->email,
-                'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở http://127.0.0.1:8000/signIn',
-                'url' => 'http://127.0.0.1:8000/signIn',
+                'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở http://localhost:8083/signIn',
+                'url' => 'http://localhost:8083/signIn',
                 'title' => 'Login'
             ];
-            return Mail::to($details['email'])->send(new RegisterUser($details));
+            Mail::to($details['email'])->send(new RegisterUser($details));
+            return response()->json(['message' => 'Please check your email']);
         } else {
             $email = $providerUser->getEmail() ?? $providerUser->getNickname();
             $account = new SocialAccount([
@@ -41,14 +42,22 @@ class SocialAccountService
                 $user = User::create([
                     'email' => $email,
                     'name' => $providerUser->getName(),
-                    'password' => Hash::make('123456'),
+                    'password' => Hash::make('12345678'),
                 ]);
             }
 
             $account->user()->associate($user);
             $account->save();
 
-            return $user;
+            $details = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'subject' => 'Bạn đã tạo tài khoản thành công hãy thử đăng nhập với password là 12345678',
+                'url' => 'http://localhost:8083/signIn',
+                'title' => 'Login'
+            ];
+            Mail::to($details['email'])->send(new RegisterUser($details));
+            return response()->json(['message' => 'Please check your email']);
         }
     }
 }

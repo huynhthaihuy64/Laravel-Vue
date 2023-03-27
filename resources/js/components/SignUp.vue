@@ -76,9 +76,9 @@
         {{ $store.getters.localizedStrings.register }}
       </a-button>
       <div class="social">
-        <div class="go" @click="socialLogin('google')" target="_blank"><font-awesome-icon :icon="['fab', 'google']"
+        <a class="go" href="/api/redirect/google" target="_blank"><font-awesome-icon :icon="['fab', 'google']"
             class="mr-1" />Google
-        </div>
+        </a>
         <div class="fb"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</div>
       </div>
     </a-form>
@@ -127,7 +127,6 @@ export default {
               window.axios.defaults.headers.common['Authorization'] =
                 'Bearer ' + response.data.success.access_token
             } else {
-              console.log('aaa')
               Toast.fire({
                 icon: 'error',
                 title: response.data.message
@@ -144,7 +143,6 @@ export default {
         }
       })
         .catch(function (error) {
-          console.log('cc');
           Toast.fire({
             icon: 'error',
             title: error
@@ -156,7 +154,6 @@ export default {
     },
     socialLogin(provider) {
       axios.get('/api/redirect/google').then(response => {
-        alert('hello');
         setUserInfo(JSON.stringify(response.data.user))
         setAccessToken(response.data.access_token)
         this.$router.push({ name: 'Home' })

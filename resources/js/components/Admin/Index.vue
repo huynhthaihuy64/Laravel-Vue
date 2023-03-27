@@ -68,7 +68,6 @@ export default {
       await httpRequest.get('/api/charts/customers/chart-revenue?year=' + year)
         .then((data) => {
           this.chartRevenue = data.data
-          console.log(this.chartRevenue);
           this.createdChartRevenue()
         })
     },
@@ -95,7 +94,6 @@ export default {
           borderWidth: 1,
         }]
       }
-      console.log(this.chartCustomer);
     },
     createdChartRevenue() {
       const labels = ["January",
@@ -120,13 +118,11 @@ export default {
           borderWidth: 1,
         }]
       }
-      console.log(this.chartData1);
     },
     async getYear() {
       await httpRequest.get('/api/charts/customers/years')
       .then((data) => {
           this.years = data.data
-          console.log(this.years);
         })
     }
   },

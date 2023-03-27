@@ -77,7 +77,7 @@ Vue.use(VueSocialauth, {
       google: {
           clientId: '867907508492-bgr2og6orrollalmo3vrb5j8mvm0c20a.apps.googleusercontent.com',
           client_secret: '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',
-          redirectUri: 'http://127.0.0.1:8000/api/callback/google'
+          redirectUri: 'http://localhost:8083/api/callback/google'
       }
   }
 });

@@ -546,7 +546,6 @@ export default {
             e.preventDefault();
             this.form
                 .validateFields((err, values) => {
-                    console.log(values);
                     if (err) return;
                     const formData = new FormData();
                     formData.append("qty", values.qty);
@@ -555,14 +554,14 @@ export default {
                         this.info = response
                         Toast.fire({
                             icon: 'success',
-                            title: 'Comment Success'
+                            title: 'Add Cart Success'
                         });
                         this.form.resetFields();
                     })
                 }).catch(function (error) {
                     Toast.fire({
                         icon: 'error',
-                        title: 'Comment Failed'
+                        title: 'Add Cart Failed'
                     });
                 });
         }

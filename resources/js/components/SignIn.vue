@@ -87,9 +87,7 @@ export default {
                 if (!error) {
                     this.formData = { ...values }
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
-                        console.log(response);
                         if (response.data.user) {
-                            console.log(response);
                             setUserInfo(JSON.stringify(response.data.user))
                             setAccessToken(response.data.success.access_token)
                             Toast.fire({
@@ -114,7 +112,6 @@ export default {
                 }
             })
                 .catch(function (error) {
-                    console.log(error);
                     Toast.fire({
                         icon: 'error',
                         title: error

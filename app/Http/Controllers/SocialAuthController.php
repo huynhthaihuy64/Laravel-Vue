@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\SocialAccountService;
-use App\Models\User;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SocialAuthController extends Controller
 {
@@ -26,7 +21,6 @@ class SocialAuthController extends Controller
 
     public function callback($social)
     {
-        $user = SocialAccountService::createOrGetUser(Socialite::driver($social)->stateless()->user(), $social);
-        return redirect()->back()->with('message', 'Thành Công');
+        return SocialAccountService::createOrGetUser(Socialite::driver($social)->stateless()->user(), $social);
     }
 }

@@ -18,7 +18,7 @@ class AddColumnUsersTable extends Migration
             $table->integer('gender')->nullable();
             $table->string('birthday')->nullable();
             $table->string('address')->nullable();
-            $table->unsignedBigInteger('role_id')->default(1)->nullable();
+            $table->unsignedBigInteger('role_id')->after('name')->default(3)->nullable();
         });
     }
 

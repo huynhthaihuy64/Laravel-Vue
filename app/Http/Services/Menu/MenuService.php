@@ -83,6 +83,6 @@ class MenuService
     {
         $menu = Menu::find($id);
         $products = $menu->products()->get();
-        dd($products->toArray());
+        return $products;
     }
 }

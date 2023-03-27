@@ -218,7 +218,6 @@ export default {
         getCart() {
             httpRequest.get('/api/carts')
                 .then(response => {
-                    console.log('Res', response)
                     this.carts = response.data.data;
                     this.totalPrice = response.data.total;
                     this.tax = response.data.tax;
@@ -258,11 +257,9 @@ export default {
                 });
         },
         async updateCart(e) {
-            console.log(this.form.getFieldsValue())
             e.preventDefault();
             await this.form
                 .validateFields((err, values) => {
-                    console.log(values);
                     if (err) return;
                     httpRequest.post('/api/cart', values).then((response) => {
                         this.info = response
@@ -289,11 +286,9 @@ export default {
                 })
         },
         handlePayment(e) {
-            console.log(this.form.getFieldsValue())
             e.preventDefault();
             this.form
                 .validateFields((err, values) => {
-                    console.log(values);
                     if (err) return;
                     httpRequest.post('/api/cart/payment', values).then((response) => {
                         this.info = response
@@ -303,7 +298,9 @@ export default {
                             title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
                         });
                     })
-                    this.getCart();
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
                     this.form.resetFields();
                 })
         }

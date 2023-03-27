@@ -19,7 +19,7 @@
           <li class="nav-item ml-5">
             <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
           </li>
-          <li class="nav-item ml-5" v-if="initialValue.role === 0">
+          <li class="nav-item ml-5" v-if="initialValue.role === 1">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
           </li>
         </ul>
@@ -104,7 +104,7 @@ export default {
         edit_name: '',
         edit_id: 1,
         edit_avatar: [],
-        role: 1,
+        role: 10,
       },
       searchText: '',
       searchArr: {},
@@ -164,7 +164,7 @@ export default {
           this.initialValue.edit_name = response.data.name;
           this.initialValue.edit_id = response.data.id;
           this.initialValue.edit_avatar = response.data.avatar;
-          this.initialValue.role = response.data.admin;
+          this.initialValue.role = response.data.role_id;
         })
     },
   },

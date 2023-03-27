@@ -52,8 +52,8 @@ class LoginController extends ResponseController
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user();
             $success['access_token'] = $user->createToken('MyApp')->accessToken;
-            if ($user->admin != 0) {
-                $admin = User::where('admin', 0)->first();
+            if ($user->role_id != 1) {
+                $admin = User::where('role_id', 1)->first();
                 $admin->notify(new SendNotification($user));
             }
             return response()->json(
@@ -288,7 +288,7 @@ class LoginController extends ResponseController
             'birthday' => Carbon::parse($user->birthday)->format('Y/m/d'),
             'gender' => $user->gender,
             'address' => $user->address,
-            'admin' => $user->admin,
+            'role_id' => $user->role_id,
             'created_at' => Carbon::parse($user->created_at)->format('Y/m/d'),
         ];
         return $listUsers;
