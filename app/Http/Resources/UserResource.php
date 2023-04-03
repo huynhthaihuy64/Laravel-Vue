@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'department' => $this->department,
             'birthday' => Carbon::parse($this->birthday)->format('Y/m/d'),
             'gender' => $this->gender === 0 ? 'Male' : 'Female',
+            'role_id' => $this->role_id,
             'address' => $this->address,
             'created_at' => Carbon::parse($this->created_at)->format('Y/m/d'),
             'images' => UserAlbums::collection($this->userAlbums)

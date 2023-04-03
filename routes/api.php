@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\CommentController;
@@ -52,6 +53,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser']);
     Route::post('/admin/users/updateCurrentUser', [LoginController::class, 'updateCurrentUser']);
+    Route::get('/admin/users/role', [UserRoleController::class, 'index']);
     Route::get('/export/{option}', [PageController::class, 'export']);
     Route::post('/import', [PageController::class, 'import']);
     Route::post('/sendMailContact', [PageController::class, 'sendMailContact'])->name('page.mailContact');
@@ -125,3 +127,5 @@ Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'in
 Route::get('/about', [PageController::class, 'about'])->name('page.about');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/export-dat', [PageController::class, 'exportDat'])->name('export.dat');

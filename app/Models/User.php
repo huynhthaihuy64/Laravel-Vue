@@ -28,6 +28,7 @@ class User extends Authenticatable
         'gender',
         'birthday',
         'address',
+        'role_id',
     ];
 
     /**
@@ -105,7 +106,7 @@ class User extends Authenticatable
     */
     public function routeNotificationForSlack($notification)
     {
-        return 'https://hooks.slack.com/services/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';
+        return 'https://hooks.slack.com/services/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';
     }
 
     // /**
@@ -125,5 +126,10 @@ class User extends Authenticatable
     public function userAlbums()
     {
         return $this->hasMany(UserAlbum::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(UserRole::class);
     }
 }

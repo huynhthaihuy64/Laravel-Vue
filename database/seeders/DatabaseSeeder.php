@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Admin'],
             ['name' => 'Member']
         ]);
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(1)->create();
     }
 }

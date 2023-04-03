@@ -122,16 +122,8 @@ class LoginController extends ResponseController
 
     public function editUser($id)
     {
-        $user = User::find($id);
-        $data = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => $user->password,
-            'avatar' => $user->avatar,
-            'phone' => $user->phone,
-        ];
-        return $data;
+        $user = User::with('role')->find($id);
+        return $user;
     }
 
     public function updateUser(Request $request, $id)
@@ -149,6 +141,7 @@ class LoginController extends ResponseController
             'phone' => $request->phone,
             'password' => $request->password ? Hash::make($request->password) : $userOrigin->password,
             'avatar' => $avatar_path,
+            'role_id' => $request->role_id
         ];
         $userOrigin->update($data);
         if (!$userOrigin) {

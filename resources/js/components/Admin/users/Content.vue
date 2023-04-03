@@ -4,7 +4,7 @@
     <div class="content-body">
       <a-row>
         <a-col :span="12">
-          <a-button type="primary" @click="showAddUser()" class="button-type">
+          <a-button v-if="currentUser.role === 1" type="primary" @click="showAddUser()" class="button-type">
             <a-icon type="plus" />
             {{ $store.getters.localizedStrings.user_management.add_user.title }}
           </a-button>
@@ -21,11 +21,15 @@
         <thead>
           <tr>
             <th scope="col" class="category-order">{{ $store.getters.localizedStrings.user_management.no }}</th>
-            <th class="sortType"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }} <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email }} <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone }}<i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">{{ $store.getters.localizedStrings.user_management.created }} <i class="fas fa-sort"></i></a></th>
-            <th></th>
+            <th class="sortType"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }}
+                <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email
+            }} <i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone
+            }}<i class="fas fa-sort"></i></a></th>
+            <th class="sortType"><a @click="toggleSort('created_at')">{{
+              $store.getters.localizedStrings.user_management.created }} <i class="fas fa-sort"></i></a></th>
+            <th v-if="currentUser.role === 1"></th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +39,7 @@
             <td>{{ item.email }}</td>
             <td>{{ item.phone }}</td>
             <td>{{ item.created_at }}</td>
-            <td>
+            <td v-if="currentUser.role === 1">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -65,10 +69,13 @@
 
     </div>
     <template>
-      <a-modal :title="$store.getters.localizedStrings.user_management.add_user.title" :visible="this.flagModalAdd" @cancel="() => cancelModalAdd()">
+      <a-modal :title="$store.getters.localizedStrings.user_management.add_user.title" :visible="this.flagModalAdd"
+        @cancel="() => cancelModalAdd()">
         <template #footer>
-          <a-button class="btn-button-cancel" @click="cancelModalAdd">{{ $store.getters.localizedStrings.user_management.cancel}}</a-button>
-          <a-button key="submit" type="primary" class="btn-button primary" @click="addUser">{{ $store.getters.localizedStrings.user_management.add_user.title }}</a-button>
+          <a-button class="btn-button-cancel" @click="cancelModalAdd">{{
+            $store.getters.localizedStrings.user_management.cancel }}</a-button>
+          <a-button key="submit" type="primary" class="btn-button primary" @click="addUser">{{
+            $store.getters.localizedStrings.user_management.add_user.title }}</a-button>
         </template>
         <a-form :form="form">
           <a-row :gutter="20">
@@ -89,6 +96,15 @@
                     rules: [{ required: true, message: 'Please input your email!' }],
                   },
                 ]" type="email" />
+              </a-form-item>
+              <a-form-item :label="$store.getters.localizedStrings.user_management.add_user.avatar">
+                <a-upload name="avatar" v-decorator="['avatar']" :file-list="fileList"
+                  action="//jsonplaceholder.typicode.com/posts/" :headers="headers" @remove="handleRemove"
+                  :beforeUpload="beforeUpload" list-type="picture">
+                  <a-button> <a-icon type="upload" />{{
+                    $store.getters.localizedStrings.user_management.add_user.attachments
+                  }}</a-button>
+                </a-upload>
               </a-form-item>
             </a-col>
             <a-col :span="12">
@@ -113,15 +129,26 @@
                   }
                 ]" />
               </a-form-item>
+              <a-form-item label="Role">
+                <a-select v-decorator="[
+                  'role_id',
+                  {
+                    initialValue: '',
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your password!',
+                      },
+                    ],
+                  }
+                ]" placeholder="Choose Role">
+                  <a-select-option v-for="(role) in roles" :value="role.id" :key="role.id">
+                    {{ role.name }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
             </a-col>
           </a-row>
-          <a-form-item :label="$store.getters.localizedStrings.user_management.add_user.avatar">
-            <a-upload name="avatar" v-decorator="['avatar']" :file-list="fileList"
-              action="//jsonplaceholder.typicode.com/posts/" :headers="headers" @remove="handleRemove"
-              :beforeUpload="beforeUpload" list-type="picture">
-              <a-button> <a-icon type="upload" />{{ $store.getters.localizedStrings.user_management.add_user.attachments }}</a-button>
-            </a-upload>
-          </a-form-item>
         </a-form>
       </a-modal>
     </template>
@@ -133,8 +160,10 @@
         {{ $store.getters.localizedStrings.user_management.confirm.content }}
       </div>
       <div class="footer">
-        <a-button class="btn-button-cancel mr-2" @click="cancelModalConfirm">{{ $store.getters.localizedStrings.user_management.confirm.cancel }}</a-button>
-        <a-button key="submit" type="primary" class="btn-button primary" @click="editUsers">{{ $store.getters.localizedStrings.user_management.confirm.confirm }}</a-button>
+        <a-button class="btn-button-cancel mr-2" @click="cancelModalConfirm">{{
+          $store.getters.localizedStrings.user_management.confirm.cancel }}</a-button>
+        <a-button key="submit" type="primary" class="btn-button primary" @click="editUsers">{{
+          $store.getters.localizedStrings.user_management.confirm.confirm }}</a-button>
       </div>
     </a-modal>
 
@@ -146,14 +175,18 @@
       </div>
 
       <div class="footer">
-        <a-button class="btn-button mr-2" @click="cancelModalDelete">{{ $store.getters.localizedStrings.user_management.delete.cancel }}</a-button>
-        <a-button key="submit" type="primary" class="btn-button primary" @click="deleteUser()">{{ $store.getters.localizedStrings.user_management.delete.confirm }}</a-button>
+        <a-button class="btn-button mr-2" @click="cancelModalDelete">{{
+          $store.getters.localizedStrings.user_management.delete.cancel }}</a-button>
+        <a-button key="submit" type="primary" class="btn-button primary" @click="deleteUser()">{{
+          $store.getters.localizedStrings.user_management.delete.confirm }}</a-button>
       </div>
     </a-modal>
     <a-modal title="Edit User" :visible="this.flagModalEdit" @cancel="cancelModalEdit" class="">
       <template #footer>
-        <a-button class="btn-button-cancel" @click="cancelModalEdit">{{ $store.getters.localizedStrings.user_management.delete.cancel }}</a-button>
-        <a-button key="submit" type="primary" class="btn-button primary" @click="editUser">{{ $store.getters.localizedStrings.user_management.edit_user.title }}</a-button>
+        <a-button class="btn-button-cancel" @click="cancelModalEdit">{{
+          $store.getters.localizedStrings.user_management.delete.cancel }}</a-button>
+        <a-button key="submit" type="primary" class="btn-button primary" @click="editUser">{{
+          $store.getters.localizedStrings.user_management.edit_user.title }}</a-button>
       </template>
       <a-form :form="form">
         <a-row :gutter="20">
@@ -175,6 +208,18 @@
                 },
               ]" type="email" />
             </a-form-item>
+            <a-form-item :label="$store.getters.localizedStrings.user_management.edit_user.avatar">
+              <a-upload name="avatar" v-decorator="['avatar']" :multiple="true" :headers="headers"
+                :supportServerRender="false" action="//jsonplaceholder.typicode.com/posts/" @remove="handleRemove"
+                :beforeUpload="beforeUpload">
+                <a-button> <a-icon type="upload" />{{
+                  $store.getters.localizedStrings.user_management.edit_user.attachments }}</a-button>
+              </a-upload>
+              <div v-if="initialValue.edit_avatar != null">
+                <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
+                    :src="`${initialValue.edit_avatar}`" /></a>
+              </div>
+            </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item :label="$store.getters.localizedStrings.user_management.edit_user.password">
@@ -193,19 +238,20 @@
                 },
               ]" />
             </a-form-item>
+            <a-form-item label="Role">
+              <a-select v-decorator="[
+                'role_id',
+                {
+                  initialValue: initialValue.edit_role,
+                }
+              ]" placeholder="Choose Role" labelInValue>
+                <a-select-option v-for="(role) in roles" :value="role.id" :key="role.id">
+                  {{ role.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
           </a-col>
         </a-row>
-        <a-form-item :label="$store.getters.localizedStrings.user_management.edit_user.avatar">
-          <a-upload name="avatar" v-decorator="['avatar']" :multiple="true" :headers="headers"
-            :supportServerRender="false" action="//jsonplaceholder.typicode.com/posts/" @remove="handleRemove"
-            :beforeUpload="beforeUpload">
-            <a-button> <a-icon type="upload" />{{ $store.getters.localizedStrings.user_management.edit_user.attachments }}</a-button>
-          </a-upload>
-          <div v-if="initialValue.edit_avatar != null">
-            <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
-                :src="`${initialValue.edit_avatar}`" /></a>
-          </div>
-        </a-form-item>
       </a-form>
     </a-modal>
   </div>
@@ -221,6 +267,7 @@ export default {
   data() {
     return {
       users: {},
+      roles: {},
       flagModalAdd: false,
       flagModalEdit: false,
       flagModalConfirm: false,
@@ -250,15 +297,19 @@ export default {
         edit_password: '',
         edit_phone: '',
         edit_id: 1,
-        edit_avatar: []
+        edit_avatar: [],
+        edit_role: 3,
+      },
+      currentUser: {
+        role: 1,
       },
       isSorter: false,
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
     getResuilt(row, page, name = '', sorter = 'desc') {
@@ -276,7 +327,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResuilt(this.row, this.page, name, this.inputType);
     },
     handleRemove(avatar) {
       const index = this.fileList.indexOf(avatar);
@@ -415,7 +466,22 @@ export default {
           this.initialValue.edit_phone = response.data.phone;
           this.initialValue.edit_id = response.data.id;
           this.initialValue.edit_avatar = response.data.avatar;
+          this.initialValue.edit_role = response.data.role.name;
         })
+    },
+    getCurrentUser() {
+      httpRequest
+        .get('/api/admin/users/currentUser')
+        .then((response) => {
+          this.currentUser.role = response.data.role_id;
+        })
+    },
+    getRole() {
+      httpRequest
+        .get('/api/admin/users/role')
+        .then((data) => {
+          this.roles = data.data
+        });
     },
     editUser(e) {
       e.preventDefault();
@@ -427,6 +493,7 @@ export default {
           formData.append("email", values.email);
           formData.append("password", values.password);
           formData.append("phone", values.phone);
+          formData.append("role_id", values.role_id);
           this.fileList.forEach((item, index) => {
             formData.append("avatar", item);
           });
@@ -453,29 +520,31 @@ export default {
       this.form.resetFields()
     },
     exportUser() {
-            httpRequest.get('/api/export/4', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'user.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: '' + this.$store.getters.localizedStrings.user_management.export_success
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
-        }
+      httpRequest.get('/api/export/4', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'user.csv');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: '' + this.$store.getters.localizedStrings.user_management.export_success
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    }
   },
   mounted() {
     console.log('Component mounted.')
+    this.getCurrentUser()
+    this.getRole()
     this.getResuilt(this.row, this.page)
   },
   created() {
@@ -761,5 +830,6 @@ td {
 
 ::v-deep .ant-select-selection {
   border: none;
-}</style>
+}
+</style>
   
