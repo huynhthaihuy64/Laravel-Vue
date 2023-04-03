@@ -25,6 +25,24 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\Traits\Sortable;
 
+/**
+ * An entity controller class.
+ *
+ * @OA\Info(
+ *     version="1.0.0",
+ *     title="Nested schemas",
+ *     description="Example info",
+ *     @OA\Contact(name="Swagger API Team")
+ * )
+ * @OA\Server(
+ *     url="https://example.localhost",
+ *     description="API server"
+ * )
+ * @OA\Tag(
+ *     name="api",
+ *     description="All API endpoints"
+ * )
+ */
 class LoginController extends ResponseController
 {
     protected $uploadService;

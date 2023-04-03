@@ -3,15 +3,21 @@
 namespace App\Http\Services\Customer;
 
 use App\Models\Customer;
+use App\Traits\Sortable;
 use Illuminate\Support\Facades\DB;
 
 class CustomerService
 {
+    use Sortable;
     protected $customer;
 
     public function __construct(Customer $customer)
     {
         $this->customer = $customer;
+    }
+
+    public function index($request) {
+        return $this->customer->with('carts')->sort($request)->paginate($request['paginate'] ?? 5);
     }
     public function chart($month,$year) 
     {

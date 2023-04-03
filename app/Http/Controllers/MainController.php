@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CustomerExport;
 use App\Exports\MenuExport;
 use App\Exports\ProductExport;
 use App\Exports\SliderExport;
@@ -74,6 +75,10 @@ class MainController extends Controller
             case 4:
                 $user = User::all()->toArray();
                 return Excel::download(new UserExport($user), 'user.csv');
+                break;
+            case 5:
+                $customer = Customer::all()->toArray();
+                return Excel::download(new CustomerExport($customer), 'customer.csv');
                 break;
         }
     }

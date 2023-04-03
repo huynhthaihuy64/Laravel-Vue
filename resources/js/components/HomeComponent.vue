@@ -9,10 +9,27 @@
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="card-body">
-                                        <carousel v-if="sliders.length">
+                                        <carousel v-if="sliders.length > 0">
                                             <div v-for="slide in sliders" :key="slide.id" class="image-contain">
                                                 <h5 style="text:center">{{ slide.name }}</h5>
                                                 <a :href="slide.url" target="_blank"><img :src="slide.file"
+                                                        style="height:300px"></a>
+                                            </div>
+                                        </carousel>
+                                        <carousel v-if="sliders.length === 0">
+                                            <div class="image-contain">
+                                                <h5 style="text:center">FaceBook</h5>
+                                                <a href="https://www.facebook.com/" target="_blank"><img src="../../../public/images/facebook.png"
+                                                        style="height:300px"></a>
+                                            </div>
+                                            <div class="image-contain">
+                                                <h5 style="text:center">Instagram</h5>
+                                                <a href="https://www.instagram.com/" target="_blank"><img src="../../../public/images/Instagram.png"
+                                                        style="height:300px"></a>
+                                            </div>
+                                            <div class="image-contain">
+                                                <h5 style="text:center">Tik Tok</h5>
+                                                <a href="https://www.tiktok.com/en/" target="_blank"><img src="../../../public/images/tiktok.png"
                                                         style="height:300px"></a>
                                             </div>
                                         </carousel>

@@ -31,6 +31,7 @@ export default {
         { key: 'menus', icon: ['fas', 'list-alt'], desc: this.$store.getters.localizedStrings.side_bar.menu  },
         { key: 'products', icon: ['fas', 'shop'], desc: this.$store.getters.localizedStrings.side_bar.product  },
         { key: 'sliders', icon: ['fas', 'sliders'], desc: this.$store.getters.localizedStrings.side_bar.slide  },
+        { key: 'customers', icon: ['fas', 'user-tie'], desc: this.$store.getters.localizedStrings.side_bar.customer  },
       ],
       routeName: null,
     }

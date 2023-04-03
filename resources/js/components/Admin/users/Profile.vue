@@ -372,6 +372,15 @@
                               <a-switch @click="toggleDarkMode" />
                             </div>
                           </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <h5>API Documentation</h5> <br>
+                              <p>Show all necessary api</p>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                              <a @click="apiDocument">All API NECESSARY</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <!-- /.tab-pane -->
@@ -454,6 +463,16 @@ export default {
       setTimeout(function () {
         window.location.reload();
       }, 1000);
+    },
+    apiDocument() {
+      this.$router.push({
+        path: '/api/documentation',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then(() => {
+        window.location.reload();
+      });
     },
     getUser() {
       httpRequest

@@ -159,6 +159,14 @@ const routes = [
           middleware: [permissionHome],
         },
       },
+      {
+        name: 'customers',
+        path: 'customers',
+        component: require("./components/Admin/customers/Customer.vue").default,
+        meta: {
+          middleware: [permissionHome],
+        },
+      },
     ]
   },
 ]

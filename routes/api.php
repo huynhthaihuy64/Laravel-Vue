@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::put('edit/{menu}', [MenuController::class, 'update']);
         Route::delete('destroy/{slider}', [MenuController::class, 'destroy']);
     });
+    // Route::get('documentation');
     Route::prefix('products')->group(function () {
         Route::post('add', [ProductController::class, 'store']);
         Route::get('list', [ProductController::class, 'index']);
@@ -94,6 +95,9 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
         Route::get('customers/chart-revenue', [CustomerController::class, 'chartRevenue']);
         Route::get('customers/years', [CustomerController::class, 'getYear']);
+    });
+    Route::prefix('customers')->group(function () {
+        Route::get('list', [CustomerController::class, 'index']);
     });
     Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart']);

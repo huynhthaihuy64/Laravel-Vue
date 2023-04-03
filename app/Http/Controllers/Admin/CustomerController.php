@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Customer\CustomerService;
@@ -15,25 +16,18 @@ class CustomerController extends Controller
     //
     protected $cart;
     
-    protected $customer;
+    protected $customerService;
 
-    public function __construct(CartService $cart, CustomerService $customer)
+    public function __construct(CartService $cart, CustomerService $customerService)
     {
         $this->cart = $cart;
-        $this->customer = $customer;
+        $this->customerService = $customerService;
     }
 
     public function index(Request $request)
     {
+        return CustomerResource::collection($this->customerService->index($request->toArray()));
     }
-
-    // public function show(Customer $customer)
-    // {
-
-    //     $carts = $this->cart->getProductForCart($customer);
-        
-    //     return $carts;
-    // }
 
     public function chartCustomer(Request $request) {
         $data = $request->toArray();
@@ -48,7 +42,7 @@ class CustomerController extends Controller
         //Cách này chuẩn hơn không bị dư code
         $months = 1;
         while($months <= 12) {
-            $dataCustomer[] = $this->customer->chart($months,$year);
+            $dataCustomer[] = $this->customerService->chart($months,$year);
             $months += 1;
         }
         return $dataCustomer;
@@ -67,7 +61,7 @@ class CustomerController extends Controller
         //Cách này chuẩn hơn không bị dư code
         $months = 1;
         while($months <= 12) {
-            $revenue[] = array_column($this->customer->chartRevenue($months,$year)->toArray(),'amount');
+            $revenue[] = array_column($this->customerService->chartRevenue($months,$year)->toArray(),'amount');
             $months += 1;
         }
         return $revenue;

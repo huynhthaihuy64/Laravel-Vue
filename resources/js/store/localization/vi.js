@@ -33,6 +33,7 @@ export default {
         product: 'Quản Lý Sản Phẩm',
         menu: 'Quản Lý Danh Mục',
         slide: 'Quản Lý Slide',
+        customer: 'Quản Lý Khách Hàng'
     },
     comment: {
         display: 'Bình Luận',
