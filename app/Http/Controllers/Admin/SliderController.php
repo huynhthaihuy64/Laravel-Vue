@@ -35,7 +35,7 @@ class SliderController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->limit ?? 5;
-        $slider = SlideResource::collection($this->slider->get($request->toArray(),$paginate))->resource;
+        $slider = SlideResource::collection($this->slider->get($request->toArray(),$paginate));
         return $slider;
     }
 

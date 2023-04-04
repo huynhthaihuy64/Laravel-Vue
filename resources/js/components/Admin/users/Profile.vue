@@ -471,7 +471,7 @@ export default {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       }).then(() => {
-        window.location.reload();
+          window.location.reload();
       });
     },
     getUser() {

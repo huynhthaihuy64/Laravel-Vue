@@ -62,34 +62,34 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('menus')->group(function () {
         Route::post('add', [MenuController::class, 'store']);
         Route::get('list', [MenuController::class, 'index']);
-        Route::get('edit/{menu}', [MenuController::class, 'show']);
-        Route::get('menuProduct/{menu}', [MenuController::class, 'getProductsWithMenu']);
-        Route::put('edit/{menu}', [MenuController::class, 'update']);
-        Route::delete('destroy/{slider}', [MenuController::class, 'destroy']);
+        Route::get('edit/{id}', [MenuController::class, 'show']);
+        Route::get('menuProduct/{id}', [MenuController::class, 'getProductsWithMenu']);
+        Route::put('edit/{id}', [MenuController::class, 'update']);
+        Route::delete('destroy/{id}', [MenuController::class, 'destroy']);
     });
     // Route::get('documentation');
     Route::prefix('products')->group(function () {
         Route::post('add', [ProductController::class, 'store']);
         Route::get('list', [ProductController::class, 'index']);
         Route::get('relative', [ProductController::class, 'relativeProducts']);
-        Route::get('edit/{product}', [ProductController::class, 'show']);
-        Route::put('edit/{product}', [ProductController::class, 'update']);
-        Route::delete('destroy/{product}', [ProductController::class, 'destroy']);
+        Route::get('edit/{id}', [ProductController::class, 'show']);
+        Route::put('edit/{id}', [ProductController::class, 'update']);
+        Route::delete('destroy/{id}', [ProductController::class, 'destroy']);
         Route::post('search', [SearchProducts::class, 'search']);
     });
     Route::prefix('sliders')->group(function () {
         Route::post('add', [SliderController::class, 'store']);
         Route::get('list', [SliderController::class, 'index']);
-        Route::get('edit/{slider}', [SliderController::class, 'show']);
-        Route::put('edit/{slider}', [SliderController::class, 'update']);
-        Route::delete('destroy/{slider}', [SliderController::class, 'destroy']);
+        Route::get('edit/{id}', [SliderController::class, 'show']);
+        Route::put('edit/{id}', [SliderController::class, 'update']);
+        Route::delete('destroy/{id}', [SliderController::class, 'destroy']);
     });
     Route::prefix('users')->group(function () {
         Route::get('list', [LoginController::class, 'listUser']);
         Route::post('add', [LoginController::class, 'register'])->name('createUser');
-        Route::get('edit/{user}', [LoginController::class, 'editUser']);
-        Route::put('edit/{user}', [LoginController::class, 'updateUser']);
-        Route::delete('destroy/{user}', [LoginController::class, 'destroy']);
+        Route::get('edit/{id}', [LoginController::class, 'editUser']);
+        Route::put('edit/{id}', [LoginController::class, 'updateUser']);
+        Route::delete('destroy/{id}', [LoginController::class, 'destroy']);
     });
     Route::prefix('charts')->group(function () {
         Route::get('customers/chart', [CustomerController::class, 'chartCustomer']);
@@ -113,7 +113,7 @@ Route::put('reset-password/{token}', [ResetPasswordController::class,'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
-Route::get('customers/view/{customer}', [CustomerController::class, 'show']);
+Route::get('customers/view/{id}', [CustomerController::class, 'show']);
 
 #Message
 Route::prefix('chat')->group(function () {
@@ -131,5 +131,3 @@ Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'in
 Route::get('/about', [PageController::class, 'about'])->name('page.about');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/export-dat', [PageController::class, 'exportDat'])->name('export.dat');

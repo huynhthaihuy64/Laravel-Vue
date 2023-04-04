@@ -134,7 +134,7 @@ class LoginController extends ResponseController
         $paginate = $request->limit ?? 10;
         $users = User::sort($request->toArray())->paginate($paginate);
 
-        $listUsers = UserResource::collection($users)->resource;
+        $listUsers = UserResource::collection($users);
         return $listUsers;
     }
 

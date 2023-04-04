@@ -21,7 +21,7 @@ class ProductController extends Controller
     {
         $paginate = $request->limit ?? 5;
         $data = $this->productService->get($request->toArray(),$paginate);
-        $listUsers = ProductResource::collection($data)->resource;
+        $listUsers = ProductResource::collection($data);
         return $listUsers;
     }
 
@@ -29,7 +29,7 @@ class ProductController extends Controller
         $paginate = $request->limit ?? 5;
         $ids = $request->ids;
         $data = $this->productService->getRelativeProduct($paginate, $ids);
-        $listProducts = ProductResource::collection($data)->resource;
+        $listProducts = ProductResource::collection($data);
         return $listProducts;
     }
 
