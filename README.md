@@ -37,6 +37,8 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Chart: Revenue, Customer
 - Comment
 - Import, Export CSV
+- Laravel Service, Resource
+- API Documentation with Swagger
 - Frontend and Backend User ACL with Gate Policy (type: admin/user)
 - Simple Static Dashboard
 - Developer Options for OAuth Clients and Personal Access Token
