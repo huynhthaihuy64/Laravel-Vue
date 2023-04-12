@@ -21,8 +21,8 @@ class ProductController extends Controller
     {
         $paginate = $request->limit ?? 5;
         $data = $this->productService->get($request->toArray(),$paginate);
-        $listUsers = ProductResource::collection($data);
-        return $listUsers;
+        $listProducts = ProductResource::collection($data);
+        return $listProducts;
     }
 
     public function relativeProducts(Request $request) {
@@ -56,6 +56,13 @@ class ProductController extends Controller
         }
 
         return $result;
+    }
+
+    public function getProductMenu(Request $request) {
+        $paginate = $request->limit ?? 6;
+        $data = $this->productService->getProductMenu($request->toArray(),$paginate);
+        $listProducts = ProductResource::collection($data);
+        return $listProducts;
     }
 
 

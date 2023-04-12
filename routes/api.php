@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('products')->group(function () {
         Route::post('add', [ProductController::class, 'store']);
         Route::get('list', [ProductController::class, 'index']);
+        Route::get('productMenu', [ProductController::class, 'getProductMenu']);
         Route::get('relative', [ProductController::class, 'relativeProducts']);
         Route::get('edit/{id}', [ProductController::class, 'show']);
         Route::put('edit/{id}', [ProductController::class, 'update']);

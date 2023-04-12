@@ -19,6 +19,18 @@
           <li class="nav-item ml-5">
             <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
           </li>
+          <li class="nav-item ml-5">
+          <div class="dropdown w-50 d-flex justify-content-center w-100">
+            <button @click="listCategory()" class="nav-link">Category</button>
+              <div id="myCategory" class="dropdown-category scrollable-menu mt-5 w-25" role="menu">
+                <div class="content-dropdown container mt-4 w-100 mb-2" v-for="(item) in menus" :key="item.id">
+                  <a @click="goToMenuDetail(item.id)" class="w-100 content-dropdown ">
+                    {{ item.name }}
+                  </a>
+                </div>
+              </div>
+          </div>
+          </li>
           <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
           </li>
@@ -99,6 +111,7 @@ export default {
   data() {
     return {
       routeName: '',
+      menus: {},
       name: '',
       initialValue: {
         edit_name: '',
@@ -123,6 +136,9 @@ export default {
     },
     searchToggle() {
       document.getElementById("myDropdown").classList.toggle("show");
+    },
+    listCategory() {
+      document.getElementById("myCategory").classList.toggle("show");
     },
     search() {
       httpRequest.post('/api/products/search', {
@@ -167,10 +183,23 @@ export default {
           this.initialValue.role = response.data.role_id;
         })
     },
+    goToMenuDetail(id) {
+          this.$router.push({ name: "Category", params: { id: id } });
+    },
+    getMenu() {
+        httpRequest
+            .get('/api/menus/list')
+            .then(
+                ({ data }) => (
+                    (this.menus = data.data)
+                )
+            );
+    },
   },
   mounted() {
     console.log('Component mounted.')
     this.getUser()
+    this.getMenu()
   },
   created() {
     this.routeName = this.$route.name
@@ -270,7 +299,14 @@ export default {
   border: 1px solid #ddd;
   z-index: 1;
 }
-
+.dropdown-category {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 200px;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;

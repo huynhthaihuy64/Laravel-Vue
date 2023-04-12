@@ -82,6 +82,12 @@ class ProductAdminService
         return Product::with('menus','comments')->find($id);
     }
 
+    public function getProductMenu($request, $paginate) {
+        $menu = Menu::find($request['menu_id']);
+        $products = $menu->products()->paginate($paginate);
+        return $products;
+    }
+
     public function update($request, $id)
     {
         $product = Product::findOrFail($id);
