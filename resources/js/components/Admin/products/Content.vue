@@ -374,8 +374,8 @@ export default {
         .then(
           ({ data }) => (
             (this.products = data.data),
-            (this.totalPage = data.total),
-            (this.lastPage = data.last_page),
+            (this.totalPage = data.meta.total),
+            (this.lastPage = data.meta.last_page),
             (this.checkPage()),
             (this.checkRow())
           )

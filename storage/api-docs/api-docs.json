@@ -1204,62 +1204,57 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "access_token": {
-                                            "type": "string",
-                                            "example": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "nullable": false,
-                                            "example": "Bearer"
-                                        },
-                                        "expires_in" : {
-                                            "type": "string",
-                                            "nullable": true,
-                                            "example": "2423235325"
-                                        },
-                                        "user": {
+                                        "data": {
                                             "type": "object",
                                             "properties": {
                                                 "id": {
                                                     "type": "integer",
                                                     "example": "1"
                                                 },
-                                                "login_id": {
+                                                "name": {
                                                     "type": "string",
-                                                    "example": "string"
-                                                },
-                                                "full_name": {
-                                                    "type": "string",
-                                                    "example": "Trần Nga"
-                                                },
-                                                "full_name_kana": {
-                                                    "type": "string",
-                                                    "example": "Tran Nga"
-                                                },
-                                                "role": {
-                                                    "type": "integer",
-                                                    "example": "1"
-                                                },
-                                                "shop": {
-                                                    "type": "integer",
-                                                    "example": "1"
-                                                },
-                                                "category": {
-                                                    "type": "integer",
-                                                    "example": "1"
-                                                },
-                                                "company": {
-                                                    "type": "integer",
-                                                    "example": "1"
+                                                    "nullable": false,
+                                                    "example": "test"
                                                 },
                                                 "email": {
                                                     "type": "string",
-                                                    "example": "admin@gmail.com"
+                                                    "nullable": false,
+                                                    "example": "test@gmail.com"
                                                 },
-                                                "type": {
+                                                "phone": {
+                                                    "type": "string",
+                                                    "nullable": false,
+                                                    "example": "0905648248"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "example": "Đà Năng,Quang Trung,Hải Châu"
+                                                },
+                                                "avatar": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "example": "/storage/uploads/avatar/1679890763-64387f11-1916-4aa4-98fe-dc828aec9d1f.jp"
+                                                },
+                                                "department": {
+                                                    "type": "string",
+                                                    "example": "DEV"
+                                                },
+                                                "gender": {
+                                                    "type": "boolean",
+                                                    "example": 0
+                                                },
+                                                "birthday": {
+                                                    "type": "string",
+                                                    "example": "28/03/2023"
+                                                },
+                                                "role_id": {
                                                     "type": "integer",
-                                                    "example": "1"
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "28/03/2023"
                                                 }
                                             }
                                         }

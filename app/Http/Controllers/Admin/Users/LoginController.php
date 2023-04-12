@@ -38,6 +38,12 @@ use App\Traits\Sortable;
  *     url="https://example.localhost",
  *     description="API server"
  * )
+*  @OA\Get(
+*     path="/redirect",
+*     summary="Redirect to new URL",
+*     tags={"Redirect"},
+*     @OA\Response(response="302", description="Found", @OA\Schema()))
+ * 
  * @OA\Tag(
  *     name="api",
  *     description="All API endpoints"
