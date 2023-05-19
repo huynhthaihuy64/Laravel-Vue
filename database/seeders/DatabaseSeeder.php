@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('user_roles')->insert([
-            ['name' => 'Supper Admin'],
-            ['name' => 'Admin'],
-            ['name' => 'Member']
+        $this->call([
+            // UserSeeder::class,
+            // MenuSeeder::class,
+            SliderSeeder::class,
+            // UserRoleSeeder::class,
         ]);
-        \App\Models\User::factory(1)->create();
     }
 }

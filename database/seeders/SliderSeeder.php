@@ -15,14 +15,11 @@ class SliderSeeder extends Seeder
      * @return void
      */
     public function run()
-    {   
-        $faker = Faker::create();
-        $path = '/slider/' . $faker->userName . '.jpg';
-        Storage::disk('public')->put('/uploads/' . $path, file_get_contents($faker->imageUrl(400, 400, 'people')));
+    {
         DB::table('sliders')->insert([
-            ['name' => 'Facebook','url'=> 'https://www.facebook.com/' ,'file' => $path, 'active' => 1],
-            ['name' => 'Instagram','url'=> 'https://www.instagram.com/' ,'file' => $path, 'active' => 1],
-            ['name' => 'Tik Tok','url'=> 'https://www.tiktok.com/en/' ,'file' => $path, 'active' => 1],
+            ['name' => 'Facebook','url'=> 'https://www.facebook.com/' ,'file' => '/storage/Slider/facebook.jpeg', 'active' => 1, 'sort_by' => 1],
+            ['name' => 'Instagram','url'=> 'https://www.instagram.com/' ,'file' => '/storage/Slider/Instagram.png', 'active' => 1, 'sort_by' => 2],
+            ['name' => 'Tik Tok','url'=> 'https://www.tiktok.com/en/' ,'file' => '/storage/Slider/download.png', 'active' => 1, 'sort_by' => 1],
         ]);
     }
 }
