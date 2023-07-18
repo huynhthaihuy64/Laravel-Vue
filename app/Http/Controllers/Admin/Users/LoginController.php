@@ -76,10 +76,10 @@ class LoginController extends ResponseController
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user();
             $success['access_token'] = $user->createToken('MyApp')->accessToken;
-            if ($user->role_id != 1) {
-                $admin = User::where('role_id', 1)->first();
-                $admin->notify(new SendNotification($user));
-            }
+            // if ($user->role_id != 1) {
+            //     $admin = User::where('role_id', 1)->first();
+            //     $admin->notify(new SendNotification($user));
+            // }
             return response()->json(
                 [
                     'success' => $success,

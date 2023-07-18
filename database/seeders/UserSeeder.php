@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserSeeder extends Seeder
@@ -25,7 +26,7 @@ class UserSeeder extends Seeder
             'name' => 'Huy Huỳnh',
             'gender' => 0,
             'avatar' => '/storage/uploads'. $path,
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Da Nang',
             'department' => 'DEV',
@@ -40,7 +41,7 @@ class UserSeeder extends Seeder
             'name' => 'Huỳnh Huy',
             'gender' => 0,
             'avatar' => '/storage/uploads'. $path,
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Sài Gòn',
             'department' => 'FE',
@@ -55,7 +56,7 @@ class UserSeeder extends Seeder
             'name' => 'Huỳnh Thái Huy',
             'gender' => 0,
             'avatar' => '/storage/uploads'. $path,
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Hà Nội',
             'department' => 'BE',

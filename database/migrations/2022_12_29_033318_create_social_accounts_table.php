@@ -20,6 +20,7 @@ class CreateSocialAccountsTable extends Migration
             $table->string('provider')->nullable();
             $table->string('provider_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

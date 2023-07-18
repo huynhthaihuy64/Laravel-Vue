@@ -18,6 +18,7 @@ class CreateShoppingcartTable extends Migration
             $table->nullableTimestamps();
 
             $table->primary(['identifier', 'instance']);
+            $table->softDeletes();
         });
     }
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\SendMailAllUserController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\CommentController;
@@ -50,6 +51,7 @@ Route::get('/callback/{social}', [SocialAuthController::class, 'callback']);
 Route::post('/admin/users/login/store', [LoginController::class, 'login']);
 Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll']);
     Route::get('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser']);
     Route::post('/admin/users/updateCurrentUser', [LoginController::class, 'updateCurrentUser']);
