@@ -16,6 +16,7 @@ class CreateMenuProductPivotTable extends Migration
         Schema::create('menu_product', function (Blueprint $table) {
             $table->bigInteger('menu_id');
             $table->bigInteger('product_id');
+            $table->softDeletes();
         });
     }
 

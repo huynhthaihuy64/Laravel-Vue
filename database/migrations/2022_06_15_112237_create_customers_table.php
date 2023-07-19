@@ -24,7 +24,7 @@ class CreateCustomersTable extends Migration
             $table->integer('total_tax');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
-            
+            $table->softDeletes();
         });
     }
 

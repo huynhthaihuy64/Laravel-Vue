@@ -21,7 +21,10 @@ class CreateProductsTable extends Migration
             $table->integer('price');
             $table->integer('price_sale');
             $table->integer('active');
+            $table->string('file')->nullable();
+            $table->json('images_quick_view')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

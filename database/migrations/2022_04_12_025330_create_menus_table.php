@@ -17,10 +17,12 @@ class CreateMenusTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('parent_id');
-            $table->text('description');
-            $table->longText('content');
+            $table->text('description')->nullable();
+            $table->longText('content')->nullable();
             $table->integer('active');//0 hoặc 1
+            $table->integer('sub_id')->default(0)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

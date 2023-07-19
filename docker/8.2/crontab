@@ -1,0 +1,3 @@
+* * * * * echo "Hello world" >> /var/log/cron.log 2>&1
+* * * * * /usr/bin/php /var/www/html/artisan app:send-mail-program-report-timeout
+* * * * * /usr/bin/php /var/www/html/artisan app:send-mail-program-report-timeout-to-admin
