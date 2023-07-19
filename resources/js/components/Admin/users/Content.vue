@@ -9,13 +9,44 @@
             {{ $store.getters.localizedStrings.user_management.add_user.title }}
           </a-button>
         </a-col>
-        <a-col :span="5"></a-col>
-        <a-col :span="5">
+        <a-col :span="2"></a-col>
+        <a-col :span="3">
+          <a-button class="button-type" @click="showModalSendMail()">
+            <font-awesome-icon :icon="['fas', 'mail-forward']" class="mr-2" />
+            Send Mail All
+          </a-button></a-col>
+        <a-modal title="Send All MAil" :visible="this.flagModelSendMail" @cancel="() => cancelModalSendMail()">
+          <template #footer>
+          <a-button class="btn-button-cancel" @click="cancelModalSendMail">Cancel</a-button>
+          <a-button key="submit" type="primary" class="btn-button primary" @click="sendMailAll">Send</a-button>
+        </template>
+          <a-form :form="form">
+            <a-form-item label="Subject">
+                <a-input v-decorator="[
+                  'subject',
+                  {
+                    initialValue: '',
+                    rules: [{ required: true, message: 'Please input your Subject!' }],
+                  },
+                ]" />
+            </a-form-item>
+            <a-form-item label="Content">
+              <textarea v-decorator="[
+              'content',
+              {
+                initialValue: '',
+                rules: [{ required: true, message: 'Please input your Content!' }],
+              },
+            ]" type="text" class="textarea"></textarea>
+            </a-form-item>
+        </a-form>
+        </a-modal>
+        <a-col :span="3">
           <a-button class="button-type" @click="exportUser">
             <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
             {{ $store.getters.localizedStrings.user_management.export_excel }}
           </a-button></a-col>
-        <a-col :span="2"></a-col>
+        <a-col :span="4"></a-col>
       </a-row>
       <table class="table">
         <thead>
@@ -270,6 +301,7 @@ export default {
       roles: {},
       flagModalAdd: false,
       flagModalEdit: false,
+      flagModelSendMail: false,
       flagModalConfirm: false,
       flagModalDelete: false,
       headers: {
@@ -392,6 +424,9 @@ export default {
     showAddUser() {
       this.flagModalAdd = true
     },
+    showModalSendMail() {
+      this.flagModelSendMail = true
+    },
     addUser(e) {
       e.preventDefault();
       this.form
@@ -417,6 +452,30 @@ export default {
           this.form.resetFields();
         })
     },
+    sendMailAll(e) {
+      e.preventDefault();
+      this.form
+        .validateFields((err, values) => {
+          if (err) return;
+          const formData = new FormData();
+          formData.append("subject", values.subject);
+          formData.append("content", values.content);
+          this.fileList.forEach((item, index) => {
+            formData.append("avatar", item);
+          });
+          httpRequest.post('/api/sendMailAll', formData).then((response) => {
+            console.log(response);
+            this.info = response
+            this.flagModelSendMail = false
+            this.getResuilt(this.row, this.page)
+            Toast.fire({
+              icon: 'success',
+              title: 'Send Mail Success'
+            });
+          })
+          this.form.resetFields();
+        })
+    },
     showModalDelete(id) {
       this.delete_id = id
       this.flagModalDelete = true
@@ -431,6 +490,9 @@ export default {
     cancelModalEdit(e) {
       this.form.resetFields()
       this.flagModalEdit = false
+    },
+    cancelModalSendMail() {
+      this.flagModelSendMail = false
     },
     cancelModalConfirm() {
       this.flagModalConfirm = false

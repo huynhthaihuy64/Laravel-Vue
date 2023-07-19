@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Users;
 
+use App\Classes\Response;
+use App\Enum\HTTPStatus;
 use App\Http\Controllers\ResponseController;
 use App\Http\Requests\Users\LoginRequest;
 use App\Http\Requests\Users\RegisterRequest;
@@ -10,6 +12,7 @@ use App\Http\Services\UploadService;
 use App\Http\Services\User\UserService;
 use App\Models\User;
 use App\Notifications\SendNotification;
+use App\Http\Services\Auth\AuthService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +27,7 @@ use Tymon\JWTAuth\JWTManager as JWT;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\Traits\Sortable;
+use Illuminate\Auth\AuthenticationException;
 
 /**
  * An entity controller class.
@@ -53,14 +57,16 @@ class LoginController extends ResponseController
 {
     protected $uploadService;
     protected $userService;
+    protected $authService;
 
     public $successStatus = 200;
 
     use Sortable;
-    public function __construct(UploadService $uploadService, UserService $userService)
+    public function __construct(UploadService $uploadService, UserService $userService, AuthService $authService)
     {
         $this->uploadService = $uploadService;
         $this->userService = $userService;
+        $this->authService = $authService;
     }
 
     public function checkAuth()
@@ -71,24 +77,14 @@ class LoginController extends ResponseController
 
     public function login(LoginRequest $request)
     {
-        $email = $request->email;
-        $password = $request->password;
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            $user = Auth::user();
-            $success['access_token'] = $user->createToken('MyApp')->accessToken;
-            // if ($user->role_id != 1) {
-            //     $admin = User::where('role_id', 1)->first();
-            //     $admin->notify(new SendNotification($user));
-            // }
-            return response()->json(
-                [
-                    'success' => $success,
-                    'user' => $user,
-                ],
-                $this->successStatus
-            );
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        try {
+            $remember = $request->input('remember');
+            $data = $this->authService->login($request->only('email', 'password'),$remember);
+            $response = Response::success($data, 'Login Success');
+            return $response->withCookie(cookie(env('AUTH_COOKIE_NAME','login'), $data['access_token'], env('COOKIE_LIFETIME',60*24*7)));
+        } catch (\Exception $ex) {
+            $code = $ex->getCode() ? $ex->getCode() : HTTPStatus::NOT_FOUND->value;
+            return Response::error($ex->getMessage(),$code);
         }
     }
 
@@ -102,11 +98,8 @@ class LoginController extends ResponseController
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
-        $success['access_token'] = $user->createToken('MyApp')->accessToken;
-        $success['name'] = $user->name;
         return response()->json(
             [
-                'success' => $success,
                 'user' => $user,
             ],
             $this->successStatus
@@ -121,17 +114,11 @@ class LoginController extends ResponseController
      */
     public function logout()
     {
-        try {
-            $user = Auth::user();
-            $user->token()->revoke();
-            $response = [
-                'success' => true,
-                'message' => 'Logout Successfully',
-            ];
-            return $response;
-        } catch (\Exception $ex) {
-            return $ex->getMessage();
+        $authenticate = $this->authService->logout();
+        if (!$authenticate) {
+            throw new AuthenticationException(__('auth.logout.error'));
         }
+        return response()->json(['message' => 'Logout Success']);
     }
 
 
@@ -309,50 +296,5 @@ class LoginController extends ResponseController
             'created_at' => Carbon::parse($user->created_at)->format('Y/m/d'),
         ];
         return $listUsers;
-    }
-
-    public function createUser(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-            'name' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(self::validationError($validator));
-        }
-        $avatar = $this->uploadService->uploadFile($request['avatar'], 'avatar');
-        $avatar_path = $avatar['file_path'];
-        $user = [
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'avatar' => $avatar_path
-        ];
-
-        $user = User::create($user);
-        $token = JWTAuth::fromUser($user);
-
-
-        return response()->json(compact('user', 'token'), 201);
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function createNewToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user' => auth('api')->user()
-        ]);
     }
 }

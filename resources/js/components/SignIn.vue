@@ -49,6 +49,13 @@
                 :disabled="hasErrors(form.getFieldsError())">
                 {{ $store.getters.localizedStrings.login }}
             </a-button>
+            <a-form-item class="form-item">
+                <a-checkbox v-decorator="[
+                    'remember',
+                ]" class="login-checkbox">
+                    Remember Me
+                </a-checkbox>
+            </a-form-item>
             <div class="social text-align-end">
                 <a><b><router-link to="/forgot">Forgot Password</router-link></b></a>
             </div>
@@ -72,6 +79,7 @@ export default {
             formData: {
                 email: '',
                 password: '',
+                remember: false,
             },
             errorMessage: '',
             hasErrors,
@@ -87,20 +95,21 @@ export default {
                 if (!error) {
                     this.formData = { ...values }
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
-                        if (response.data.user) {
-                            setUserInfo(JSON.stringify(response.data.user))
-                            setAccessToken(response.data.success.access_token)
+                        console.log(response);
+                        if (response.data.data.user) {
+                            setUserInfo(JSON.stringify(response.data.data.user))
+                            setAccessToken(response.data.data.access_token)
                             Toast.fire({
                                 icon: 'success',
                                 title: '' + this.$store.getters.localizedStrings.login_success
                             });
                             this.$router.push({ name: 'Home' })
                             window.axios.defaults.headers.common['Authorization'] =
-                                'Bearer ' + response.data.success.access_token
+                                'Bearer ' + response.data.data.access_token
                         } else {
                             Toast.fire({
                                 icon: 'error',
-                                title: response.data.message
+                                title: response.data.data.message
                             });
                         }
                     }).catch(function (error) {

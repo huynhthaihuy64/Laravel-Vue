@@ -31,8 +31,8 @@ class SendMailAllRequest extends FormRequest
     public function messages()
     {
         return [
-            'subject.required' => __('messages.sendMail.form.subject.required'),
-            'content.required' => __('messages.sendMail.form.content.required'),
+            'subject.required' => "Subject is required",
+            'content.required' => 'Content is required',
         ];
     }
 }
