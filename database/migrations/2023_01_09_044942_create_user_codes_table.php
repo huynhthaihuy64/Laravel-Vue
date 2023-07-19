@@ -18,6 +18,7 @@ class CreateUserCodesTable extends Migration
             $table->integer('user_id');
             $table->string('code');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

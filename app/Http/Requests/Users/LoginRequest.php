@@ -25,7 +25,7 @@ class LoginRequest extends FormRequest
     {
         return [
             //
-            'email' => 'required|exists:users',
+            'email' => 'required',
             'password' => 'required',
         ];
     }
@@ -33,7 +33,6 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'Please enter your email',
-            'email.exists' => 'Email is not exist',
             'password.required' => 'Please enter your password',
             'password.regiex' => 'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
         ];

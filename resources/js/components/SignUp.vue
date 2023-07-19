@@ -79,7 +79,7 @@
         <a class="go" href="/api/redirect/google" target="_blank"><font-awesome-icon :icon="['fab', 'google']"
             class="mr-1" />Google
         </a>
-        <div class="fb"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</div>
+        <a class="fb" href="/api/auth/facebook"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a>
       </div>
     </a-form>
   </div>

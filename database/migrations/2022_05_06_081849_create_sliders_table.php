@@ -21,6 +21,7 @@ class CreateSlidersTable extends Migration
             $table->integer('sort_by');
             $table->integer('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
