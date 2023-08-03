@@ -4,6 +4,7 @@ namespace App\Http\Services\Menu;
 
 use App\Models\Menu;
 use App\Traits\Sortable;
+use Illuminate\Support\Facades\DB;
 
 class MenuService
 {
@@ -26,6 +27,7 @@ class MenuService
     public function create($data)
     {
         try {
+            DB::beginTransaction();
             $menu = Menu::create([
                 'name' => $data['name'],
                 'parent_id' => $data['parent_id'],
@@ -34,11 +36,11 @@ class MenuService
                 'sub_id' => $data['sub_id'] ?? 0,
                 'active' => $data['active'],
             ]);
-
+            DB::commit();
             return $menu;
         } catch (\Exception $err) {
-            session()->flash('error', $err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 

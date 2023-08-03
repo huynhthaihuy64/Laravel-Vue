@@ -17,37 +17,38 @@
                 <div class="col-md-6 col-lg-7 p-b-30">
                     <div class="p-l-25 p-r-30 p-lr-0-lg">
                         <div class="wrap-slick3 flex-sb flex-w">
-                            <div class="wrap-slick3-dots">
-                                <ul class="slick3-dots" style="" role="tablist">
-                                    <li class="slick-active" role="presentation">
-                                        <img :src="initialValue.edit_img" class="image-contain">
-                                        <div class="slick3-dot-overlay"></div>
-                                    </li>
-                                </ul>
-                            </div>
+                            <a-tabs v-model="activeKey" tab-position="left" :style="{ height: '600px' }">
+                                <a-tab-pane v-for="(item, index) in initialValue.images" :key="item.id">
+                                    <template slot="tab">
+                                        <img :src="item.url" :alt="'Tab ' + (index + 1)" />
+                                    </template>
+                                    <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane active"
+                                        id="pic-1">
+                                        <div class="slick-list draggable">
+                                            <div class="slick-track" style="opacity: 1; width: 200px;">
+                                                <div class="slick-track" style="opacity: 1; width: 200px;">
+                                                <div class="item-slick3 slick-slide slick-current slick-active"
+                                                    data-thumb="images/product-detail-01.jpg" data-slick-index="0"
+                                                    aria-hidden="false"
+                                                    style="width: 200px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
+                                                    tabindex="0" role="tabpanel" id="slick-slide10"
+                                                    aria-describedby="slick-slide-control10">
+                                                    <div class="wrap-pic-w pos-relative">
+                                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHZAq08u4YaR0Jsu2CgeptdxC74y-9QEeFYEAb6YHP&s"
+                                                            class="image-contain" alt="IMG-PRODUCT" height="300px">
 
-                            <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted">
-                                <div class="slick-list draggable">
-                                    <div class="slick-track" style="opacity: 1; width: 1539px;">
-                                        <div class="item-slick3 slick-slide slick-current slick-active"
-                                            data-thumb="images/product-detail-01.jpg" data-slick-index="0"
-                                            aria-hidden="false"
-                                            style="width: 513px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
-                                            tabindex="0" role="tabpanel" id="slick-slide10"
-                                            aria-describedby="slick-slide-control10">
-                                            <div class="wrap-pic-w pos-relative">
-                                                <img :src="initialValue.edit_img" class="image-contain" alt="IMG-PRODUCT"
-                                                    height="300px">
-
-                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                    :href="initialValue.edit_img" tabindex="0">
-                                                    <i class="fa fa-expand"></i>
-                                                </a>
+                                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                                                            :href="initialValue.edit_img" tabindex="0">
+                                                            <i class="fa fa-expand"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </a-tab-pane>
+                            </a-tabs>
                         </div>
                     </div>
                 </div>
@@ -75,10 +76,10 @@
                                                 <a-form-item class="form-item">
                                                     <a-input v-decorator="['product_id', {
                                                         initialValue: initialValue.edit_id,
-                                                    }]" type="hidden"/>
+                                                    }]" type="hidden" />
                                                 </a-form-item>
                                                 <a-form-item name="input-number" no-style>
-                                                    <a-input-number v-decorator="['qty',{
+                                                    <a-input-number v-decorator="['qty', {
                                                         initialValue: 1,
                                                     }]" :min="1" :max="100" />
                                                 </a-form-item>
@@ -226,7 +227,8 @@
                                             style="margin-left:40px;">
                                             <div v-if="item.parent_id == 0">
                                                 <div class="col-12">
-                                                    <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
+                                                    <img :src="item.user.avatar" height="50px" width="50px"
+                                                        class="image-contain">
                                                     <strong class="ml-2">
                                                         {{ item.user.name }}:
                                                     </strong>
@@ -258,7 +260,8 @@
                                                         style="margin-left:40px;">
                                                         <div v-if="item.parent_id != 0">
                                                             <div class="col-12">
-                                                                <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
+                                                                <img :src="item.user.avatar" height="50px" width="50px"
+                                                                    class="image-contain">
                                                                 <strong class="ml-2">
                                                                     {{ item.user.name }}:
                                                                 </strong>
@@ -363,6 +366,7 @@
 </template>
 <script>
 import httpRequest from '../axios'
+import { ref } from 'vue';
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -374,6 +378,7 @@ export default {
     },
     data() {
         return {
+            activeKey: ref('1'),
             products: {},
             comments: {},
             CountData: 10,
@@ -394,6 +399,7 @@ export default {
                 edit_price_sale: 30,
                 edit_img: [],
                 menus: [],
+                images: [],
                 menuName: '',
                 edit_active: 1,
                 edit_id: 1,
@@ -423,6 +429,13 @@ export default {
                             this.initialValue.menus = data.data.menus.map((item) => {
                                 return {
                                     id: item.id,
+                                };
+                            }),
+                            this.initialValue.images = data.data.images.map((item) => {
+                                return {
+                                    id: item.id,
+                                    name: item.name,
+                                    url: item.url
                                 };
                             })
                         )
@@ -606,7 +619,4 @@ export default {
 .slider {
     display: block;
     justify-content: center;
-}
-
-
-</style>
+}</style>

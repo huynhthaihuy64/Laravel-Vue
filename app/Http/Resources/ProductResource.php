@@ -33,6 +33,7 @@ class ProductResource extends JsonResource
             'menuName' => $menuName,
             'content' => $this->content,
             'comments' => $this->comments()->get(),
+            'images' => $this->images,
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y'),
           ];
     }

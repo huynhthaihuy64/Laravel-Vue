@@ -7,6 +7,7 @@ use App\Models\Slider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
+use Illuminate\Support\Facades\DB;
 
 class SliderService
 {
@@ -22,6 +23,7 @@ class SliderService
         $file = $this->uploadService->uploadFile($data['file'], 'slider');
         $data['file'] = $file['file_path'];
         try {
+            DB::beginTransaction();
             $slider = Slider::create([
                 'name' => $data['name'],
                 'file' => $data['file'],
@@ -29,14 +31,16 @@ class SliderService
                 'sort_by' => 1,
                 'active' => $data['active'],
             ]);
+            DB::commit();
             return $slider;
         } catch (\Exception $err) {
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
-    public function get($data,$paginate)
+    public function get($data, $paginate)
     {
         return Slider::sort($data)->paginate($paginate);
     }
@@ -46,6 +50,7 @@ class SliderService
         $file = $this->uploadService->uploadFile($data['file'], 'slider');
         $data['file'] = $file['file_path'];
         try {
+            DB::beginTransaction();
             $slider = Slider::find($id);
             $slider->update([
                 'name' => $data['name'],
@@ -54,10 +59,12 @@ class SliderService
                 'sort_by' => 1,
                 'active' => $data['active'],
             ]);
+            DB::commit();
             return $slider;
         } catch (\Exception $err) {
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
@@ -65,10 +72,17 @@ class SliderService
     {
         $slider = Slider::find($id);
         if ($slider) {
-            $path = str_replace('storage', 'public', $slider->file);
-            Storage::delete($path);
-            $slider->delete();
-            return true;
+            try {
+                DB::beginTransaction();
+                $path = str_replace('storage', 'public', $slider->file);
+                Storage::delete($path);
+                $slider->delete();
+                DB::commit();
+                return true;
+            } catch (\Exception $err) {
+                DB::rollback();
+                return $err->getMessage();
+            }
         }
         return false;
     }

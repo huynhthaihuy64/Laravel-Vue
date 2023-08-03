@@ -52,7 +52,7 @@ Route::post('/admin/users/login/store', [LoginController::class, 'login']);
 Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll']);
-    Route::get('/admin/users/logout', [LoginController::class, 'logout']);
+    Route::post('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser']);
     Route::post('/admin/users/updateCurrentUser', [LoginController::class, 'updateCurrentUser']);
     Route::get('/admin/users/role', [UserRoleController::class, 'index']);

@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

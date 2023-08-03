@@ -70,6 +70,15 @@ class AuthService
      */
     public function createUserToken($user)
     {
+        // Nếu dùng Sanctum:
+        // if($remember == true) {
+        //     $duration = Carbon::now()->addMinutes(config('sanctum.rm_expiration'));
+        // } else {
+        //     $duration = Carbon::now()->addMinutes(config('sanctum.expiration'));
+        // }
+        // $token = $user->createToken($user->email,['*'],$duration);
+        // $tokenResult['access_token'] = $token->plainTextToken;
+        // $tokenResult['expires_at'] = $token->accessToken->expires_at;
         $oldTokens = $user->token();
         if ($oldTokens !== null) {
             $oldTokens->revoke();
@@ -86,6 +95,14 @@ class AuthService
      */
     public function logout(): bool
     {
+        // Nếu dung sanctum:
+        // try {
+        //     $user = auth()->user();
+        //     $user->currentAccessToken()->delete();
+        //     return true;
+        // } catch (\Exception $e) {
+        //     throw $e;
+        // }
         try {
             $user = Auth::user();
             $user->token()->revoke();

@@ -35,7 +35,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content');
+        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content','images');
         $product = $this->productService->insert($data);
         return $product;
     }

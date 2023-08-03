@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use App\Http\Services\Slider\SliderService;
 use App\Http\Services\Menu\MenuService;
 use App\Http\Services\Product\ProductService;
-use App\Imports\CustomerImport;
 use App\Imports\MenuImport;
 use App\Mail\MailContact;
 use App\Models\Customer;
@@ -19,6 +18,7 @@ use App\Models\Menu;
 use App\Models\Product;
 use App\Models\Slider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -62,23 +62,23 @@ class MainController extends Controller
         switch ($option) {
             case 1:
                 $product = Product::all()->toArray();
-                return Excel::download(new ProductExport($product), 'products.csv');
+                return Excel::download(new ProductExport($product), 'products' . Carbon::now()->format('Y-m-d') .'.csv');
                 break;
             case 2:
                 $slider = Slider::all()->toArray();
-                return Excel::download(new SliderExport($slider), 'slider.csv');
+                return Excel::download(new SliderExport($slider), 'slider'. Carbon::now()->format('Y-m-d') . '.csv');
                 break;
             case 3:
                 $menu = Menu::all()->toArray();
-                return Excel::download(new MenuExport($menu), 'menu.csv');
+                return Excel::download(new MenuExport($menu), 'menu'. Carbon::now()->format('Y-m-d') . '.csv');
                 break;
             case 4:
                 $user = User::all()->toArray();
-                return Excel::download(new UserExport($user), 'user.csv');
+                return Excel::download(new UserExport($user), 'user' . Carbon::now()->format('Y-m-d') . '.csv');
                 break;
             case 5:
                 $customer = Customer::all()->toArray();
-                return Excel::download(new CustomerExport($customer), 'customer.csv');
+                return Excel::download(new CustomerExport($customer), 'customer'. Carbon::now()->format('Y-m-d') . '.csv');
                 break;
         }
     }
@@ -92,14 +92,14 @@ class MainController extends Controller
 
         $file = $request->file('file');
         switch ($request->type) {
-            case 1:
-                $product = Product::all()->toArray();
-                return Excel::download(new ProductExport($product), 'products.csv');
-                break;
-            case 2:
-                $slider = Slider::all()->toArray();
-                return Excel::download(new SliderExport($slider), 'slider.csv');
-                break;
+            // case 1:
+            //     $product = Product::all()->toArray();
+            //     return Excel::download(new ProductExport($product), 'products.csv');
+            //     break;
+            // case 2:
+            //     $slider = Slider::all()->toArray();
+            //     return Excel::download(new SliderExport($slider), 'slider.csv');
+            //     break;
             // case 3:
             //     try {
             //         Excel::import(new CustomerImport, $file);
@@ -118,10 +118,10 @@ class MainController extends Controller
                     return response()->json(($ex->getMessage()), 400);
                 }
                 break;
-            case 5:
-                $user = User::all()->toArray();
-                return Excel::download(new UserExport($user), 'user.csv');
-                break;
+            // case 5:
+            //     $user = User::all()->toArray();
+            //     return Excel::download(new UserExport($user), 'user.csv');
+            //     break;
         }
     }
 }

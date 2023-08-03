@@ -4,12 +4,14 @@
 namespace App\Http\Services\Product;
 
 use App\Http\Services\UploadService;
+use App\Models\Image;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Log;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
+use Illuminate\Support\Facades\DB;
 
 class ProductAdminService
 {
@@ -48,6 +50,7 @@ class ProductAdminService
         $request['file'] = $file['file_path'];
         if ($isValidPrice === false) return false;
         try {
+            DB::beginTransaction();
             $product = Product::create([
                 'name' => $request['name'],
                 'price' => $request['price'],
@@ -57,32 +60,50 @@ class ProductAdminService
                 'file' => $request['file'],
                 'active' => $request['active'],
             ]);
+            if (isset($request['images']) && !empty($request['images'])) {
+                $uploadFiles = [];
+                foreach ($request['images'] as $file) {
+                    $uploadFiles[] = $this->uploadService->uploadFile($file, 'album/' . $product->id);
+                }
+                if (!$uploadFiles || empty($uploadFiles)) {
+                    throw new \Exception('Upload File failed');
+                }
+                foreach ($uploadFiles as $file) {
+                    $product->images()->save(new Image([
+                        "name" => $file['file_name'],
+                        "url" => $file['file_path']
+                    ]));
+                }
+            }
             $product->menus()->sync($request['menu_id']);
+            DB::commit();
             return $product;
         } catch (\Exception $err) {
-            Session::flash('error', 'Add Product Failed');
             Log::info($err->getMessage());
-            return  $err;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
-    public function get($data,$paginate)
+    public function get($data, $paginate)
     {
         return Product::sort($data)->with('menus')->paginate($paginate);
     }
 
-    public function getRelativeProduct($paginate,array $ids) {
-        return Product::with('menus')->whereHas('menus', function($q) use($ids) {
+    public function getRelativeProduct($paginate, array $ids)
+    {
+        return Product::with('menus')->whereHas('menus', function ($q) use ($ids) {
             $q->whereIn('id', $ids);
         })->orderByDesc('id')->paginate($paginate);
     }
 
     public function show($id)
     {
-        return Product::with('menus','comments')->find($id);
+        return Product::with('menus', 'comments', 'images')->find($id);
     }
 
-    public function getProductMenu($request, $paginate) {
+    public function getProductMenu($request, $paginate)
+    {
         $menu = Menu::find($request['menu_id']);
         $products = $menu->products()->paginate($paginate);
         return $products;
@@ -96,6 +117,7 @@ class ProductAdminService
         $request['file'] = $file['file_path'];
         if ($isValidPrice === false) return false;
         try {
+            DB::beginTransaction();
             $product->update([
                 'name' => $request['name'],
                 'price' => $request['price'],
@@ -114,25 +136,33 @@ class ProductAdminService
             //         $product->menus()->attach($menu);
             //     }
             // }
+            DB::commit();
             return $product;
         } catch (\Exception $err) {
-            Session::flash('error', 'Update Product Failed');
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
-        return true;
     }
 
     public function delete($id)
     {
         $product = Product::find($id);
         if ($product) {
-            $path = str_replace('storage', 'public', $product->file);
-            Storage::delete($path);
-            $product->delete();
-            return true;
+            DB::beginTransaction();
+            try {
+                $path = str_replace('storage', 'public', $product->file);
+                Storage::delete($path);
+                $product->delete();
+                DB::commit();
+                return true;
+            } catch (\Exception $err) {
+                Log::info($err->getMessage());
+                DB::rollback();
+                return false;
+            }
         }
-
+        DB::rollback();
         return false;
     }
 }

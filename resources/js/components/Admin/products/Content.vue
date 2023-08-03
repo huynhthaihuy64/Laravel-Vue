@@ -172,6 +172,15 @@
                 </a-select>
               </a-form-item>
             </a-col>
+            <a-col :span="12">
+              <a-form-item label="Album Product">
+              <a-upload v-decorator="['images']" name="images" :multiple="true"
+                :default-file-list="initialValue.fileList" :headers="headers"
+                action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
+                <a-button> <a-icon type="upload" />Choose Your Album</a-button>
+              </a-upload>
+            </a-form-item>
+            </a-col>
           </a-row>
         </a-form>
       </a-modal>
@@ -479,6 +488,16 @@ export default {
           this.fileList.forEach((item, index) => {
             formData.append("file", item);
           });
+          console.log(values)
+          if (values.images) {
+            console.log(values.images)
+            const listFileUpload = values.images.fileList.filter(
+              (e) => e.originFileObj
+            );
+            listFileUpload.forEach((item, index) => {
+              formData.append('images[]', item.originFileObj);
+            });
+          }
           httpRequest.post('/api/products/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
