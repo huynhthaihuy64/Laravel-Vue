@@ -63,7 +63,6 @@ export default {
         getCart() {
             httpRequest.get('/api/carts')
                 .then(response => {
-                    console.log('Res', response)
                     this.carts = response.data.data;
                     this.totalPrice = response.data.total;
                     this.tax = response.data.tax;
@@ -111,7 +110,6 @@ export default {
         }
     },
     mounted() {
-        console.log('Component mounted.')
         this.getCart();
     },
     created() {

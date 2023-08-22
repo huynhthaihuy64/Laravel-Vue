@@ -35,7 +35,8 @@
           <tr v-for="(item, index) in products" :key="item.id">
             <th scope="row">{{ index + 1 }}</th>
             <td>{{ item.name }}</td>
-            <td>{{ item.description | truncate(30, '...') }}</td>
+            <td>{{ item.description !== null ? item.description.length > 30 ? item.description.slice(0, 30) + '...' :
+              item.description : '' }}</td>
             <td>{{ item.menuName }}</td>
             <td>{{ item.price | formatNumber }}</td>
             <td>{{ item.price_sale | formatNumber }}</td>
@@ -174,12 +175,12 @@
             </a-col>
             <a-col :span="12">
               <a-form-item label="Album Product">
-              <a-upload v-decorator="['images']" name="images" :multiple="true"
-                :default-file-list="initialValue.fileList" :headers="headers"
-                action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
-                <a-button> <a-icon type="upload" />Choose Your Album</a-button>
-              </a-upload>
-            </a-form-item>
+                <a-upload v-decorator="['images']" name="images" :multiple="true"
+                  :default-file-list="initialValue.fileList" :headers="headers"
+                  action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
+                  <a-button> <a-icon type="upload" />Choose Your Album</a-button>
+                </a-upload>
+              </a-form-item>
             </a-col>
           </a-row>
         </a-form>
@@ -372,9 +373,9 @@ export default {
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
     getResuilt(row, page, name = '', sorter = 'desc') {
@@ -401,7 +402,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResuilt(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -488,9 +489,7 @@ export default {
           this.fileList.forEach((item, index) => {
             formData.append("file", item);
           });
-          console.log(values)
           if (values.images) {
-            console.log(values.images)
             const listFileUpload = values.images.fileList.filter(
               (e) => e.originFileObj
             );
@@ -563,18 +562,18 @@ export default {
         .then((response) => {
           this.initialValue.edit_name = response.data.data.name;
           this.initialValue.edit_description = response.data.data.description,
-          this.initialValue.edit_price = response.data.data.price,
-          this.initialValue.edit_price_sale = response.data.data.price_sale,
-          this.content = response.data.data.content,
-          this.initialValue.edit_file = response.data.data.file,
-          this.initialValue.edit_active = response.data.data.active
+            this.initialValue.edit_price = response.data.data.price,
+            this.initialValue.edit_price_sale = response.data.data.price_sale,
+            this.content = response.data.data.content,
+            this.initialValue.edit_file = response.data.data.file,
+            this.initialValue.edit_active = response.data.data.active
           this.initialValue.edit_id = response.data.data.id
           this.initialValue.menus = response.data.data.menus.map((item) => {
-          return {
-            key: item.id,
-            label: item.name
-          };
-        });
+            return {
+              key: item.id,
+              label: item.name
+            };
+          });
         })
     },
     editProduct(e) {
@@ -627,29 +626,28 @@ export default {
       this.form.resetFields()
     },
     exportProduct() {
-            httpRequest.get('/api/export/1', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'product.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Export Success'
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
-        }
+      httpRequest.get('/api/export/1', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'product.csv');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: 'Export Success'
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    }
   },
   mounted() {
-    console.log('Component mounted.')
     this.getResuilt(this.row, this.page)
     this.getMenu()
   },
@@ -657,11 +655,6 @@ export default {
     this.$Progress.start()
     this.getResuilt(this.row, this.page)
     this.$Progress.finish()
-  },
-  filters: {
-    truncate: function (text, length, suffix) {
-      return text.substring(0, length) + suffix;
-    },
   },
 }
 </script>
@@ -812,6 +805,7 @@ td {
 .sortType:hover {
   background-color: yellow;
 }
+
 .category-value {
   display: flex;
   margin-bottom: 10px;
@@ -860,7 +854,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);

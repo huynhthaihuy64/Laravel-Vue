@@ -274,9 +274,9 @@ export default {
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
     getResuilt(row, page, name = '', sorter = 'desc') {
@@ -294,7 +294,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResuilt(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -468,29 +468,28 @@ export default {
       this.form.resetFields()
     },
     exportSlider() {
-            httpRequest.get('/api/export/2', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'slider.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Export Success'
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
-        }
+      httpRequest.get('/api/export/2', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'slider.csv');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: 'Export Success'
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    }
   },
   mounted() {
-    console.log('Component mounted.')
     this.getResuilt(this.row, this.page)
   },
   created() {
@@ -692,7 +691,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);

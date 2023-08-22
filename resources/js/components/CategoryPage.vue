@@ -121,7 +121,6 @@ export default {
 					.get('/api/menus/edit/' + this.$route.params.id)
 					.then(
 						({ data }) => (
-							console.log(data),
 							this.initialValue.edit_name = data.name,
 							this.initialValue.edit_parent_id = data.parent_id,
 							this.initialValue.edit_description = data.description,
@@ -194,7 +193,6 @@ export default {
 		},
 	},
 	mounted() {
-		console.log('Component mounted.')
 		this.getMenu()
 		this.getProductMenu()
 	},

@@ -46,7 +46,8 @@
                         <td>{{ item.name }}</td>
                         <td v-if="item.parent_id == 0"><span class="btn btn-warning btn-xs w-75">Main</span></td>
                         <td v-if="item.parent_id == 1"><span class="btn btn-info btn-xs w-75">Sub</span></td>
-                        <td>{{ item.description | truncate(30, '...') }}</td>
+                        <td>{{ item.description !== null ? item.description.length > 30 ? item.description.slice(0, 30) +
+                            '...' : item.description : '' }}</td>
                         <td v-if="item.active == 0"><span class="btn btn-danger btn-xs w-75">InActive</span></td>
                         <td v-if="item.active == 1"><span class="btn btn-success btn-xs w-75">Active</span></td>
                         <td>{{ item.created_at }}</td>
@@ -561,18 +562,12 @@ export default {
         }
     },
     mounted() {
-        console.log('Component mounted.')
         this.getResuilt(this.row, this.page)
     },
     created() {
         this.$Progress.start()
         this.getResuilt(this.row, this.page)
         this.$Progress.finish()
-    },
-    filters: {
-        truncate: function (text, length, suffix) {
-            return text.substring(0, length) + suffix;
-        },
     },
 }
 </script>
@@ -763,7 +758,7 @@ td {
 
 .category-content {
     min-height: calc(100vh - 96px);
-    margin-left: calc(20% + 26px);
+    margin-left: calc(20% + 10px);
     padding: 20px 24px;
     border-radius: 5px;
     box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
@@ -789,8 +784,9 @@ td {
 }
 
 .sortType:hover {
-  background-color: yellow;
+    background-color: yellow;
 }
+
 .content-body {
     width: 100%;
 }

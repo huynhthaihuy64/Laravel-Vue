@@ -197,7 +197,6 @@ export default {
     },
   },
   mounted() {
-    console.log('Component mounted.')
     this.getUser()
     this.getMenu()
   },

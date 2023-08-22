@@ -87,6 +87,10 @@ class User extends Authenticatable
     {
     return $this->hasMany(Message::class);
     }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 
     /* 
         Notify Email

@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         Storage::disk('public')->put('/uploads/' . $path, file_get_contents($faker->imageUrl(400, 400, 'people')));
         User::create([
             'role_id' => '1',
-            'email' => 'huynhthaihu64@gmail.com',
+            'email' => 'huynhthaihuy64@gmail.com',
             'name' => 'Huy Huỳnh',
             'gender' => 0,
             'avatar' => '/storage/uploads'. $path,

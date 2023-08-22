@@ -17,38 +17,63 @@
                 <div class="col-md-6 col-lg-7 p-b-30">
                     <div class="p-l-25 p-r-30 p-lr-0-lg">
                         <div class="wrap-slick3 flex-sb flex-w">
-                            <a-tabs v-model="activeKey" tab-position="left" :style="{ height: '600px' }">
+                            <a-tabs v-if="initialValue.images.length > 0" tab-position="left" :style="{ height: '600px' }"
+                                class="w-100">
                                 <a-tab-pane v-for="(item, index) in initialValue.images" :key="item.id">
                                     <template slot="tab">
-                                        <img :src="item.url" :alt="'Tab ' + (index + 1)" />
+                                        <img :class="{ 'active': index === 0 }" :src="item.url" :alt="'Tab ' + (index + 1)"
+                                            style="width: 200px" />
                                     </template>
-                                    <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane active"
-                                        id="pic-1">
+                                    <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane"
+                                        :class="{ 'active show': index === 0 }">
                                         <div class="slick-list draggable">
-                                            <div class="slick-track" style="opacity: 1; width: 200px;">
-                                                <div class="slick-track" style="opacity: 1; width: 200px;">
-                                                <div class="item-slick3 slick-slide slick-current slick-active"
-                                                    data-thumb="images/product-detail-01.jpg" data-slick-index="0"
-                                                    aria-hidden="false"
-                                                    style="width: 200px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
-                                                    tabindex="0" role="tabpanel" id="slick-slide10"
-                                                    aria-describedby="slick-slide-control10">
-                                                    <div class="wrap-pic-w pos-relative">
-                                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHZAq08u4YaR0Jsu2CgeptdxC74y-9QEeFYEAb6YHP&s"
-                                                            class="image-contain" alt="IMG-PRODUCT" height="300px">
-
-                                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                            :href="initialValue.edit_img" tabindex="0">
+                                            <div class="slick-track" style="opacity: 1; width: 400px;">
+                                                <div class="slick-track" style="opacity: 1; width: 400px;">
+                                                    <div class="item-slick3 slick-slide slick-current slick-active"
+                                                        data-slick-index="0" aria-hidden="false"
+                                                        style="width: 400px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
+                                                        tabindex="0" role="tabpanel" id="slick-slide10"
+                                                        aria-describedby="slick-slide-control10">
+                                                        <div class="wrap-pic-w pos-relative w-100">
+                                                            <img :src="item.url" class="image-contain" alt="IMG-PRODUCT"
+                                                                height="400px">
+                                                        </div>
+                                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 ml-5"
+                                                            :href="item.url" tabindex="0">
                                                             <i class="fa fa-expand"></i>
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </a-tab-pane>
                             </a-tabs>
+                            <div v-if="initialValue.images.length === 0"
+                                class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane"
+                                :class="{ 'active show': index === 0 }" id="pic-1">
+                                <div class="slick-list draggable">
+                                    <div class="slick-track" style="opacity: 1; width: 400px;">
+                                        <div class="slick-track" style="opacity: 1; width: 400px;">
+                                            <div class="item-slick3 slick-slide slick-current slick-active"
+                                                data-thumb="images/product-detail-01.jpg" data-slick-index="0"
+                                                aria-hidden="false"
+                                                style="width: 400px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
+                                                tabindex="0" role="tabpanel" id="slick-slide10"
+                                                aria-describedby="slick-slide-control10">
+                                                <div class="wrap-pic-w pos-relative w-100">
+                                                    <img :src="initialValue.edit_img" class="image-contain"
+                                                        alt="IMG-PRODUCT" height="400px">
+                                                </div>
+                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 ml-5"
+                                                    :href="initialValue.edit_img" tabindex="0">
+                                                    <i class="fa fa-expand"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -366,7 +391,6 @@
 </template>
 <script>
 import httpRequest from '../axios'
-import { ref } from 'vue';
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -378,7 +402,6 @@ export default {
     },
     data() {
         return {
-            activeKey: ref('1'),
             products: {},
             comments: {},
             CountData: 10,
@@ -580,7 +603,6 @@ export default {
         }
     },
     mounted() {
-        console.log('Component mounted.')
     },
     created() {
         this.$Progress.start()
@@ -619,4 +641,5 @@ export default {
 .slider {
     display: block;
     justify-content: center;
-}</style>
+}
+</style>

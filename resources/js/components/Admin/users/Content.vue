@@ -17,29 +17,29 @@
           </a-button></a-col>
         <a-modal title="Send All MAil" :visible="this.flagModelSendMail" @cancel="() => cancelModalSendMail()">
           <template #footer>
-          <a-button class="btn-button-cancel" @click="cancelModalSendMail">Cancel</a-button>
-          <a-button key="submit" type="primary" class="btn-button primary" @click="sendMailAll">Send</a-button>
-        </template>
+            <a-button class="btn-button-cancel" @click="cancelModalSendMail">Cancel</a-button>
+            <a-button key="submit" type="primary" class="btn-button primary" @click="sendMailAll">Send</a-button>
+          </template>
           <a-form :form="form">
             <a-form-item label="Subject">
-                <a-input v-decorator="[
-                  'subject',
-                  {
-                    initialValue: '',
-                    rules: [{ required: true, message: 'Please input your Subject!' }],
-                  },
-                ]" />
+              <a-input v-decorator="[
+                'subject',
+                {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Please input your Subject!' }],
+                },
+              ]" />
             </a-form-item>
             <a-form-item label="Content">
               <textarea v-decorator="[
-              'content',
-              {
-                initialValue: '',
-                rules: [{ required: true, message: 'Please input your Content!' }],
-              },
-            ]" type="text" class="textarea"></textarea>
+                'content',
+                {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Please input your Content!' }],
+                },
+              ]" type="text" class="textarea"></textarea>
             </a-form-item>
-        </a-form>
+          </a-form>
         </a-modal>
         <a-col :span="3">
           <a-button class="button-type" @click="exportUser">
@@ -464,7 +464,6 @@ export default {
             formData.append("avatar", item);
           });
           httpRequest.post('/api/sendMailAll', formData).then((response) => {
-            console.log(response);
             this.info = response
             this.flagModelSendMail = false
             this.getResuilt(this.row, this.page)
@@ -604,7 +603,6 @@ export default {
     }
   },
   mounted() {
-    console.log('Component mounted.')
     this.getCurrentUser()
     this.getRole()
     this.getResuilt(this.row, this.page)
@@ -808,7 +806,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);

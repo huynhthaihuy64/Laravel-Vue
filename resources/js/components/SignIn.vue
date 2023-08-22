@@ -95,7 +95,6 @@ export default {
                 if (!error) {
                     this.formData = { ...values }
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
-                        console.log(response);
                         if (response.data.data.user) {
                             setUserInfo(JSON.stringify(response.data.data.user))
                             setAccessToken(response.data.data.access_token)

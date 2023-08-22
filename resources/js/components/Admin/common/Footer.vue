@@ -154,7 +154,6 @@ export default {
         },
     },
     mounted() {
-        console.log('Component mounted.')
         this.getSlider(),
         this.getMenu()
     },

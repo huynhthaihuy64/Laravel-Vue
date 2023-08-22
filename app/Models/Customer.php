@@ -20,7 +20,8 @@ class Customer extends Model
         'total_tax',
     ];
 
-    public function carts(){
-        return $this->hasMany(Cart::class,'customer_id','id');
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }
