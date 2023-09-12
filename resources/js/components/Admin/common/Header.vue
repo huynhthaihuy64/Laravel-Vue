@@ -37,7 +37,7 @@
         </ul>
       </div>
     </div>
-    <div class="col-5">
+    <div class="col-4">
       <div class="dropdown w-50 d-flex justify-content-center w-100">
         <button @click="searchToggle()">Search<i class="zmdi zmdi-search ml-2"></i></button>
         <div id="myDropdown" class="dropdown-content scrollable-menu mt-4 w-100" role="menu">
@@ -60,6 +60,7 @@
         </div>
       </div>
     </div>
+    <div id="google_translate_element" class="col-1 mt-3"></div>
     <div class="d-flex text-black profile mr-5 col-2 d-flex justify-content-end">
       <div class="flex-shrink-0" v-if="initialValue.edit_avatar">
         <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
