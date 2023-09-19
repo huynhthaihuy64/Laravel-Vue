@@ -83,6 +83,9 @@
               <a-menu-item class="menu-item js-show-cart">
                 <a @click="handleClick"><font-awesome-icon :icon="['fas', 'cart-shopping']" />Show Cart</a>
               </a-menu-item>
+              <a-menu-item class="menu-item ml-1 menu-item">
+                <a @click="handleChat"><font-awesome-icon :icon="['fas', 'message']" />Chat</a>
+              </a-menu-item>
               <a-menu-item class="menu-item ml-1 menu-item-last" @click="handleLogout">
                 <IconLogout />
                 <div class="logout"><span> {{ $store.getters.localizedStrings.logout }} </span></div>
@@ -168,6 +171,10 @@ export default {
           title: this.$store.getters.localizedStrings.error,
         });
       }
+    },
+    handleChat() {
+      this.$router.push({ name: "listFriend"});
+      this.$router.go();
     },
     goToDetail(id) {
       this.$router.push({ name: "productDetail", params: { id: id } });

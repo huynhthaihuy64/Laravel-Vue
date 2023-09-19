@@ -3,7 +3,7 @@
     <MainHeader :is-active="isActive" v-on:updateActive="updateActive" />
     <div class="body-wrapper">
       <div class="content-wrapper">
-        <router-view></router-view>
+        <router-view :user="user"></router-view>
       </div>
       <Cart v-if="isActive === true" :is-active="isActive" v-on:updateActive="updateActive"/>
     </div>
@@ -15,11 +15,12 @@
 import MainHeader from './Header.vue'
 import MainFooter from './Footer.vue'
 import Cart from '../../Cart.vue'
-
+import httpRequest from '../../../axios'
 export default {
   components: { MainHeader, MainFooter, Cart },
   data() {
     return {
+      user: {},
       isActive: this.isActive,
     }
   },
@@ -33,9 +34,17 @@ export default {
       } else {
         return ""
       }
-    }
+    },
+    getUser() {
+      httpRequest
+        .get('/api/admin/users/currentUser')
+        .then((response) => {
+          this.user = response.data
+        })
+    },
   },
   mounted() {
+    this.getUser();
     this.bodyClasses();
   }
 }

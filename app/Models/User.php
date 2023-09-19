@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Twilio\Rest\Client;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -135,5 +136,55 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(UserRole::class);
+    }
+
+    public function friendsOfMine()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
+    }
+
+    public function friendOf()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id');
+    }
+
+    public function friends()
+    {
+        return $this->friendsOfMine->merge($this->friendOf);
+    }
+
+    public function chatRooms()
+    {
+        return $this->hasMany(ChatRoom::class);
+    }
+
+    public function scopeWhereLike($query, $fields, $keyword) {
+        $query->where(function ($q) use ($fields, $keyword) {
+            foreach ($fields as $field) {
+                $q->orWhere($field, 'LIKE', '%'.$keyword.'%');
+            }
+        });
+    }
+
+     /**
+     * Catch event.
+     */
+    public static function boot()
+    {
+        parent::boot();
+        
+        static::deleting(function ($user) {
+            DB::beginTransaction();
+            try {
+                $friendId = Friend::where('user_id',$user->id)->orWhere('friend_id',$user->id)->select('id')->get();
+                $chatRoomId = ChatRoom::where('user_id',$user->id)->orWhere('friend_id',$user->id)->select('id')->get();
+                Friend::destroy($friendId);
+                ChatRoom::destroy($chatRoomId);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
+        });
     }
 }

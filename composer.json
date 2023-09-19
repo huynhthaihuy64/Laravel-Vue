@@ -21,6 +21,7 @@
         "maatwebsite/excel": "^3.1",
         "mcamara/laravel-localization": "^1.8",
         "nesbot/carbon": "^2.66",
+        "pusher/pusher-php-server": "^7.2",
         "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {

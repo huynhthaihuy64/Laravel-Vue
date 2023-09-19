@@ -1,4 +1,6 @@
 window._ = require('lodash');
+import Echo from 'laravel-echo'
+import { getAccessToken, revokeUser } from "./auth";
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -37,3 +39,17 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+window.Pusher = require('pusher-js');
+const accessToken = getAccessToken();
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    auth: {
+        headers: {
+            Authorization: "Bearer " + accessToken
+        },
+    },
+});

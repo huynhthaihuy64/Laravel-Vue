@@ -14,12 +14,12 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\SendMailAllUserController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\TwoFAController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-use Mcamara\LaravelLocalization\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,21 +109,23 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('cart/payment', [App\Http\Controllers\CartController::class, 'payment']);
     Route::delete('cart/removeAll', [App\Http\Controllers\CartController::class, 'removeAll']);
     Route::get('cart/remove/{id}', [App\Http\Controllers\CartController::class, 'remove']);
+    Route::get('list-friend', [ChatController::class, 'index']);
+    Route::get('/chat/{id}', [ChatController::class, 'show']);
+    Route::post('/history/{friendId}', [ChatController::class, 'history']);
+    Route::post('/chat-room/sendChat', [ChatController::class, 'sendChat']);
+    Broadcast::channel('chat-room.{user_id}.{friend_id}', function ($user, $userId, $friendId) {
+        return $user->id == $friendId;
+    });
+    Route::get('search-friend', [ChatController::class, 'searchFriend']);
+    Route::post('add-friend', [ChatController::class, 'addFriend']);
 });
-
-Route::post('reset-password', [ResetPasswordController::class,'sendMail']);
-Route::put('reset-password/{token}', [ResetPasswordController::class,'reset']);
+Route::post('reset-password', [ResetPasswordController::class, 'sendMail']);
+Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
 Route::get('customers/view/{id}', [CustomerController::class, 'show']);
 
-#Message
-Route::prefix('chat')->group(function () {
-    Route::get('/', [ChatsController::class, 'index']);
-    Route::get('messages', [ChatsController::class, 'fetchMessages']);
-    Route::post('messages', [ChatsController::class, 'sendMessage']);
-});
 #upload
 Route::post('upload/services', [UploadController::class, 'store']);
 

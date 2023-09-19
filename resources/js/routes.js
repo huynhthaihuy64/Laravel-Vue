@@ -109,6 +109,14 @@ const routes = [
           middleware: [permissionHome],
         },
       },
+      {
+        name: 'listFriend',
+        path: '/list-friend',
+        component: require("./components/Chat/ListFriend.vue").default,
+        meta: {
+          middleware: [permissionHome],
+        },
+      },
     ]
   },
   {
