@@ -81,7 +81,7 @@ export default {
 <style>
 .category-content {
     min-height: calc(100vh - 96px);
-    margin-left: calc(30% + 10px);
+    margin-left: calc(22% + 10px);
     margin-right: calc(20% + 10px);
     padding: 20px 24px;
     border-radius: 5px;

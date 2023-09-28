@@ -7,7 +7,6 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 
 class SocialAccountService

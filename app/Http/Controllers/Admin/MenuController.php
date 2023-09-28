@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Menu\CreateFormRequest;
 use App\Http\Resources\MenuResource;
 use Illuminate\Http\Request;
 use App\Http\Services\Menu\MenuService;
-use App\Models\Menu;
 
 class MenuController extends Controller
 {

@@ -2,11 +2,8 @@
 
 namespace App\Imports;
 
-use App\Models\FileUpload;
-use App\Models\Goat;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
 

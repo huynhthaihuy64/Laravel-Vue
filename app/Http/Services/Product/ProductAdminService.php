@@ -8,7 +8,6 @@ use App\Models\Image;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Log;
 use App\Models\Product;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
 use Illuminate\Support\Facades\DB;

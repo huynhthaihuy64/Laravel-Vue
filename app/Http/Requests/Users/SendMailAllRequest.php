@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Enum\Mail\Selection;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -34,5 +33,10 @@ class SendMailAllRequest extends FormRequest
             'subject.required' => "Subject is required",
             'content.required' => 'Content is required',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
 }

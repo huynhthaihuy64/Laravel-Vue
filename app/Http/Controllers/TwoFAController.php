@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Services\Product\ProductService;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Session;
-use App\Models\UserCode;
   
 class TwoFAController extends Controller
 {

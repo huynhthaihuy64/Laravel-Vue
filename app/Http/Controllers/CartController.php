@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Product\ProductService;
-use App\Models\Product;
-use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {

@@ -9,11 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Twilio\Rest\Client;
 use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Sortable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable,SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *

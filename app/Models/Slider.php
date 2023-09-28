@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sortable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Slider extends Model
 {
-    use HasFactory;
-    use Sortable;
+    use HasFactory,Sortable,SoftDeletes;
     
     protected $fillable = [
         'name',

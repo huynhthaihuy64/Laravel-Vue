@@ -3,17 +3,11 @@
 namespace App\Http\Services\Auth;
 
 use App\Events\SetRemember;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use App\Mail\ResetPasswordMail;
 
 class AuthService
 {

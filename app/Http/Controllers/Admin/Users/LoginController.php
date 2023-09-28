@@ -11,24 +11,14 @@ use App\Http\Resources\UserResource;
 use App\Http\Services\UploadService;
 use App\Http\Services\User\UserService;
 use App\Models\User;
-use App\Notifications\SendNotification;
 use App\Http\Services\Auth\AuthService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Tymon\JWTAuth\JWTManager as JWT;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\Traits\Sortable;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * An entity controller class.

@@ -2,14 +2,10 @@
 
 namespace App\Notifications;
 
-use App\Mail\MailCronjob;
-use App\Mail\OrderShipped;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Mail;
 
 class SendNotification extends Notification
 {
