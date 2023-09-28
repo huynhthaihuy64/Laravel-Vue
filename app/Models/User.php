@@ -158,6 +158,11 @@ class User extends Authenticatable
         return $this->hasMany(ChatRoom::class);
     }
 
+    public function fileUploads()
+    {
+        return $this->hasMany(FileUpload::class);
+    }
+
     public function scopeWhereLike($query, $fields, $keyword) {
         $query->where(function ($q) use ($fields, $keyword) {
             foreach ($fields as $field) {

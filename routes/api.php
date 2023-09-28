@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ImportMultipleController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\SendMailAllUserController;
 use App\Http\Controllers\ResetPasswordController;
@@ -118,6 +119,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     Route::get('search-friend', [ChatController::class, 'searchFriend']);
     Route::post('add-friend', [ChatController::class, 'addFriend']);
+    Route::post('import-multiple', [ImportMultipleController::class, 'importMultiple']);
 });
 Route::post('reset-password', [ResetPasswordController::class, 'sendMail']);
 Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset']);

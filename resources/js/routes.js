@@ -175,6 +175,14 @@ const routes = [
           middleware: [permissionHome],
         },
       },
+      {
+        name: 'uploadMultiple',
+        path: 'upload-multiple',
+        component: require("./components/Admin/upload/UploadFile.vue").default,
+        meta: {
+          middleware: [permissionHome],
+        },
+      },
     ]
   },
 ]

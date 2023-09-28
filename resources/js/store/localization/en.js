@@ -32,7 +32,8 @@ export default {
         product: 'Product Management',
         menu: 'Menu Management',
         slide: 'Slide Management',
-        customer: 'Customer Management'
+        customer: 'Customer Management',
+        multipleFile: 'Upload File'
     },
     comment: {
         display: 'Display Comments',

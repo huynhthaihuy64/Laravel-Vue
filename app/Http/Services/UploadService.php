@@ -42,20 +42,20 @@ class UploadService
         }
     }
 
-    public function getMultipleFiles($request) {
-        $files = $request->file('images_quick_view');
-        if ($request->hasFile('images_quick_view')) {
+    public function getMultipleFiles($request,$folder) {
+        $files = $request->file('file');
+        if ($request->hasFile('file')) {
             foreach ($files as $file) {
                 try {
                     $name = $file->getClientOriginalName();
 
-                    $pathFull = 'public/';
+                    $pathFull = 'public/'.$folder;
                     $path = $file->storeAs(
                         $pathFull,
                         $name
                     );
 
-                    $url[] = '/storage/' . $name;
+                    $url[] = '/storage/' . $path;
                 } catch (\Exception $error) {
                     return false;
                 }
