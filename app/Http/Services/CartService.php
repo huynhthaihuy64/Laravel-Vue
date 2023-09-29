@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Mail\ThankForBuy;
 use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\Product;
@@ -9,6 +10,7 @@ use App\Models\User;
 use App\Models\UserProduct;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CartService
 {
@@ -28,7 +30,15 @@ class CartService
     }
     public function index ($params) {
         $carts = $this->cart->with('product','user')->paginate($params['limit'] ?? 10);
-        return $carts;
+        $totalAll = 0;
+        foreach($carts as $cart) {
+            $totalAll += $cart->total;
+        }
+        $data = [
+            'carts' => $carts,
+            'total_all' => $totalAll
+        ];
+        return $data;
     }
 
     public function store($params) {
@@ -66,14 +76,31 @@ class CartService
         return $cart;
     }
 
-    public function update($id, $params) {
-        $cart = $this->cart->find($id);
-        if(!$cart) {
-            throw new \Exception("Cart Not Found");
-        }
+    public function update($params) {
         try {
             DB::beginTransaction();
-            $cart->update($params);
+            if (is_array($params['carts'])) {
+                foreach($params['carts'] as $val){
+                    $cart = $this->cart->find($val['id']);
+                    if(!$cart) {
+                        throw new \Exception("Cart Not Found");
+                    }
+                    $cart->update([
+                        'qty' => $val['qty'],
+                        'total' => $cart->price * $val['qty']
+                    ]);
+                }
+            } else {
+                $cart = $this->cart->find($params['carts']['id']);
+                if(!$cart) {
+                    throw new \Exception("Cart Not Found");
+                }
+                $cart->update([
+                    'qty' => $params['carts']['qty'],
+                    'total' => $cart->price * $params['carts']['qty']
+                ]);
+            }
+            
             DB::commit();
             return $cart;
         }
@@ -86,7 +113,11 @@ class CartService
     public function destroy($ids) {
         try {
             DB::beginTransaction();
-            $this->cart->whereIn('id',$ids)->delete();
+            if(is_array($ids)) {
+                $this->cart->whereIn('id',$ids)->delete();
+            } else {
+                $this->cart->where('id',$ids)->delete();
+            }
             DB::commit();
             return ['message' => "Delete Success"];
         } catch (\Exception $e) {
@@ -97,8 +128,8 @@ class CartService
     public function payment($data) {
         try {
             DB::beginTransaction();
-            foreach($data['cart_id'] as $cartId) {
-                $cart = $this->cart->where('id',$cartId)->where('user_id',auth()->user()->id)->first();
+            foreach($data['carts'] as $val) {
+                $cart = $this->cart->where('id',$val['id'])->where('user_id',auth()->user()->id)->first();
                 if(!$cart) {
                     throw new \Exception('Cart Not Found');
                 }
@@ -106,7 +137,7 @@ class CartService
                 if(!$product) {
                     throw new \Exception('Product Not Found');
                 }
-                $this->userProduct->create([
+                $userProduct = $this->userProduct->create([
                     'user_id' => auth()->user()->id,
                     'product_id' => $product->id,
                     'qty' => $cart->qty,
@@ -114,7 +145,9 @@ class CartService
                     'total' => $cart->total,
                 ]);
             }
-            $this->cart->whereIn('id',$data['cart_id'])->delete();
+            $dataBuy = $this->cart->whereIn('id',array_column($data['carts'], 'id'))->with('product')->get()->toArray();
+            $this->cart->whereIn('id',array_column($data['carts'], 'id'))->delete();
+            Mail::to($data['email'])->send(new ThankForBuy($data,$dataBuy));
             DB::commit();
             return response()->json(['message' => "Payment Success"]);
         } catch(\Exception $e) {

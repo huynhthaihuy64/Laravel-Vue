@@ -12,10 +12,10 @@
                 </div>
             <ul class="nav flex-column" v-for="(item) in carts" :key="item.id">
                 <li class="nav-link d-flex flex-wrap flex-row">
-                    <div class="col-12 text-light h5 text-center p-0">{{ item.name }}</div>
+                    <div class="col-12 text-light h5 text-center p-0">{{ item.product.name }}</div>
                     <div class="col-4 p-0">
                         <img
-                        :src="item.options.image"
+                        :src="item.product.file"
                             alt="" height="75px" width="100%" class="image-contain">
                     </div>
                     <div class="col-3 bg-primary text-light justify-content-around d-flex flex-column">
@@ -23,18 +23,16 @@
                                 class="product-price-total">{{ item.qty }}</span></div>
                     </div>
                     <div class="sidecart-price pl-0 col-5 bg-primary text-right d-flex justify-content-end align-items-center flex-wrap text-light">
-                        <a-button type="danger" class="h-25 text-center" @click="removeItem(item.rowId)">X</a-button>
-                        <div class="product-price">{{ item.price }}</div>
+                        <a-button type="danger" class="h-25 text-center" @click="removeItem(item.id)">X</a-button>
+                        <div class=""><span class="text-dark"><b>Price:</b></span> <span
+                                class="product-price-total">{{ item.product.price }}</span></div>
                         <div class=""><span class="text-dark"><b>Total:</b></span> <span
-                                class="product-price-total">{{ item.subtotal }}</span></div>
+                                class="product-price-total">{{ item.total }}</span></div>
                     </div>
                 </li>
             </ul>
             <div class="text-light h6 text-left mx-3">{{ $store.getters.localizedStrings.cart.total_price }}: <span class="text-success"
                     id="sidecart-total-products">{{ totalPrice ?? 0| formatNumber}}</span></div>
-            <div class="text-light h6 text-left mx-3">{{ $store.getters.localizedStrings.cart.tax }}: <span class="text-success" id="sidecart-frete">{{ tax ?? 0| formatNumber}}</span></div>
-            <div class="text-light h5 text-left mx-3">{{ $store.getters.localizedStrings.cart.total_tax }}: <span class="text-success"
-                    id="sidecart-total">{{ total_tax ?? 0| formatNumber}}</span></div>
             <div class="p-2">
                 <button type="button" @click="goToCart" class="btn btn-success w-100">{{ $store.getters.localizedStrings.cart.payment }}</button>
                 <button type="button" @click="removeAll()" class="btn btn-danger w-100">{{ $store.getters.localizedStrings.cart.delete_all }}</button>
@@ -63,10 +61,8 @@ export default {
         getCart() {
             httpRequest.get('/api/carts')
                 .then(response => {
-                    this.carts = response.data.data;
-                    this.totalPrice = response.data.total;
-                    this.tax = response.data.tax;
-                    this.total_tax = response.data.total_tax;
+                    this.carts = response.data.carts.data;
+                    this.totalPrice = response.data.total_all;
                 })
         },
         removeItem(rowId) {

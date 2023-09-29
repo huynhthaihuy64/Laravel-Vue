@@ -41,4 +41,9 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function userProducts()
+    {
+        return $this->hasMay(UserProduct::class, 'product_id', 'id');
+    }
 }

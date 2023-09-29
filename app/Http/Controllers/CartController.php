@@ -28,8 +28,8 @@ class CartController extends Controller
         return $this->cartService->show($id);
     }
 
-    public function update($id,Request $request) {
-        return $this->cartService->update($id, $request->all());
+    public function update(Request $request) {
+        return $this->cartService->update($request->only(['carts']));
     }
 
     public function remove($id) {

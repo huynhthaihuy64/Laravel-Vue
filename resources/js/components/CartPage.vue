@@ -19,17 +19,17 @@
                                         <tr class="table_row" v-for="(item, index) in carts" :key="item.id">
                                             <td class="column-1">
                                                 <div class="how-itemcart1 mt-3">
-                                                    <img :src="item.options.image" alt="IMG" class="image-contain">
+                                                    <img :src="item.product.file" alt="IMG" class="image-contain">
                                                 </div>
                                             </td>
                                             <td class="column-2">
-                                                <p class="mt-4">{{ item.name }}</p>
+                                                <p class="mt-4">{{ item.product.name }}</p>
                                                 <a-form-item class="mt-3" no-style>
-                                                    <a-input v-decorator="['carts.' + index + '.rowId' , {initialValue: item.rowId,}]" type="hidden" />
+                                                    <a-input v-decorator="['carts.' + index + '.id' , {initialValue: item.id,}]" type="hidden" />
                                                 </a-form-item>
                                             </td>
                                             <td class="column-3">
-                                                <p class="mt-4">{{ item.price | formatNumber }}</p>
+                                                <p class="mt-4">{{ item.product.price | formatNumber }}</p>
                                             </td>
                                             <td class="column-4">
                                                 <a-form-item class="mt-3" no-style>
@@ -37,11 +37,11 @@
                                                 </a-form-item>
                                             </td>
                                             <td class="column-5">
-                                                <p class="mt-4">{{ item.subtotal }}</p>
+                                                <p class="mt-4">{{ item.total }}</p>
                                             </td>
                                             <td class="p-r-15">
                                                 <div class="mt-4">
-                                                    <a @click="removeItem(item.rowId)" style="color:red">{{ $store.getters.localizedStrings.cart_page.delete }}</a>
+                                                    <a @click="removeItem(item.id)" style="color:red">{{ $store.getters.localizedStrings.cart_page.delete }}</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -79,32 +79,6 @@
                                 <div class="size-209 p-t-1">
                                     <span class="mtext-110 cl2">
                                         {{ totalPrice | formatNumber }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex-w flex-t p-t-27 p-b-33">
-                                <div class="size-208">
-                                    <span class="mtext-101 cl2">
-                                        {{ $store.getters.localizedStrings.cart_page.tax }}:
-                                    </span>
-                                </div>
-
-                                <div class="size-209 p-t-1">
-                                    <span class="mtext-110 cl2">
-                                        {{ tax | formatNumber }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex-w flex-t p-t-27 p-b-33">
-                                <div class="size-208">
-                                    <span class="mtext-101 cl2">
-                                        {{ $store.getters.localizedStrings.cart_page.total_tax }}:
-                                    </span>
-                                </div>
-
-                                <div class="size-209 p-t-1">
-                                    <span class="mtext-110 cl2">
-                                        {{ total_tax | formatNumber }}
                                     </span>
                                 </div>
                             </div>
@@ -218,10 +192,8 @@ export default {
         getCart() {
             httpRequest.get('/api/carts')
                 .then(response => {
-                    this.carts = response.data.data;
-                    this.totalPrice = response.data.total;
-                    this.tax = response.data.tax;
-                    this.total_tax = response.data.total_tax;
+                    this.carts = response.data.carts.data;
+                    this.totalPrice = response.data.total_all;
                 })
         },
         removeItem(rowId) {
@@ -260,6 +232,7 @@ export default {
             e.preventDefault();
             await this.form
                 .validateFields((err, values) => {
+                    console.log(values);
                     if (err) return;
                     httpRequest.post('/api/cart', values).then((response) => {
                         this.info = response
@@ -298,9 +271,9 @@ export default {
                             title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
                         });
                     })
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 1000);
+                    // setTimeout(function () {
+                    //     window.location.reload();
+                    // }, 1000);
                     this.form.resetFields();
                 })
         }
