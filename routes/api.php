@@ -52,6 +52,8 @@ Route::get('/callback/{social}', [SocialAuthController::class, 'callback']);
 Route::post('/admin/users/login/store', [LoginController::class, 'login']);
 Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/upload-file', [UploadController::class, 'uploadFileExcel']);
+    Route::post('/import-product', [ImportMultipleController::class, 'importMultiple']);
     Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll']);
     Route::post('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser']);
@@ -126,15 +128,11 @@ Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
-Route::get('customers/view/{id}', [CustomerController::class, 'show']);
 
 #upload
 Route::post('upload/services', [UploadController::class, 'store']);
 
-Route::get('/', [App\Http\Controllers\MainController::class, 'index'])->name('page');
-Route::get('/services/load-product/{id}', [App\Http\Controllers\MainController::class, 'loadProduct']);
 Route::get('/danh-muc/{id}', [App\Http\Controllers\MenuController::class, 'index']);
 Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'index']);
-Route::get('/about', [PageController::class, 'about'])->name('page.about');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

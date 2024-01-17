@@ -1,5 +1,7 @@
 <?php
 
+use App\Constants\FileConstants;
+
 return [
 
     /*
@@ -81,5 +83,6 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
-
+    'size_file_max' => env('SIZE_FILE_MAX', FileConstants::SIZE_FILE_MAX),
+    'max_file_upload' => env('MAX_FILE_UPLOADS', FileConstants::MAX_FILE_UPLOADS),
 ];
