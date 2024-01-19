@@ -8,8 +8,15 @@
             <a-icon type="plus" />
             Add Product
           </a-button></a-col>
-        <a-col :span="5"></a-col>
-        <a-col :span="5">
+        <a-col :span="5" class="d-flex justify-content-end mr-2">
+          <a-upload :beforeUpload="beforeUpload" :headers="headers" action="//jsonplaceholder.typicode.com/posts/">
+            <a-button class="button-type" @click="importProduct">
+              <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
+              Import Excel
+            </a-button>
+          </a-upload>
+        </a-col>
+        <a-col :span="3">
           <a-button class="button-type" @click="exportProduct">
             <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
             Export Excel
@@ -283,7 +290,7 @@
         <p class="msg-error" v-if="contentIsError">Content is not null</p>
         <a-row :gutter="20">
           <a-col :span="12">
-            <a-form-item llabel="Image">
+            <a-form-item label="Image">
               <a-upload name="file" v-decorator="['file']" action="//jsonplaceholder.typicode.com/posts/"
                 :headers="headers" @remove="handleRemove" :beforeUpload="beforeUpload">
                 <a-button> <a-icon type="upload" />Image</a-button>
@@ -378,7 +385,7 @@ export default {
     },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/products/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -402,7 +409,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row, this.page, name, this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -423,7 +430,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page, this.field, this.inputType);
+      this.getResult(this.row, this.page, this.field, this.inputType);
     },
     handleNextPage() {
       this.btn = false;
@@ -431,7 +438,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page, this.field, this.inputType);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -443,7 +450,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -452,9 +459,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {
@@ -500,7 +507,7 @@ export default {
           httpRequest.post('/api/products/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Create Success'
@@ -534,7 +541,7 @@ export default {
     deleteProduct() {
       httpRequest.delete('/api/products/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: 'Delete Success'
@@ -609,7 +616,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: 'Edit Success'
@@ -645,15 +652,45 @@ export default {
             title: error
           });
         })
+    },
+    async beforeImport(file) {
+      this.fileList = [...this.fileList, file];
+      this.importProduct(this.fileList);
+      return new Promise((resolve) => { })
+    },
+
+    async importProduct(file) {
+      try {
+        const uploadFileIds = [];
+        for (const item of this.fileList) {
+          const formData = new FormData();
+          formData.append("file", item);
+          formData.append("type", 1);
+          const responseUpload = await httpRequest.post('/api/files/upload-file', formData)
+          uploadFileIds.push(responseUpload.data.data.id);
+        }
+        console.log('ids',uploadFileIds);
+        const responseImport = await httpRequest.post('/api/products/import-product', { ids: uploadFileIds, type: 1 });
+        this.info = responseImport;
+        Toast.fire({
+          icon: 'success',
+          title: 'Import Success'
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error
+        });
+      }
     }
   },
   mounted() {
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.getMenu()
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }

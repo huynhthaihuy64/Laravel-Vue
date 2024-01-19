@@ -43,9 +43,6 @@ class ResetPasswordController extends Controller
             session()->flash('success', 'Send Success');
             return redirect()->back();
         }
-        return response()->json([
-        'message' => 'We have e-mailed your password reset link!'
-        ]);
     }
 
     public function reset(UpdatePasswordRequest $request, $token)

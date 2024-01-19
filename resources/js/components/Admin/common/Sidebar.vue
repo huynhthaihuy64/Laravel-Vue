@@ -33,6 +33,7 @@ export default {
         { key: 'sliders', icon: ['fas', 'sliders'], desc: this.$store.getters.localizedStrings.side_bar.slide  },
         { key: 'customers', icon: ['fas', 'user-tie'], desc: this.$store.getters.localizedStrings.side_bar.customer  },
         { key: 'uploadMultiple', icon: ['fas', 'file-upload'], desc: this.$store.getters.localizedStrings.side_bar.multipleFile  },
+        { key: 'files', icon: ['fas', 'file-upload'], desc: this.$store.getters.localizedStrings.file.name },
       ],
       routeName: null,
     }

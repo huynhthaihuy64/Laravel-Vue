@@ -183,6 +183,14 @@ const routes = [
           middleware: [permissionHome],
         },
       },
+      {
+        name: 'files',
+        path: 'files',
+        component: require("./components/Admin/files/File.vue").default,
+        meta: {
+          middleware: [permissionHome],
+        },
+      },
     ]
   },
 ]

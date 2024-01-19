@@ -24,7 +24,6 @@ class SliderController extends Controller
             'file' => 'required',
             'url' => 'required',
         ]);
-        $paginate = $request->limit ?? 5;
         $data = $request->toArray();
         $slider = $this->slider->insert($data);
 

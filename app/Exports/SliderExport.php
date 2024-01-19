@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -48,7 +49,7 @@ class SliderExport implements FromArray, WithHeadings, WithMapping
             $item['name'],
             $item['url'],
             $item['active'] == 0 ? 'InActive' : 'Active',
-            $item['created_at'],
+            Carbon::parse($item['created_at'])->format('Y-m-d'),
         ];
     }
 }
