@@ -156,5 +156,8 @@ export default {
         total_tax: 'Total With Tax',
         customer: 'Customer Information',
         payment: 'Payment'
+    },
+    file: {
+        name: 'List File Upload'
     }
 }

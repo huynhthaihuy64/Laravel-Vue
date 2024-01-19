@@ -79,7 +79,6 @@ class ProductService
             'price' => $item['price'],
             'price_sale' => $item['price_sale'],
             'active' => $item['active'],
-            'file' => !empty($item['file']) ? $item['file'] : null,
             'updated_at' => $time
         ];
         $menu = Menu::where('name', $item['menu'])->first()?->toArray();

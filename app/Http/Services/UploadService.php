@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Constants\Constants;
 use App\Constants\FileConstants;
 use App\Models\File as ModelsFile;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
@@ -107,6 +108,23 @@ class UploadService
     private function randomFileName(string $fileExtension): string
     {
         return md5(uniqid(rand(), true)) . '.' . $fileExtension;
+    }
+
+    /**
+     * Get file path by id
+     *
+     * @param int $id
+     *
+     * @return ModelsFile
+     */
+    public function getFileById(int $id): ModelsFile
+    {
+        $file = ModelsFile::find($id);
+        if (!$file || !file_exists($file->file_path)) {
+            throw new Exception('File '. $id .'not found');
+        }
+
+        return $file;
     }
 
     /**

@@ -55,7 +55,7 @@ class CustomerExport implements FromArray, WithHeadings, WithMapping
             $item['email'],
             $item['content'],
             $item['total_tax'],
-            Carbon::parse($item['created_at'])->format('d/m/Y')
+            Carbon::parse($item['created_at'])->format('Y-m-d'),
         ];
     }
 }

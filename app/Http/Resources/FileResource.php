@@ -22,7 +22,8 @@ class FileResource extends JsonResource
             'status'  => $this->status,
             'type'  => $this->type,
             'file_type'  => $this->file_type,
-            'user' => UserResource::make($this->whenLoaded('user')),
+            'created_at' => $this->created_at,
+            'user' => $this->user,
         ];
 
         return $fields;

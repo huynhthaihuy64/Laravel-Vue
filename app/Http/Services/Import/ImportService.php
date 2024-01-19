@@ -4,14 +4,12 @@ namespace App\Http\Services\Import;
 
 use App\Http\Services\Product\ProductService;
 use App\Http\Services\UploadService;
-use App\Imports\ProductImport;
 use App\Jobs\ImportProductJob;
 use App\Models\File;
 use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ImportService
 {

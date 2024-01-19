@@ -93,7 +93,7 @@ export default {
     },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/customers/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -109,7 +109,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row, this.page, name, this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     showModalEdit(id) {
       this.getSlider(id);
@@ -120,7 +120,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -128,7 +128,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -140,7 +140,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -187,7 +187,7 @@ export default {
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }

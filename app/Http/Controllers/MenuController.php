@@ -8,7 +8,6 @@ use App\Http\Services\Product\ProductService;
 
 class MenuController extends Controller
 {
-    //
     protected $menuService;
 
     protected $productService;

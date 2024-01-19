@@ -11,20 +11,20 @@ use App\Http\Services\UploadService;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UploadController extends Controller
 {
     use ResponseTrait;
-    protected $upload;
-    public function __construct(UploadService $upload)
+    protected $uploadService;
+    public function __construct(UploadService $uploadService)
     {
-        $this->upload = $upload;
+        $this->uploadService = $uploadService;
     }
 
     public function store(Request $request)
     {
-        // $this->upload->store($request);
-        $url = $this->upload->store($request);
+        $url = $this->uploadService->store($request);
         if ($url !== false) {
             return response()->json([
                 'error' => false,
@@ -41,8 +41,27 @@ class UploadController extends Controller
         $file = $data[FileConstants::INPUT_FILE];
         $data['user_id'] = Auth::id();
         $data[FileConstants::INPUT_DESTINATION_FOLDER] = FileConstants::FOLDER_TEMP;
-        $file = $this->upload->uploadFileExcel($file, $data);
+        $file = $this->uploadService->uploadFileExcel($file, $data);
 
         return $this->responseSuccess(FileResource::make($file));
+    }
+
+    /**
+     * Download file by id
+     *
+     * @param int $id
+     * @return BinaryFileResponse
+     */
+    public function download(int $id): BinaryFileResponse
+    {
+        $file = $this->uploadService->getFileById($id);
+
+        return response()->download(
+            $file['file_path'],
+            str_replace(FileConstants::CHARACTERS, '_', $file['file_name']),
+            [
+                "Access-Control-Expose-Headers" => "Content-Disposition"
+            ]
+        );
     }
 }

@@ -229,7 +229,7 @@ export default {
             httpRequest.post('/api/add-friend', formData).then((response) => {
                 this.info = response
                 this.flagModalAdd = false
-                this.getResuilt(this.row, this.page)
+                this.getResult(this.row, this.page)
                 Toast.fire({
                     icon: 'success',
                     title: 'Add Success'
