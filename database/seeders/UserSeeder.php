@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $path = '/avatar/' . $faker->userName . '.jpg';
+        $path = '/avatar/reynolds.immanuel.jpg';
         Storage::disk('public')->put('/uploads/' . $path, file_get_contents($faker->imageUrl(400, 400, 'people')));
         User::create([
             'role_id' => '1',

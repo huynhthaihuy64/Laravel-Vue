@@ -38,8 +38,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('posts', [PostController::class, 'index']);
-
 Route::get('/2fa', [TwoFAController::class, 'index'])->name('2fa.index');
 Route::post('/2fa', [TwoFAController::class, 'store'])->name('2fa.post');
 Route::get('/2fa/reset', [TwoFAController::class, 'resend'])->name('2fa.resend');
