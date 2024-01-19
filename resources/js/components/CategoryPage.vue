@@ -97,6 +97,10 @@ export default {
 			form: this.$form.createForm(this),
 			menus: {},
 			products: {},
+			totalPage: 2,
+			page: 1,
+			row: 6,
+			lastPage: '',
 			meta: {
 				"from": 1,
 				"to": 6
@@ -134,18 +138,18 @@ export default {
 			this.$router.push({ name: "Category", params: { id: id } });
 			this.$router.go();
 		},
-		async getProductMenu() {
-			const response = await
+		getProductMenu(row, page) {
+			  const self = this;
 				httpRequest
-					.get('/api/products/productMenu?menu_id=' + this.$route.params.id)
+					.get('/api/products/productMenu?menu_id=' + this.$route.params.id + '&limit=' + row + '&page=' + page)
 					.then(
-						({ data }) => (
-							(this.products = data.data)
-								(this.totalPage = data.meta.total),
-							(this.lastPage = data.meta.last_page),
-							(this.checkPage()),
-							(this.checkRow())
-						)
+						({ data }) => {
+							(self.lastPage = data.meta.last_page),
+							(self.products = data.data)
+							(self.totalPage = data.meta.total),
+							(self.checkPage()),
+							(self.checkRow())
+						}
 					);
 		},
 		getMenu() {
@@ -162,7 +166,7 @@ export default {
 				this.page = this.page - 1;
 			}
 			this.checkPage();
-			this.getProductMenu(this.page);
+			this.getProductMenu(this.row, this.page);
 		},
 		handleNextPage() {
 			this.btn = false;
@@ -170,7 +174,7 @@ export default {
 				this.page = this.page + 1;
 			}
 			this.checkPage();
-			this.getProductMenu(this.page);
+			this.getProductMenu(this.row,this.page);
 		},
 		checkPage() {
 			if (this.page == this.lastPage) {
@@ -179,9 +183,9 @@ export default {
 				this.btnNext = true;
 			}
 			if (this.page == 1) {
-				this.btnPrew = false;
+				this.btnPrev = false;
 			} else {
-				this.btnPrew = true;
+				this.btnPrev = true;
 			}
 		},
 		checkRow() {
@@ -191,14 +195,17 @@ export default {
 				this.meta.to = this.totalPage
 			}
 		},
+		goToDetail(id) {
+			this.$router.push({ name: "productDetail", params: { id: id } });
+		},
 	},
 	mounted() {
 		this.getMenu()
-		this.getProductMenu()
 	},
 	created() {
 		this.$Progress.start()
 		this.getMenuDetail(this.page)
+		this.getProductMenu(this.row, this.page)
 		this.$Progress.finish()
 	},
 }

@@ -9,7 +9,6 @@ use App\Http\Services\Menu\MenuService;
 
 class MenuController extends Controller
 {
-    //
     protected $menuService;
 
     public function __construct(MenuService $menuService)

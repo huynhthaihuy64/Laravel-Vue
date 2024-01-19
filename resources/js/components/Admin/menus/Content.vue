@@ -2,31 +2,30 @@
     <div class="container-fluid category-content">
         <h1 class="title">List Menu</h1>
         <div class="content-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6">
-                        <a-button type="primary" @click="showAddMenu()" class="button-type">
-                            <a-icon type="plus" />
-                            Add Menu
-                        </a-button>
-                    </div>
-                    <div class="col-4 d-flex justify-content-end">
-                        <a-upload :beforeUpload="beforeUpload" :headers="headers"
-                            action="//jsonplaceholder.typicode.com/posts/">
-                            <a-button class="button-type">
-                                <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
-                                Import Excel
-                            </a-button>
-                        </a-upload>
-                    </div>
-                    <div class="col-2">
-                        <a-button class="button-type" @click="exportMenu">
+            <a-row>
+                <a-col :span="12">
+                    <a-button type="primary" @click="showAddMenu()" class="button-type">
+                        <a-icon type="plus" />
+                        Add Menu
+                    </a-button>
+                </a-col>
+                <a-col :span="5" class="d-flex justify-content-end mr-2">
+                    <a-upload :beforeUpload="beforeUpload" :headers="headers"
+                        action="//jsonplaceholder.typicode.com/posts/">
+                        <a-button class="button-type">
                             <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
-                            Export Excel
+                            Import Excel
                         </a-button>
-                    </div>
-                </div>
-            </div>
+                    </a-upload>
+                </a-col>
+                <a-col :span="3">
+                    <a-button class="button-type" @click="exportMenu">
+                        <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
+                        Export Excel
+                    </a-button>
+                </a-col>
+                <a-col :span="2"></a-col>
+            </a-row>
             <table class="table">
                 <thead>
                     <tr>
@@ -322,7 +321,7 @@ export default {
         },
     },
     methods: {
-        getResuilt(row, page, name = '', sorter = 'desc') {
+        getResult(row, page, name = '', sorter = 'desc') {
             httpRequest
                 .get('/api/menus/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
                 .then(
@@ -337,7 +336,7 @@ export default {
         },
         toggleSort(name) {
             this.isSorter = !this.isSorter
-            this.getResuilt(this.row, this.page, name, this.inputType);
+            this.getResult(this.row, this.page, name, this.inputType);
         },
         handleRemove(file) {
             const index = this.fileList.indexOf(file);
@@ -367,7 +366,7 @@ export default {
                 this.page = this.page - 1;
             }
             this.checkPage();
-            this.getResuilt(this.row, this.page);
+            this.getResult(this.row, this.page);
         },
         handleNextPage() {
             this.btn = false;
@@ -375,7 +374,7 @@ export default {
                 this.page = this.page + 1;
             }
             this.checkPage();
-            this.getResuilt(this.row, this.page);
+            this.getResult(this.row, this.page);
         },
         rowPerPage(pageSize) {
             this.pageSize = pageSize
@@ -387,7 +386,7 @@ export default {
             }
             this.page = 1;
             this.checkPage();
-            this.getResuilt(this.row, 1);
+            this.getResult(this.row, 1);
         },
         checkPage() {
             if (this.page == this.lastPage) {
@@ -396,9 +395,9 @@ export default {
                 this.btnNext = true;
             }
             if (this.page == 1) {
-                this.btnPrew = false;
+                this.btnPrev = false;
             } else {
-                this.btnPrew = true;
+                this.btnPrev = true;
             }
         },
         checkRow() {
@@ -425,7 +424,7 @@ export default {
                     httpRequest.post('/api/menus/add', formData).then((response) => {
                         this.info = response
                         this.flagModalAdd = false
-                        this.getResuilt(this.row, this.page)
+                        this.getResult(this.row, this.page)
                         Toast.fire({
                             icon: 'success',
                             title: 'Create Success'
@@ -459,7 +458,7 @@ export default {
         deleteMenu() {
             httpRequest.delete('/api/menus/destroy/' + this.delete_id).then((response) => {
                 this.info = response
-                this.getResuilt(this.row, this.page)
+                this.getResult(this.row, this.page)
                 Toast.fire({
                     icon: 'success',
                     title: 'Delete Success'
@@ -502,7 +501,7 @@ export default {
                             this.info = response
                             this.flagModalEdit = false
                             this.form.resetFields()
-                            this.getResuilt(this.row, this.page)
+                            this.getResult(this.row, this.page)
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Edit Success'
@@ -562,11 +561,11 @@ export default {
         }
     },
     mounted() {
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
     },
     created() {
         this.$Progress.start()
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         this.$Progress.finish()
     },
 }
@@ -581,7 +580,7 @@ export default {
 
 table {
     border-collapse: collapse;
-    width: 100%;
+    width: 80%;
     border: 1px solid #ddd;
 }
 

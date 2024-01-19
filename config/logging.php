@@ -54,6 +54,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'history' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/history.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

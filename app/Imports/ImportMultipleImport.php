@@ -2,6 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\Goal;
+use App\Models\Staff;
+use App\Models\Unit;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Facades\Log;
@@ -10,12 +13,12 @@ use Exception;
 class ImportMultipleImport implements ToCollection
 {
     public $error = [];
+
     protected $header = [
         "Mã đối tượng",
         "Mã chỉ tiêu",
         "Thời gian",
-        "Giá trị tính (%)",
-        "Giá trị TT (%)",
+        "Tỷ trọng (%)",
     ];
 
     protected function validateRowData($row, $key)
@@ -35,14 +38,25 @@ class ImportMultipleImport implements ToCollection
             }
         }
     }
-
-    /**
-     * @param  Collection  $collection
-     */
     public function collection(Collection $collection)
     {
+        $data = $collection->toArray();
+        $staffCodes = collect([]);
+        $unitCodes = collect([]);
+        $goalCodes = collect([]);
+
+        for ($key = 3; $key < count($data); $key++) {
+            $staffCodes->push($data[$key][0]);
+            $unitCodes->push($data[$key][0]);
+            $goalCodes->push($data[$key][1]);
+        }
+
+        $staffs = Staff::whereIn('code', $staffCodes)->get()->keyBy('code');
+        $units = Unit::whereIn('code', $unitCodes)->get()->keyBy('code');
+        $goals = Goal::whereIn('code', $goalCodes)->get()->keyBy('code');
+
         try {
-            foreach ($collection->toArray() as $key => $array) {
+            foreach ($data as $key => $array) {
                 if ($key == 0 || $key == 1) {
                     continue;
                 }
@@ -52,28 +66,35 @@ class ImportMultipleImport implements ToCollection
                     }
                     continue;
                 }
-                if ($key >= 3) {
-                    $this->error[$key] = [
-                        'code_object' => $array[0],
-                        'code_target' => $array[1],
-                        'time' => $array[2],
-                        'calculated_value' => $array[3],
-                        'real_value' => $array[4],
-                    ];
-                }
-                if ($key >= 3  && empty($array[0])) {
-                    $this->error[$key]['message'] = "Mã đối tượng là bắt buộc";
+
+                $this->error[$key] = [
+                    'code' => $array[0],
+                    'goal_code' => $array[1],
+                    'time' => $array[2],
+                    'proportion' => $array[3],
+                ];
+
+                if (empty($array[0]) || (!$staffs->has($array[0]) && !$units->has($array[0]))) {
+                    $this->error[$key]['message'] = "Không tồn tại mã đối tượng";
                     continue;
                 }
-                if ($key >= 3  && empty($array[1])) {
-                    $this->error[$key]['message'] = "Mã chỉ tiêu là bắt buộc";
+
+                if (empty($array[1]) || !$goals->has($array[1])) {
+                    $this->error[$key]['message'] = "Không tồn tại mã chỉ tiêu";
                     continue;
                 }
-                if ($key >= 3 && (preg_match('/^\d{1,2}\/\d{4}$/',$array[2]) == 0 && preg_match('/^\d{4}$/', $array[2]) == 0)){
-                    $this->error[$key]['message'] = "Format time failed";
+
+                if ((preg_match('/^\d{1,2}\/\d{4}$/', $array[2]) == 0 || preg_match('/^\d{4}$/', $array[2]) == 0) && !empty($array[3]) && preg_match('/^\d+(,\d{1,2})?$/', $array[3]) == 0) {
+                    $this->error[$key]['message'] = "Sai định dạng thời gian";
+                    continue;
+                }
+
+                if (preg_match('/^\d+(,\d{1,2})?$/', $array[3]) == 0 && !empty($array[3])) {
+                    $this->error[$key]['message'] = "Sai format tỷ trọng";
                     continue;
                 }
             }
+
             return $this->error;
         } catch (Exception $ex) {
             Log::info('Import Product Fail: ' . $ex->getMessage());

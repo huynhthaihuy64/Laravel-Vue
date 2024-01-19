@@ -166,7 +166,7 @@ export default {
         }
     },
     methods: {
-        getResuilt() {
+        getResult() {
             httpRequest
                 .get('/api/sliders/list')
                 .then(
@@ -181,9 +181,9 @@ export default {
                 .get('/api/products/list?limit=' + 3 + '&page=' + page)
                 .then(
                     ({ data }) => (
+                        (this.lastPage = data.meta.last_page),
                         (this.products = data.data),
-                        (this.totalPage = data.total),
-                        (this.lastPage = data.last_page),
+                        (this.totalPage = data.meta.total),
                         (this.checkPage()),
                         (this.checkRow())
                     )
@@ -228,10 +228,12 @@ export default {
         },
     },
     mounted() {
+        this.getResult()
+        this.getProductList(this.page)
     },
     created() {
         this.$Progress.start()
-        this.getResuilt()
+        this.getResult()
         this.getProductList(this.page)
         this.$Progress.finish()
     },

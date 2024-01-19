@@ -279,7 +279,7 @@ export default {
     },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/sliders/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -294,7 +294,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row, this.page, name, this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -315,7 +315,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -323,7 +323,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -335,7 +335,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -374,7 +374,7 @@ export default {
           httpRequest.post('/api/sliders/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Create Success'
@@ -408,7 +408,7 @@ export default {
     deleteSlider() {
       httpRequest.delete('/api/sliders/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: 'Delete Success'
@@ -451,7 +451,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: 'Edit Success'
@@ -490,11 +490,11 @@ export default {
     }
   },
   mounted() {
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }

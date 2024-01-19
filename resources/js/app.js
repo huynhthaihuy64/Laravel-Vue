@@ -21,7 +21,23 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Swal from "sweetalert2";
 
 /* import specific icons */
-import { faUserSecret, faChevronRight, faChevronLeft, faShop, faSliders, faListAlt, faDashboard, faRegistered, faFileExcel, faCartShopping, faUserTie, faMailForward, faMessage, faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import {
+    faUserSecret,
+    faChevronRight,
+    faChevronLeft,
+    faShop,
+    faSliders,
+    faListAlt,
+    faDashboard,
+    faRegistered,
+    faFileExcel,
+    faCartShopping,
+    faUserTie,
+    faMailForward,
+    faMessage,
+    faFileUpload,
+    faDownload,
+} from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFacebook, faStackOverflow, faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import Vue from "vue";
 require("./bootstrap");
@@ -34,7 +50,23 @@ Vue.filter("formatNumber", function (value) {
   return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
 });
 
-library.add(faUserSecret, faChevronRight, faChevronLeft, faShop, faSliders, faListAlt, faDashboard, faRegistered, faFileExcel, faCartShopping, faUserTie, faMailForward, faMessage, faFileUpload)
+library.add(
+    faUserSecret,
+    faChevronRight,
+    faChevronLeft,
+    faShop,
+    faSliders,
+    faListAlt,
+    faDashboard,
+    faRegistered,
+    faFileExcel,
+    faCartShopping,
+    faUserTie,
+    faMailForward,
+    faMessage,
+    faFileUpload,
+    faDownload
+);
 library.add(faTwitter, faFacebook, faStackOverflow, faGithub, faGoogle)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

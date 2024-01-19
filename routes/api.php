@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\FileHistoryController;
 use App\Http\Controllers\Admin\ImportMultipleController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\SendMailAllUserController;
@@ -52,6 +53,11 @@ Route::get('/callback/{social}', [SocialAuthController::class, 'callback']);
 Route::post('/admin/users/login/store', [LoginController::class, 'login']);
 Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::prefix('files')->group(function () {
+        Route::get('/listFile', [FileHistoryController::class, 'getList']);
+        Route::post('/upload-file', [UploadController::class, 'uploadFileExcel']);
+        Route::get('/download/{id}', [UploadController::class, 'download']);
+    });
     Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll']);
     Route::post('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser']);
@@ -80,6 +86,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::put('edit/{id}', [ProductController::class, 'update']);
         Route::delete('destroy/{id}', [ProductController::class, 'destroy']);
         Route::post('search', [SearchProducts::class, 'search']);
+        Route::post('/import-product', [ImportMultipleController::class, 'importMultiple']);
     });
     Route::prefix('sliders')->group(function () {
         Route::post('add', [SliderController::class, 'store']);
@@ -126,15 +133,11 @@ Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset']);
 
 #cart
 Route::get('customers', [CustomerController::class, 'index']);
-Route::get('customers/view/{id}', [CustomerController::class, 'show']);
 
 #upload
 Route::post('upload/services', [UploadController::class, 'store']);
 
-Route::get('/', [App\Http\Controllers\MainController::class, 'index'])->name('page');
-Route::get('/services/load-product/{id}', [App\Http\Controllers\MainController::class, 'loadProduct']);
 Route::get('/danh-muc/{id}', [App\Http\Controllers\MenuController::class, 'index']);
 Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'index']);
-Route::get('/about', [PageController::class, 'about'])->name('page.about');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

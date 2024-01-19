@@ -163,9 +163,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+        // Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -234,10 +233,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        // 'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
     ],
 
 ];

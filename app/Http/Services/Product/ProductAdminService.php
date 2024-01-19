@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProductAdminService
@@ -146,22 +147,21 @@ class ProductAdminService
 
     public function delete($id)
     {
-        $product = Product::find($id);
-        if ($product) {
+        try {
             DB::beginTransaction();
-            try {
-                $path = str_replace('storage', 'public', $product->file);
-                Storage::delete($path);
-                $product->delete();
-                DB::commit();
-                return true;
-            } catch (\Exception $err) {
-                Log::info($err->getMessage());
-                DB::rollback();
-                return false;
+            $product = Product::find($id);
+            if (!$product) {
+                throw new \Exception('Product not found');
             }
+            $path = str_replace('storage', 'public', $product->file);
+            Storage::delete($path);
+            $product->delete();
+            Log::channel('history')->info('Người dùng ' . auth()->user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($product) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . auth()->user()->name);
+            DB::commit();
+            return true;
+        } catch (\Exception $err) {
+            DB::rollback();
+            return $err->getMessage();
         }
-        DB::rollback();
-        return false;
     }
 }
