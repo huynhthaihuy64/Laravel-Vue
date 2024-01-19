@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Http\Services\Product\ProductAdminService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -21,6 +23,7 @@ class ProductController extends Controller
         $paginate = $request->limit ?? 5;
         $data = $this->productService->get($request->toArray(),$paginate);
         $listProducts = ProductResource::collection($data);
+        Log::channel('history')->info('Người dùng ' . auth()->user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($data) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . auth()->user()->name);
         return $listProducts;
     }
 

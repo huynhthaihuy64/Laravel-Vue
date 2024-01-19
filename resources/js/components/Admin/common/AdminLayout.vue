@@ -2,7 +2,7 @@
   <div :class="bodyClasses()">
     <MainHeader />
     <div class="body-wrapper">
-      <Sidebar />
+      <Sidebar class="sidebar" />
       <div class="content-wrapper">
         <router-view></router-view>
       </div>
@@ -36,11 +36,14 @@ export default {
   margin-top: 10px;
 }
 
+.sidebar {
+  flex: 0 0 30%; /* Sidebar chiếm 30%, không co giãn, không co nhỏ */
+}
+
 .content-wrapper {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  flex: 1;
+  flex: 1; /* Content chiếm 70%, co giãn và co nhỏ theo nhu cầu */
   border-radius: 5px;
-  margin-right: 17px;
 }
 
 .dark-mode {

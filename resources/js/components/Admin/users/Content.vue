@@ -344,7 +344,7 @@ export default {
     },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/users/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -359,7 +359,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row, this.page, name, this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(avatar) {
       const index = this.fileList.indexOf(avatar);
@@ -380,7 +380,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -388,7 +388,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -400,7 +400,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -443,7 +443,7 @@ export default {
           httpRequest.post('/api/users/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
@@ -466,7 +466,7 @@ export default {
           httpRequest.post('/api/sendMailAll', formData).then((response) => {
             this.info = response
             this.flagModelSendMail = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Send Mail Success'
@@ -503,7 +503,7 @@ export default {
     deleteUser() {
       httpRequest.delete('/api/users/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: '' + this.$store.getters.localizedStrings.user_management.delete.success
@@ -564,7 +564,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: '' + this.$store.getters.localizedStrings.user_management.edit_user.success
@@ -605,11 +605,11 @@ export default {
   mounted() {
     this.getCurrentUser()
     this.getRole()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }

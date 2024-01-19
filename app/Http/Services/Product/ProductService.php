@@ -3,7 +3,7 @@
 
 namespace App\Http\Services\Product;
 
-
+use App\Models\Menu;
 use App\Models\Product;
 
 class ProductService
@@ -60,5 +60,29 @@ class ProductService
             $q->where('name', 'LIKE', "%$textSearch%");
         })->get();
         return $products;
+    }
+
+    /**
+     * Handle processing of performance data
+     *
+     * @param array $item
+     * @param int $type
+     * @param string $time
+     * @param int $userId
+     */
+    public function handleProductData($item, $time): void
+    {
+        $common = [
+            'name' => $item['name'],
+            'description' => $item['description'],
+            'content' => $item['content'],
+            'price' => $item['price'],
+            'price_sale' => $item['price_sale'],
+            'active' => $item['active'],
+            'updated_at' => $time
+        ];
+        $menu = Menu::where('name', $item['menu'])->first()?->toArray();
+        $product = Product::updateOrCreate(['name' => $item['name']], $common);
+        $product->menus()->sync($menu['id']);
     }
 }

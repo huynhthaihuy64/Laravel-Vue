@@ -17,11 +17,10 @@ class ExportMultiple implements FromCollection, WithHeadings
         $count = 1;
         $mappedData = collect($this->data)->map(function ($item) use (&$count) {
             $mappedRow = [
-                __('Mã đối tượng') => $item['code_object'],
-                __('Mã chỉ tiêu') => $item['code_target'],
+                __('Mã đối tượng') => $item['code'],
+                __('Mã chỉ tiêu') => $item['goal_code'],
                 __('Thời gian') => $item['time'],
-                __('Giá trị tính (%)') => $item['calculated_value'],
-                __('Giá trị TT (%)') => $item['real_value'],
+                __('Tỷ trọng (%)') => $item['proportion'],
                 __('Nội dung lỗi') => $item['message'] ?? '',
             ];
             $count++;
@@ -41,8 +40,7 @@ class ExportMultiple implements FromCollection, WithHeadings
             'Mã đối tượng',
             'Mã chỉ tiêu',
             'Thời gian',
-            'Giá trị tính (%)',
-            'Giá trị TT (%)',
+            'Tỷ trọng (%)',
             'Nội dung lỗi',
         ];
     }
