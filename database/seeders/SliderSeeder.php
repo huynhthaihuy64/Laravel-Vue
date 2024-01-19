@@ -20,6 +20,7 @@ class SliderSeeder extends Seeder
             ['name' => 'Facebook','url'=> 'https://www.facebook.com/' ,'file' => '/storage/Slider/facebook.jpeg', 'active' => 1, 'sort_by' => 1],
             ['name' => 'Instagram','url'=> 'https://www.instagram.com/' ,'file' => '/storage/Slider/Instagram.png', 'active' => 1, 'sort_by' => 2],
             ['name' => 'Tik Tok','url'=> 'https://www.tiktok.com/en/' ,'file' => '/storage/Slider/download.png', 'active' => 1, 'sort_by' => 1],
+            ['name' => 'Laravel', 'url' => 'https://laravel.com/', 'file' => '/storage/Slider/laravel.png', 'active' => 1, 'sort_by' => 1],
         ]);
     }
 }
