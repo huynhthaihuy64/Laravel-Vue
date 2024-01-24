@@ -22,10 +22,6 @@ class StaffUnitGoal extends Model
         return $this->belongsTo(Staff::class);
     }
 
-    public function goal() {
-        return $this->belongsTo(Goal::class);
-    }
-
     public function Unit() {
         return $this->belongsTo(Unit::class);
     }

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\UserProductResource;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Customer\CustomerService;
+use App\Models\Cart;
 use App\Models\Customer;
+use App\Models\UserProduct;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +29,7 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
-        return CustomerResource::collection($this->customerService->index($request->toArray()));
+        return UserProductResource::collection($this->customerService->index($request->toArray()));
     }
 
     public function chartCustomer(Request $request) {
@@ -68,7 +71,7 @@ class CustomerController extends Controller
     }
 
     public function getYear() {
-        $years = Customer::select(DB::raw('DISTINCT YEAR(created_at) year'))->get();
+        $years = UserProduct::select(DB::raw('YEAR(created_at) year'))->distinct()->get();
         return $years;
     }
 }

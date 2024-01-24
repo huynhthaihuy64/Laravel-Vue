@@ -31,8 +31,10 @@
                 <div class="card card-primary card-outline">
                   <div class="card-body box-profile">
                     <div class="text-center">
-                      <a :href="initialValue.edit_avatar" target="_blank"><img
+                      <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img
                           class="image-contain profile-user-img img-fluid img-circle" :src="`${initialValue.edit_avatar}`" /></a>
+                      <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img
+                            class="image-contain profile-user-img img-fluid img-circle" src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" /></a>
                     </div>
 
                     <h3 class="profile-username text-center">{{ initialValue.edit_name }}</h3>
@@ -329,8 +331,10 @@
                               <a-button> <a-icon
                                   type="upload" />{{ $store.getters.localizedStrings.profile.profile.upload }}</a-button>
                             </a-upload>
-                            <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img class="image-contain fileUpdate"
                                 :src="`${initialValue.edit_avatar}`" height="100px" /></a>
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img class="image-contain fileUpdate"
+                                  src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" height="100px" /></a>
                           </a-form-item>
                           <a-form-item :label="$store.getters.localizedStrings.profile.profile.gender.album">
                             <a-upload v-decorator="['images']" name="images" :multiple="true"

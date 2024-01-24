@@ -66,7 +66,7 @@
         <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
       </div>
       <div class="flex-shrink-0" v-if="!initialValue.edit_avatar">
-        <img src="../../../../../public/images/avatar.png" alt="Generic placeholder image" class="image-contain avatar" />
+        <img src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" alt="Generic placeholder image" class="image-contain avatar" />
       </div>
       <div class="info">
         <a-dropdown>

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "aws/aws-sdk-php": "^3.296",
         "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.7",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -20,6 +21,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "*",
         "laravel/vonage-notification-channel": "^3.2",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "^3.1",
         "mcamara/laravel-localization": "^1.8",
         "nesbot/carbon": "^2.66",

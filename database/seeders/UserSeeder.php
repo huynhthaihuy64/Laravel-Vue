@@ -17,15 +17,11 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-        $path = '/avatar/reynolds.immanuel.jpg';
-        Storage::disk('public')->put('/uploads/' . $path, file_get_contents($faker->imageUrl(400, 400, 'people')));
         User::create([
             'role_id' => '1',
             'email' => 'huynhthaihuy64@gmail.com',
             'name' => 'Huy Huỳnh',
             'gender' => 0,
-            'avatar' => '/storage/'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Da Nang',
@@ -40,7 +36,6 @@ class UserSeeder extends Seeder
             'email' => 'ch4ut1nhtr1@gmail.com',
             'name' => 'Huỳnh Huy',
             'gender' => 0,
-            'avatar' => '/storage/'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Sài Gòn',
@@ -55,7 +50,6 @@ class UserSeeder extends Seeder
             'email' => 'kinsatthu123@gmail.com',
             'name' => 'Huỳnh Thái Huy',
             'gender' => 0,
-            'avatar' => '/storage/'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Hà Nội',

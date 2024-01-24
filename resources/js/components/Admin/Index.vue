@@ -4,7 +4,7 @@
       <div class="container">
         <div class="row">
           <div class="col-6">
-            <a-select default-value="2023">
+            <a-select :default-value="year">
           <i slot="suffixIcon" class="fas fa-sort-down dropdown-icon"></i>
           <a-select-option v-for="(data, index) in years" :value="data.year" :key="`data_${index}`"
             @click="getChartCustomer(data.year)">
@@ -14,7 +14,7 @@
             <Bar id="my-chart-id" :options="chartOptions" :data="chartData" class="my-chart" height="400px" />
           </div>
           <div class="col-6">
-            <a-select default-value="2023">
+            <a-select :default-value="year">
           <i slot="suffixIcon" class="fas fa-sort-down dropdown-icon"></i>
           <a-select-option v-for="(data, index) in years" :value="data.year" :key="`data_${index}`"
             @click="getChartRevenue(data.year)">
@@ -43,6 +43,7 @@ export default {
         labels: [],
         datasets: [{ data: [] }]
       },
+      year: new Date().getFullYear(),
       chartOptions: {
         responsive: false
       },
@@ -56,7 +57,7 @@ export default {
     }
   },
   methods: {
-    async getChartCustomer(year = 2023) {
+    async getChartCustomer(year = new Date().getFullYear()) {
       await httpRequest.get('/api/charts/customers/chart?year=' + year)
         .then((data) => {
           this.chartCustomer = data.data
@@ -64,7 +65,7 @@ export default {
           this.createdChart()
         })
     },
-    async getChartRevenue(year = 2023) {
+    async getChartRevenue(year = new Date().getFullYear()) {
       await httpRequest.get('/api/charts/customers/chart-revenue?year=' + year)
         .then((data) => {
           this.chartRevenue = data.data

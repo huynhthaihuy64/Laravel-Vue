@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('/listFile', [FileHistoryController::class, 'getList']);
         Route::post('/upload-file', [UploadController::class, 'uploadFileExcel']);
         Route::get('/download/{id}', [UploadController::class, 'download']);
+        Route::post('/upload-file-s3', [UploadController::class, 'uploadFileS3']);
     });
     Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll']);
     Route::post('/admin/users/logout', [LoginController::class, 'logout']);

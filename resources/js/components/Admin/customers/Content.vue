@@ -16,28 +16,24 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>User_ID</th>
-            <th>Phone</th>
-            <th class="sortType"><a @click="toggleSort('address')">Address <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('email')">Email <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('content')">Content <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('total_tax')">Total_Tax <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">User_ID</th>
+            <th class="center-text">Phone</th>
+            <th class="sortType center-text"><a @click="toggleSort('address')">Address <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('email')">Email <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('total_sum')">Total <i class="fas fa-sort"></i></a></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in customers" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td> {{ item.user_id }} </td>
-            <td>{{ item.phone }}</td>
-            <td>{{ item.address }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.content }}</td>
-            <td>{{ item.total_tax | formatNumber }}</td>
-            <td>{{ item.created_at }}</td>
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.user.name }}</td>
+            <td class="center-text"> {{ item.user.id }} </td>
+            <td class="center-text">{{ item.user.phone }}</td>
+            <td class="center-text">{{ item.user.address }}</td>
+            <td class="center-text">{{ item.user.email }}</td>
+            <td class="center-text">{{ item.total_sum | formatNumber }}</td>
           </tr>
         </tbody>
       </table>
@@ -421,6 +417,11 @@ td {
 .fileUpdate {
   width: 60%;
   height: 150px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .title {
