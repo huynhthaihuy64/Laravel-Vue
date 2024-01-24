@@ -51,26 +51,26 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">{{ $store.getters.localizedStrings.user_management.no }}</th>
-            <th class="sortType"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }}
+            <th scope="col" class="category-order center-text">{{ $store.getters.localizedStrings.user_management.no }}</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }}
                 <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email
+            <th class="sortType center-text"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email
             }} <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone
+            <th class="sortType center-text"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone
             }}<i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">{{
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">{{
               $store.getters.localizedStrings.user_management.created }} <i class="fas fa-sort"></i></a></th>
             <th v-if="currentUser.role === 1"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in users" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.phone }}</td>
-            <td>{{ item.created_at }}</td>
-            <td v-if="currentUser.role === 1">
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text">{{ item.email }}</td>
+            <td class="center-text">{{ item.phone }}</td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text" v-if="currentUser.role === 1">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -794,6 +794,11 @@ td {
 
 .btn-button-cancel {
   padding: 0 35px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .primary {

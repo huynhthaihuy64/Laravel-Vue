@@ -20,25 +20,25 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>Url</th>
-            <th>Image</th>
-            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
-            <th>Action</th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Url</th>
+            <th class="center-text">Image</th>
+            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in sliders" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td><a :href="item.url" target="_blank"> {{ item.url }} </a></td>
-            <td><img class="file image-contain" :src="`${item.file}`" /></td>
-            <td v-if="item.active == 0"><span class="btn btn-danger btn-xs w-75">InActive</span></td>
-            <td v-if="item.active == 1"><span class="btn btn-success btn-xs w-75">Active</span></td>
-            <td>{{ item.created_at }}</td>
-            <td>
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text"><a :href="item.url" target="_blank"> {{ item.url }} </a></td>
+            <td class="center-text"><img class="file image-contain" :src="`${item.file}`" /></td>
+            <td class="center-text" v-if="item.active == 0"><span class="btn btn-danger btn-xs w-75">InActive</span></td>
+            <td class="center-text" v-if="item.active == 1"><span class="btn btn-success btn-xs w-75">Active</span></td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -735,6 +735,11 @@ td {
   font-weight: 700;
   color: #000;
   margin-bottom: 18px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .pagination-wrapper {

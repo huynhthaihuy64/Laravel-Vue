@@ -26,32 +26,32 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>Description</th>
-            <th>Category</th>
-            <th class="sortType"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('price_sale')">Price_Sale <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
-            <th>Image</th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
-            <th>Action</th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Description</th>
+            <th class="center-text">Category</th>
+            <th class="sortType center-text"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('price_sale')">Price_Sale <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Image</th>
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in products" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td>{{ item.description !== null ? item.description.length > 30 ? item.description.slice(0, 30) + '...' :
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text">{{ item.description !== null ? item.description.length > 30 ? item.description.slice(0, 30) + '...' :
               item.description : '' }}</td>
-            <td>{{ item.menuName }}</td>
-            <td>{{ item.price | formatNumber }}</td>
-            <td>{{ item.price_sale | formatNumber }}</td>
-            <td v-if="item.active == 0"><span class="btn btn-danger btn-xs">InActive</span></td>
-            <td v-if="item.active == 1"><span class="btn btn-success btn-xs">Active</span></td>
-            <td><img class="file image-contain" :src="`${item.file}`" /></td>
-            <td>{{ item.created_at }}</td>
-            <td>
+            <td class="center-text">{{ item.menuName }}</td>
+            <td class="center-text">{{ item.price | formatNumber }}</td>
+            <td class="center-text">{{ item.price_sale | formatNumber }}</td>
+            <td class="center-text" v-if="item.active == 0"><span class="btn btn-danger btn-xs">InActive</span></td>
+            <td class="center-text" v-if="item.active == 1"><span class="btn btn-success btn-xs">Active</span></td>
+            <td class="center-text"><img class="file image-contain" :src="`${item.file}`" /></td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -935,6 +935,11 @@ td {
   font-weight: 700;
   color: #000;
   margin-bottom: 18px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .pagination-wrapper {

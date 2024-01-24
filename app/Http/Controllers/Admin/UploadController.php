@@ -6,6 +6,7 @@ use App\Constants\FileConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UploadExcelRequest;
 use App\Http\Resources\FileResource;
+use App\Http\Resources\FileS3Resource;
 use Illuminate\Http\Request;
 use App\Http\Services\UploadService;
 use App\Traits\ResponseTrait;
@@ -63,5 +64,19 @@ class UploadController extends Controller
                 "Access-Control-Expose-Headers" => "Content-Disposition"
             ]
         );
+    }
+
+    public function uploadFileS3(UploadExcelRequest $request): JsonResponse
+    {
+        $data = $request->all();
+        $file = $data[FileConstants::INPUT_FILE];
+        $data['user_id'] = Auth::id();
+        $file = $this->uploadService->uploadFileS3($file, $data);
+
+        //Get All
+        // return $this->responseSuccess(FileS3Resource::collection($file));
+
+        //Get 1
+        return $this->responseSuccess(FileS3Resource::make($file));
     }
 }

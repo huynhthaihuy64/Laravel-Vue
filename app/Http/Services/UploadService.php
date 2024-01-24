@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class UploadService
@@ -248,5 +249,15 @@ class UploadService
             'file_size' => filesize($newFilePath)
         ];
         return $newFileDetail;
+    }
+    public function uploadFileS3(UploadedFile $file, array $data)
+    {
+        //Upload File To S3
+        $file->storeAs('Images/' . Auth::user()->name, $file->getClientOriginalName(), 's3');
+        $fileInfo = Storage::disk('s3')->getMetadata('Images/' . Auth::user()->name . '/' . $file->getClientOriginalName());
+
+        //Get All File
+        // $fileInfo = Storage::disk('s3')->listContents('Images/'. Auth::user()->name);
+        return $fileInfo;
     }
 }

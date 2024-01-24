@@ -5,31 +5,43 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">No</th>
-                        <th class="sortType"><a @click="toggleSort('type')">File Type <i class="fas fa-sort"></i></a></th>
-                        <th class="sortType"><a @click="toggleSort('name')">File Name<i class="fas fa-sort"></i></a></th>
-                        <th class="d-flex justify-content-center">Download</th>
-                        <th class="sortType"><a @click="toggleSort('created_at')">Upload Time <i class="fas fa-sort"></i></a></th>
-                        <th class="sortType"><a @click="toggleSort('user_id')">Handler <i class="fas fa-sort"></i></a>
+                        <th scope="col" class="center-text">No</th>
+                        <th class="sortType center-text"><a @click="toggleSort('type')">File Type <i class="fas fa-sort"></i></a></th>
+                        <th class="sortType center-text"><a @click="toggleSort('name')">File Name<i class="fas fa-sort"></i></a></th>
+                        <th scope="col" class="center-text">Download</th>
+                        <th class="sortType center-text"><a @click="toggleSort('created_at')">Upload Time <i
+                                    class="fas fa-sort"></i></a></th>
+                        <th class="sortType center-text"><a @click="toggleSort('user_id')">Handler <i class="fas fa-sort"></i></a>
                         </th>
-                        <th class="sortType"><a @click="toggleSort('status')">Result <i class="fas fa-sort"></i></a>
+                        <th class="sortType center-text"><a @click="toggleSort('status')">Result <i class="fas fa-sort"></i></a>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in files" :key="item.id">
-                        <th scope="row">{{ index + 1 }}</th>
-                        <td v-if="item.type == 1">Product</td>
-                        <td v-if="item.type == 2">Menu</td>
-                        <td>{{ item.file_name !== null ? item.file_name.length > 30 ? item.file_name.slice(0, 30) +
-                            '...' :
-                            item.file_name : '' }}</td>
-                        <td class="d-flex justify-content-center"><button @click="handleDownload(item.id,item.file_name)"><font-awesome-icon :icon="['fas', 'fa-download']" /></button></td>
-                        <td>{{ formatDateTime(item.created_at) }}</td>
-                        <td>{{ item.user.name }}</td>
-                        <td v-if="item.status == 1"><span class="btn btn-secondary btn-xs w-75">UnRead</span></td>
-                        <td v-if="item.status == 2"><span class="btn btn-danger btn-xs w-75">Failed</span></td>
-                        <td v-if="item.status == 3"><span class="btn btn-success btn-xs w-75">Success</span></td>
+                        <th scope="row" class= "align-items-center center-text">{{ index + 1 }}</th>
+                        <td scope="row" v-if="item.type == 1" class="align-items-center center-text">Product</td>
+                        <td scope="row" v-if="item.type == 2" class="align-items-center center-text">Menu</td>
+                        <td scope="row" class="align-items-center center-text">
+                            {{ item.file_name !== null ? (item.file_name.length > 30 ? item.file_name.slice(0, 30) + '...' :
+                                item.file_name) : '' }}
+                        </td>
+                        <td scope="row" class="align-items-center center-text">
+                            <button @click="handleDownload(item.id, item.file_name)">
+                                <font-awesome-icon :icon="['fas', 'fa-download']" />
+                            </button>
+                        </td>
+                        <td scope="row" class="align-items-center center-text">{{ formatDateTime(item.created_at) }}</td>
+                        <td scope="row" class="align-items-center center-text">{{ item.user.name }}</td>
+                        <td v-if="item.status == 1" class="align-items-center center-text">
+                            <span scope="row" class="btn btn-secondary btn-xs w-75 h-50">UnRead</span>
+                        </td>
+                        <td v-if="item.status == 2" class="align-items-center center-text">
+                            <span scope="row" class="btn btn-danger btn-xs w-75 h-50">Failed</span>
+                        </td>
+                        <td v-if="item.status == 3" class="align-items-center center-text">
+                            <span scope="row" class="btn btn-success btn-xs w-75 h-50">Success</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -98,8 +110,8 @@ export default {
         },
     },
     methods: {
-         formatDateTime(dateTime) {
-           return moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+        formatDateTime(dateTime) {
+            return moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
         },
         getResult(row, page, name = '', sorter = 'desc') {
             httpRequest
@@ -169,7 +181,7 @@ export default {
             }
         },
         handleDownload(id, name) {
-            httpRequest.get('/api/files/download/' + id , { responseType: 'arraybuffer' })
+            httpRequest.get('/api/files/download/' + id, { responseType: 'arraybuffer' })
                 .then((response) => {
                     var fileURL = window.URL.createObjectURL(new Blob([response.data]));
                     var fileLink = document.createElement('a');
@@ -441,6 +453,11 @@ td {
     font-weight: 700;
     color: #000;
     margin-bottom: 18px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .pagination-wrapper {

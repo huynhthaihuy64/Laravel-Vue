@@ -270,10 +270,10 @@ export default {
                             icon: 'success',
                             title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
                         });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
                     })
-                    // setTimeout(function () {
-                    //     window.location.reload();
-                    // }, 1000);
                     this.form.resetFields();
                 })
         }
