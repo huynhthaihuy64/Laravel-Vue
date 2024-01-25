@@ -113,20 +113,27 @@ class ProductAdminService
     {
         $product = Product::findOrFail($id);
         $isValidPrice = $this->isValidPrice($request);
-        $file = $this->uploadService->uploadFile($request['file'], 'product');
-        $request['file'] = $file['file_path'];
+        if (isset($request['file'])) {
+            $file = $this->uploadService->uploadFile($request['file'], 'product');
+            $request['file'] = $file['file_path'];
+        }
         if ($isValidPrice === false) return false;
         try {
             DB::beginTransaction();
-            $product->update([
+            $data = [
                 'name' => $request['name'],
                 'price' => $request['price'],
                 'price_sale' => $request['price_sale'],
                 'description' => $request['description'],
                 'content' => isset($request['content']) ? $request['content'] : null,
-                'file' => $request['file'],
                 'active' => $request['active'],
-            ]);
+            ];
+            if (isset($request['file'])) {
+                $data['file'] = $request['file'];
+                $product->update($data);
+            } else  {
+                $product->update($data);
+            }
             $product->menus()->detach();
             $product->menus()->attach($request['menu_id']);
             // foreach($request['menu_id'] as $menu){

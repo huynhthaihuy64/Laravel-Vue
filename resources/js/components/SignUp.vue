@@ -79,7 +79,6 @@
         <a class="go" href="/api/redirect/google" target="_blank"><font-awesome-icon :icon="['fab', 'google']"
             class="mr-1" />Google
         </a>
-        <a class="fb" href="/api/auth/facebook"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a>
       </div>
     </a-form>
   </div>
@@ -306,14 +305,6 @@ button {
 
 .social div:hover {
   background-color: rgba(255, 255, 255, 0.47);
-}
-
-.social .fb {
-  background: #56acfc !important;
-  margin-left: 25px;
-  text-align: center;
-  padding: 10px;
-  margin: 0 auto // căn giữa 
 }
 
 .social .go {
