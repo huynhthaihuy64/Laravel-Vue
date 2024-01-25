@@ -237,7 +237,6 @@ class UploadService
             Storage::makeDirectory($uploadFolder);
         }
         $path = Storage::path($uploadFolder);
-
         if (!file_exists($path)) {
             mkdir($path, Constants::PERMISSION, true);
         }
