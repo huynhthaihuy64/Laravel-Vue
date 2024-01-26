@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'password' => $this->password,
             'department' => $this->department,
             'birthday' => Carbon::parse($this->birthday)->format('Y/m/d'),
-            'gender' => $this->gender === 0 ? 'Male' : 'Female',
+            'gender' => $this->gender === 0 ? __('messages.user.gender.male') : __('messages.user.gender.female'),
             'role_id' => $this->role_id,
             'address' => $this->address,
             'created_at' => Carbon::parse($this->created_at)->format('Y/m/d'),

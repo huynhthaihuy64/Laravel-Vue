@@ -26,7 +26,7 @@ class TwoFAController extends Controller
     {
         $users = User::where('id', '!=', auth()->user()->id)->get();
         return view('2fa',[
-            'title' => 'Send OTP',
+            'title' => __('messages.user.sms.messages.send-otp'),
             'searchProducts' => $this->product->getAll(),
             'products' => $this->product->get(),
             'users' => $users

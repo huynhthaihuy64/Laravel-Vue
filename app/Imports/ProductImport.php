@@ -41,7 +41,7 @@ class ProductImport implements ToCollection
         if ($key === 2) {
             for ($i = 0; $i < count($this->headers); $i++) {
                 if ($headers[$i] !== $this->headers[$i]) {
-                    throw new Exception(__('Header Không đúng'));
+                    throw new Exception(__(__('messages.validation.import.header')));
                 }
             }
         }

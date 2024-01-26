@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserService
 {
@@ -35,7 +36,7 @@ class UserService
                     $uploadFiles[] = $this->uploadService->uploadFile($file, 'album/' . $id);
                 }
                 if (!$uploadFiles || empty($uploadFiles)) {
-                    throw new \Exception('Upload File failed');
+                    throw new BadRequestException(__('messages.upload-file.failed'));
                 }
                 foreach ($uploadFiles as $file) {
                     $userOrigin->userAlbums()->save(new UserAlbum([
@@ -62,7 +63,7 @@ class UserService
                 }
             }
             if (!$userOrigin) {
-                return response()->json('failed');
+                return response()->json(__('messages.user.update.failed'));
             }
             DB::commit();
             return $userOrigin;

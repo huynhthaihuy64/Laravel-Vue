@@ -3,6 +3,7 @@
 
 namespace App\Http\Services\Product;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Services\UploadService;
 use App\Models\Image;
 use App\Models\Menu;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ProductAdminService
 {
@@ -66,7 +68,7 @@ class ProductAdminService
                     $uploadFiles[] = $this->uploadService->uploadFile($file, 'album/' . $product->id);
                 }
                 if (!$uploadFiles || empty($uploadFiles)) {
-                    throw new \Exception('Upload File failed');
+                    throw new BadRequestException(__('messages.upload-file.failed'));
                 }
                 foreach ($uploadFiles as $file) {
                     $product->images()->save(new Image([
@@ -158,7 +160,7 @@ class ProductAdminService
             DB::beginTransaction();
             $product = Product::find($id);
             if (!$product) {
-                throw new \Exception('Product not found');
+                throw new NotFoundException(Product::class);
             }
             $path = str_replace('storage', 'public', $product->file);
             Storage::delete($path);

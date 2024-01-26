@@ -35,12 +35,12 @@ class UpdatePasswordRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Email is required',
-            'email.email' => 'The attribute must be a valid email address',
-            'email.exists' => 'Email is not exist',
-            'password.required' => 'Password is required',
-            'password.confirmed' => 'Password confirm does not match',
-            'password.regex' => 'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
+            'email.required' => __('messages.validation.user.email.required'),
+            'email.email' => __('messages.validation.user.email.email'),
+            'email.exists' =>  __('messages.validation.user.email.exists'),
+            'password.required' => __('messages.validation.user.password.required'),
+            'password.confirmed' => __('messages.validation.user.password.confirmed'),
+            'password.regex' => __('messages.validation.user.password.regex'),
         ];
     }
 

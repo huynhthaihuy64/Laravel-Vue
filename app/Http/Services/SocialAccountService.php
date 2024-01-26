@@ -27,7 +27,7 @@ class SocialAccountService
                 'title' => 'Login'
             ];
             Mail::to($details['email'])->send(new RegisterUser($details));
-            return response()->json(['message' => 'Please check your email']);
+            return response()->json(['message' => __('messages.mail.send.email')]);
         } else {
             $email = $providerUser->getEmail() ?? $providerUser->getNickname();
             $account = new SocialAccount([
@@ -56,7 +56,7 @@ class SocialAccountService
                 'title' => 'Login'
             ];
             Mail::to($details['email'])->send(new RegisterUser($details));
-            return response()->json(['message' => 'Please check your email']);
+            return response()->json(['message' => __('messages.mail.send.email')]);
         }
     }
 }

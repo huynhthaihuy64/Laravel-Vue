@@ -34,10 +34,11 @@ class ImportRequest extends FormRequest
     public function messages()
     {
         return [
-            'file.required' => 'File is required',
-            'file.*.file' => 'File is File',
-            'file.*.mimes' => 'Type File must be CSV or XLSX',
-            'file.*.max' => 'Max is 50MB'
+            'file.required' => __('messages.validation.file.required'),
+            'file.*.required' => __('messages.validation.file.required'),
+            'file.*.file' => __('messages.validation.file.*.file'),
+            'file.*.mimes' => __('messages.validation.file.*.mimes'),
+            'file.*.max' => __('messages.validation.file.*.max')
         ];
     }
 

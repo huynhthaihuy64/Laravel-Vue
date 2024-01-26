@@ -43,6 +43,22 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Simple Static Dashboard
 - Developer Options for OAuth Clients and Personal Access Token
 - Build with Docker
+- Payment by Paypal
+- Chat with friend
+- Upload file AWS S3
+- Xhprof Test Performance
+- Send SMS Vonage
+
+## Library
+
+- aws-sdk
+- l5-swagger
+- slack-notification
+- socialite
+- vonage-notification-chanel
+- flysystem-aws-s3-v3
+- maatwebsite
+- srmklive/paypal
 
 ## Installation
 
@@ -70,9 +86,6 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan passport:install`
-- Application http://localhost:8083/
-- DBhost: yourIP:3309, user: root, Password: 123456
-
 
 ## Unit Test
 

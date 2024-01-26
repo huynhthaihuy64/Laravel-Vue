@@ -409,9 +409,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {

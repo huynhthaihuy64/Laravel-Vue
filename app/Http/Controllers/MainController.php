@@ -49,10 +49,10 @@ class MainController extends Controller
         ];
         Mail::to($details['email'])->send(new MailContact($details));
         if (Mail::failures()) {
-            session()->flash('error', 'Send Failed');
+            session()->flash('error', __('messages.mail.send.failed'));
             return redirect()->back();
         } else {
-            session()->flash('success', 'Send Success');
+            session()->flash('success', __('messages.mail.send.success'));
             return redirect()->back();
         }
     }
@@ -112,7 +112,7 @@ class MainController extends Controller
             case 4:
                 try {
                     Excel::import(new MenuImport, $file);
-                    return response()->json(['message' => 'import Menu success']); 
+                    return response()->json(['message' => __('messages.import.menu')]); 
                     break;
                 } catch (\Exception $ex) {
                     return response()->json(($ex->getMessage()), 400);

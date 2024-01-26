@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Product\ProductService;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class CartController extends Controller
 {

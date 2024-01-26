@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CustomerResource;
 use App\Http\Resources\UserProductResource;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Customer\CustomerService;
-use App\Models\Cart;
-use App\Models\Customer;
 use App\Models\UserProduct;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

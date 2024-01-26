@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Constants\Constants;
 use App\Constants\FileConstants;
+use App\Exceptions\NotFoundException;
 use App\Models\File as ModelsFile;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -122,7 +123,7 @@ class UploadService
     {
         $file = ModelsFile::find($id);
         if (!$file || !file_exists($file->file_path)) {
-            throw new Exception('File '. $id .'not found');
+            throw new NotFoundException(File::class . $id);
         }
 
         return $file;

@@ -34,9 +34,9 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Please enter your email',
-            'password.required' => 'Please enter your password',
-            'password.regiex' => 'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
+            'email.required' => __('messages.validation.user.email.required'),
+            'password.required' => __('messages.validation.user.password.required'),
+            'password.regex' => __('messages.validation.user.password.regex')
         ];
     }
 

@@ -39,7 +39,7 @@ class ImportService
                 );
             }
             DB::commit();
-            return __('Thành Công');
+            return __('messages.import.success');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;

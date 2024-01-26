@@ -264,7 +264,7 @@
                                   'department',
                                   {
                                     initialValue: initialValue.edit_department,
-                                    rules: [{ required: true, message: 'Please input your name!' }],
+                                    rules: [{ required: true, message: 'Please input your department!' }],
                                   },
                                 ]" />
                               </a-form-item>
@@ -273,7 +273,7 @@
                                   'address',
                                   {
                                     initialValue: initialValue.edit_address,
-                                    rules: [{ required: true, message: 'Please input your name!' }],
+                                    rules: [{ required: true, message: 'Please input your address!' }],
                                   },
                                 ]" />
                               </a-form-item>
