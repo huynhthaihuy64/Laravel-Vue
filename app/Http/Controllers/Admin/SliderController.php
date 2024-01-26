@@ -63,7 +63,7 @@ class SliderController extends Controller
         if ($result) {
             return response()->json([
                 'error' => false,
-                'message' => 'Delete Slider Success'
+                'message' => __('messages.slider.delete.success')
             ]);
         }
 

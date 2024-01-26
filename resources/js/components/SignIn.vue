@@ -128,12 +128,6 @@ export default {
         },
         onToggleShowPassword() {
             this.isShowPassword = !this.isShowPassword
-        },
-        getURL() {
-            Toast.fire({
-                icon: 'success',
-                title: 'OK'
-            });
         }
     },
     computed: {

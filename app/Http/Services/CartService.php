@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Exceptions\AppValidationException;
+use App\Exceptions\NotFoundException;
 use App\Mail\ThankForBuy;
 use App\Models\Cart;
 use App\Models\Customer;
@@ -51,13 +53,13 @@ class CartService
         $user = auth()->user();
         $product = $this->product->find($params['product_id']);
         if (!$product) {
-            throw new \Exception('Product not found');
+            throw new NotFoundException(Product::class);
         }
         try {
             DB::beginTransaction();
             $checkCart = $this->cart->where('user_id', $user->id)->where('product_id', $product->id)->first();
             if ($checkCart) {
-                throw new \Exception('You already have it in your cart');
+                throw new AppValidationException(__('messages.validation.cart.exists'));
             }
             $cart = $this->cart->create([
                 'user_id' => $user->id,
@@ -78,7 +80,7 @@ class CartService
     {
         $cart = $this->cart->find($id);
         if (!$cart) {
-            throw new \Exception("Cart Not Found");
+            throw new NotFoundException(Cart::class);
         }
         return $cart;
     }
@@ -91,7 +93,7 @@ class CartService
                 foreach ($params['carts'] as $val) {
                     $cart = $this->cart->find($val['id']);
                     if (!$cart) {
-                        throw new \Exception("Cart Not Found");
+                        throw new NotFoundException(Cart::class);
                     }
                     $cart->update([
                         'qty' => $val['qty'],
@@ -101,7 +103,7 @@ class CartService
             } else {
                 $cart = $this->cart->find($params['carts']['id']);
                 if (!$cart) {
-                    throw new \Exception("Cart Not Found");
+                    throw new NotFoundException(Cart::class);
                 }
                 $cart->update([
                     'qty' => $params['carts']['qty'],
@@ -127,7 +129,7 @@ class CartService
                 $this->cart->where('id', $ids)->delete();
             }
             DB::commit();
-            return ['message' => "Delete Success"];
+            return ['message' => __('messages.cart.delete.success')];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -163,7 +165,7 @@ class CartService
             "purchase_units" => [
                 [
                     "amount" => [
-                        "currency_code" => "USD",
+                        "currency_code" => __('messages.cart.payment.currency_code'),
                         "value" => $amount
                     ]
                 ]
@@ -177,7 +179,7 @@ class CartService
                 }
             }
         } else {
-            return response()->json(['message' => "Can't Payment"]);
+            return response()->json(['message' => __('messages.cart.payment.failed')]);
         }
     }
 
@@ -189,19 +191,19 @@ class CartService
         $response = $provider->capturePaymentOrder($param->token);
         $data = $param->toArray();
         $paypal = $this->paypal->where('token',$data['token'])->get()->toArray();
-        if (isset($response['status']) && $response['status'] === 'COMPLETED') {
+        if (isset($response['status']) && $response['status'] === __('messages.cart.payment.complete')) {
             DB::beginTransaction();
             try {
                 foreach ($paypal as $val) {
                     $cart = $this->cart->where('id', $val['cart_id'])->first();
                     if (!$cart) {
-                        throw new \Exception('Cart Not Found');
+                        throw new NotFoundException(Cart::class);
                     }
                     $product = $this->product->find($cart->product_id);
                     if (!$product) {
-                        throw new \Exception('Product Not Found');
+                        throw new NotFoundException(Product::class);
                     }
-                    $userProduct = $this->userProduct->create([
+                    $this->userProduct->create([
                         'user_id' => auth()->user()->id,
                         'product_id' => $product->id,
                         'qty' => $cart->qty,
@@ -215,14 +217,14 @@ class CartService
                 $this->paypal->where('token', $data['token'])->delete();
                 Mail::to($user['email'])->send(new ThankForBuy($param, $dataBuy));
                 DB::commit();
-                return response()->json(['message' => "Payment Success"]);
+                return response()->json(['message' => __('messages.cart.payment.success')]);
             } catch (\Exception $e) {
                 DB::rollback();
                 Log::info($e->getMessage());
-                return response()->json(['message' => "Can't Payment"]);
+                return response()->json(['message' => __('messages.cart.payment.failed')]);
             }
         } else {
-            return response()->json(['message' => "Can't Payment"]);
+            return response()->json(['message' => __('messages.cart.payment.failed')]);
         }
     }
 }

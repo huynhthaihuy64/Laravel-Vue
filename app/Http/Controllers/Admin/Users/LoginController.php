@@ -71,7 +71,7 @@ class LoginController extends ResponseController
         try {
             $remember = $request->input('remember');
             $data = $this->authService->login($request->only('email', 'password'),$remember);
-            $response = Response::success($data, 'Login Success');
+            $response = Response::success($data, __('messages.user.login.success'));
             return $response->withCookie(cookie(env('AUTH_COOKIE_NAME','login'), $data['access_token'], env('COOKIE_LIFETIME',60*24*7)));
         } catch (\Exception $ex) {
             $code = $ex->getCode() ? $ex->getCode() : HTTPStatus::NOT_FOUND->value;
@@ -109,7 +109,7 @@ class LoginController extends ResponseController
         if (!$authenticate) {
             throw new AuthenticationException(__('auth.logout.error'));
         }
-        return response()->json(['message' => 'Logout Success']);
+        return response()->json(['message' => __('messages.user.logout.success')]);
     }
 
 
@@ -147,10 +147,10 @@ class LoginController extends ResponseController
         ];
         $userOrigin->update($data);
         if (!$userOrigin) {
-            return response()->json('failed');
+            return response()->json(__('messages.user.update.failed'));
         }
 
-        return response()->json('success');
+        return response()->json(__('messages.user.update.success'));
     }
 
     public function updateCurrentUser(Request $request)
@@ -178,7 +178,7 @@ class LoginController extends ResponseController
             $user->delete();
             return response()->json([
                 'error' => false,
-                'message' => 'Delete User Success'
+                'message' => __('messages.user.delete.success')
             ]);
         }
 
@@ -241,7 +241,7 @@ class LoginController extends ResponseController
 
         if ($userId == "" || $userId == null) {
             $response['error'] = 1;
-            $response['message'] = 'You are logged out, Login again.';
+            $response['message'] = __('messages.user.sms.messages.logged');
             $response['loggedIn'] = 0;
         } else {
             $OTP = $request->session()->get('OTP');
@@ -257,12 +257,12 @@ class LoginController extends ResponseController
                 $response['error'] = 0;
                 $response['isVerified'] = 1;
                 $response['loggedIn'] = 1;
-                $response['message'] = "Your Number is Verified.";
+                $response['message'] = __('messages.user.sms.messages.number');
             } else {
                 $response['error'] = 1;
                 $response['isVerified'] = 0;
                 $response['loggedIn'] = 1;
-                $response['message'] = "OTP does not match.";
+                $response['message'] = __('messages.user.sms.messages.otp');
             }
         }
         echo json_encode($response);

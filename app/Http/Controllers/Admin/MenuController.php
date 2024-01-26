@@ -49,7 +49,7 @@ class MenuController extends Controller
         if ($result) {
             return response()->json([
                 'error' => false,
-                'message' => 'Delete Menu Success'
+                'message' => __('messages.menu.delete.success')
             ]);
         }
         return response()->json([

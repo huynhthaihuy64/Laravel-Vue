@@ -32,9 +32,9 @@ class ImportMultipleImport implements ToCollection
 
         if ($key == 2) {
             if (array_values($row) !== array_values($this->header)) {
-                throw new Exception("Header Title Incorrect");
+                throw new Exception(__('messages.validation.import.header-title'));
             } elseif (!empty(array_diff($header, $this->header))) {
-                throw new Exception("Header Incorrect");
+                throw new Exception(__('messages.validation.import.header'));
             }
         }
     }

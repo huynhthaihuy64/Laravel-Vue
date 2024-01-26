@@ -3,6 +3,7 @@
 namespace App\Http\Services\Chat;
 
 use App\Events\ChatRoomBroadCast;
+use App\Exceptions\NotFoundException;
 use App\Models\ChatRoom;
 use App\Models\Friend;
 use App\Models\User;
@@ -31,7 +32,7 @@ class ChatService
     {
         $friends = $this->user->find($userId);
         if (!$friends) {
-            throw new \Exception('User Not Found');
+            throw new NotFoundException(User::class);
         }
         return $friends;
     }

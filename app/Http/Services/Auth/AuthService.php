@@ -29,7 +29,7 @@ class AuthService
     {
         $user = $this->user->where('email', $request['email'])->first();
         if ($user === null || !Auth::attempt($request)) {
-            return $this->_throwErrorAuthenticate(__('Login Failed'));
+            return $this->_throwErrorAuthenticate(__('messages.user.login.failed'));
         }
         return $this->_processAfterLogin($user,$remember);
     }
@@ -119,6 +119,6 @@ class AuthService
         if ($message) {
             throw new AuthenticationException($message);
         }
-        throw new AuthenticationException('Login Failed');
+        throw new AuthenticationException(__('messages.user.login.failed'));
     }
 }
