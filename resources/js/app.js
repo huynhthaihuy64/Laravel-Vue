@@ -37,6 +37,7 @@ import {
     faMessage,
     faFileUpload,
     faDownload,
+    faLink,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFacebook, faStackOverflow, faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import Vue from "vue";
@@ -65,7 +66,8 @@ library.add(
     faMailForward,
     faMessage,
     faFileUpload,
-    faDownload
+    faDownload,
+    faLink
 );
 library.add(faTwitter, faFacebook, faStackOverflow, faGithub, faGoogle)
 Vue.component('font-awesome-icon', FontAwesomeIcon)

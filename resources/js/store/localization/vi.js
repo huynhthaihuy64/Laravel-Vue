@@ -34,6 +34,8 @@ export default {
         menu: "Quản Lý Danh Mục",
         slide: "Quản Lý Slide",
         customer: "Quản Lý Khách Hàng",
+        multipleFile: "Tải File",
+        link: "Tìm kiếm bằng url",
     },
     comment: {
         display: "Bình Luận",

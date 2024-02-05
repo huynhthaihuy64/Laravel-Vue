@@ -6,12 +6,12 @@ use App\Constants\Constants;
 use App\Constants\FileConstants;
 use App\Exceptions\NotFoundException;
 use App\Models\File as ModelsFile;
-use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Http;
 
 class UploadService
 {
@@ -259,5 +259,12 @@ class UploadService
         //Get All File
         // $fileInfo = Storage::disk('s3')->listContents('Images/'. Auth::user()->name);
         return $fileInfo;
+    }
+
+    public function getAnimeByUrl(array $param)
+    {
+        $endPoint = "https://api.trace.moe/search?url=" . $param['url'];
+        $response = HTTP::get($endPoint);
+        return response()->json(['data' => $response->json()]);
     }
 }
