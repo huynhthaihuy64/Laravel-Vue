@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\FileHistoryController;
+use App\Http\Controllers\Admin\GetAnimeByUrlController;
 use App\Http\Controllers\Admin\ImportMultipleController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\SendMailAllUserController;
@@ -51,6 +52,7 @@ Route::post('/admin/users/login/store', [LoginController::class, 'login'])->name
 Route::post('/admin/users/register/store', [LoginController::class, 'register'])->name('register');
 Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('files')->group(function () {
+        Route::get('/getAnimeByUrl', [GetAnimeByUrlController::class, 'getAnimeByUrl'])->name('files.getAnimeByUrl');
         Route::get('/listFile', [FileHistoryController::class, 'getList'])->name('files.list');
         Route::post('/upload-file', [UploadController::class, 'uploadFileExcel'])->name('files.uploadFile');
         Route::get('/download/{id}', [UploadController::class, 'download'])->name('files.download');

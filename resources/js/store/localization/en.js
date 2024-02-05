@@ -33,7 +33,8 @@ export default {
         menu: 'Menu Management',
         slide: 'Slide Management',
         customer: 'Customer Management',
-        multipleFile: 'Upload File'
+        multipleFile: 'Upload File',
+        link: 'Get Link Search'
     },
     comment: {
         display: 'Display Comments',
