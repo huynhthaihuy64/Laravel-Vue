@@ -25,7 +25,9 @@
                                             <td class="column-2">
                                                 <p class="mt-4">{{ item.product.name }}</p>
                                                 <a-form-item class="mt-3" no-style>
-                                                    <a-input v-decorator="['carts.' + index + '.id' , {initialValue: item.id,}]" type="hidden" />
+                                                    <a-input
+                                                        v-decorator="['carts.' + index + '.id', { initialValue: item.id, }]"
+                                                        type="hidden" />
                                                 </a-form-item>
                                             </td>
                                             <td class="column-3">
@@ -33,7 +35,9 @@
                                             </td>
                                             <td class="column-4">
                                                 <a-form-item class="mt-3" no-style>
-                                                    <a-input-number v-decorator="['carts.' + index + '.qty' , {initialValue: parseInt(item.qty),}]" :min="1" :max="100" />
+                                                    <a-input-number
+                                                        v-decorator="['carts.' + index + '.qty', { initialValue: parseInt(item.qty), }]"
+                                                        :min="1" :max="100" />
                                                 </a-form-item>
                                             </td>
                                             <td class="column-5">
@@ -41,7 +45,8 @@
                                             </td>
                                             <td class="p-r-15">
                                                 <div class="mt-4">
-                                                    <a @click="removeItem(item.id)" style="color:red">{{ $store.getters.localizedStrings.cart_page.delete }}</a>
+                                                    <a @click="removeItem(item.id)" style="color:red">{{
+                                                        $store.getters.localizedStrings.cart_page.delete }}</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -58,102 +63,111 @@
                                         {{ $store.getters.localizedStrings.cart_page.coupon }}
                                     </div>
                                     <button html-type="submit"
-                                        class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10 w-25 ml-2 text-center">{{ $store.getters.localizedStrings.cart_page.update }}</button>
+                                        class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10 w-25 ml-2 text-center">{{
+                                            $store.getters.localizedStrings.cart_page.update }}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a-form>
                 <a-form :form="form" id="form-container" @submit="handlePayment">
-                        <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                            <h4 class="mtext-109 cl2 p-b-30">
-                                {{ $store.getters.localizedStrings.cart_page.cart_total }}
-                            </h4>
-                            <div class="flex-w flex-t p-t-27 p-b-33">
-                                <div class="size-208">
-                                    <span class="mtext-101 cl2">
-                                        {{ $store.getters.localizedStrings.cart_page.total }}:
-                                    </span>
-                                </div>
-
-                                <div class="size-209 p-t-1">
-                                    <span class="mtext-110 cl2">
-                                        {{ totalPrice | formatNumber }}
-                                    </span>
-                                </div>
+                    <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                        <h4 class="mtext-109 cl2 p-b-30">
+                            {{ $store.getters.localizedStrings.cart_page.cart_total }}
+                        </h4>
+                        <div class="flex-w flex-t p-t-27 p-b-33">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">
+                                    {{ $store.getters.localizedStrings.cart_page.total }}:
+                                </span>
                             </div>
 
-                            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2">
+                                    {{ totalPrice | formatNumber }}
+                                </span>
+                            </div>
+                        </div>
 
-                                <div class="size-100 p-r-18 p-r-0-sm w-full-ssm">
-                                    <div class="p-t-15">
-                                        <span class="stext-112 cl8">
-                                            {{ $store.getters.localizedStrings.cart_page.customer }}
-                                        </span>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
 
-                                        <div class="bor8 bg0 m-b-12 mt-3">
-                                            <a-form-item>
-                                                <a-input v-decorator="[
-                                                    'name',
-                                                    {
+                            <div class="size-100 p-r-18 p-r-0-sm w-full-ssm">
+                                <div class="p-t-15">
+                                    <span class="stext-112 cl8">
+                                        {{ $store.getters.localizedStrings.cart_page.customer }}
+                                    </span>
+
+                                    <div class="bor8 bg0 m-b-12 mt-3">
+                                        <a-form-item>
+                                            <a-input v-decorator="[
+                                                'name',
+                                                {
                                                     initialValue: initialValue.edit_name,
                                                     rules: [{ required: true, message: 'Please input your name!' }],
-                                                    },
-                                                ]" disabled/>
-                                            </a-form-item>
-                                        </div>
+                                                },
+                                            ]" disabled />
+                                        </a-form-item>
+                                    </div>
 
-                                        <div class="bor8 bg0 m-b-12">
-                                            <a-form-item>
-                                                <a-input v-decorator="[
-                                                    'phone',
-                                                    {
+                                    <div class="bor8 bg0 m-b-12">
+                                        <a-form-item>
+                                            <a-input v-decorator="[
+                                                'phone',
+                                                {
                                                     initialValue: initialValue.edit_phone,
                                                     rules: [{ required: true, message: 'Please input your phone!' }],
-                                                    },
-                                                ]" />
-                                            </a-form-item>
-                                        </div>
+                                                },
+                                            ]" />
+                                        </a-form-item>
+                                    </div>
 
-                                        <div class="bor8 bg0 m-b-12">
-                                            <a-form-item>
-                                                <a-input v-decorator="[
-                                                    'address',
-                                                    {
+                                    <div class="bor8 bg0 m-b-12">
+                                        <a-form-item>
+                                            <a-input v-decorator="[
+                                                'address',
+                                                {
                                                     initialValue: initialValue.edit_address,
                                                     rules: [{ required: true, message: 'Please input your Address!' }],
-                                                    },
-                                                ]" />
-                                            </a-form-item>
-                                        </div>
+                                                },
+                                            ]" />
+                                        </a-form-item>
+                                    </div>
 
-                                        <div class="bor8 bg0 m-b-12">
-                                            <a-form-item>
-                                                <a-input v-decorator="[
-                                                    'email',
-                                                    {
+                                    <div class="bor8 bg0 m-b-12">
+                                        <a-form-item>
+                                            <a-input v-decorator="[
+                                                'email',
+                                                {
                                                     initialValue: initialValue.edit_email,
                                                     rules: [{ required: true, message: 'Please input your email!' }],
-                                                    },
-                                                ]" disabled/>
-                                            </a-form-item>
-                                        </div>
-
-                                        <div class="bor8 bg0 m-b-12">
-                                            <a-form-item>
-                                                    <a-textarea :rows="4" placeholder="Input Content" v-decorator="['content']" :maxlength="6"/>
-                                            </a-form-item>
-                                        </div>
-
+                                                },
+                                            ]" disabled />
+                                        </a-form-item>
                                     </div>
+
+                                    <div class="bor8 bg0 m-b-12">
+                                        <a-form-item>
+                                            <a-textarea :rows="4" placeholder="Input Content" v-decorator="['content']"
+                                                :maxlength="6" />
+                                        </a-form-item>
+                                    </div>
+
                                 </div>
                             </div>
-
-                            <button
-                                class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer bg-primary">
-                                {{ $store.getters.localizedStrings.cart_page.payment }}
-                            </button>
                         </div>
+
+                        <button @click="showPaymentModal($event)"
+                            class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer bg-primary">
+                            {{ $store.getters.localizedStrings.cart_page.payment }}
+                        </button>
+                        <a-modal v-model="paymentModalVisible" title="Choose Payment Method" class="d-flex">
+                            <!-- Content for payment methods -->
+                            <button class="button" @click="selectPaymentMethod('VNPay',$event)"><img class="button-image" src="../../../public/images/download-logo-vector-vnpay-mien-phi.jpg"/></button>
+                            <button class="button mt-3" @click="selectPaymentMethod('Momo',$event)"><img class="button-image" src="../../../public/images/image (3).png"/></button>
+                            <button class="button mt-3" @click="selectPaymentMethod('OnePay',$event)"><img class="button-image" src="../../../public/images/31-1367011326_500x0.jpeg"/></button>
+                            <button class="button mt-3" @click="selectPaymentMethod('Paypal',$event)"><img class="button-image" src="../../../public/images/196566.png"/></button>
+                        </a-modal>
+                    </div>
                 </a-form>
             </div>
         </div>
@@ -164,6 +178,8 @@ import httpRequest from '../axios'
 export default {
     data() {
         return {
+            paymentModalVisible: false,
+            selectedPaymentMethod: null,
             form: this.$form.createForm(this),
             carts: {},
             totalPrice: 1,
@@ -185,7 +201,7 @@ export default {
     },
     computed: {
         inputValues() {
-        return this.carts.map((item) => item.value);
+            return this.carts.map((item) => item.value);
         }
     },
     methods: {
@@ -258,15 +274,29 @@ export default {
                     this.initialValue.role = response.data.admin;
                 })
         },
-        handlePayment(e) {
+        showPaymentModal() {
+            // Show payment modal
+            this.paymentModalVisible = true;
+        },
+        selectPaymentMethod(method, e) {
+            // Set selected payment method
+            this.selectedPaymentMethod = method;
+            this.handlePayment(e, method);
+            // Optionally, you can directly handle payment here if needed
+        },
+        handlePayment(e, method) {
             e.preventDefault();
+            console.log(this.selectedPaymentMethod);
+            if (this.selectedPaymentMethod) {
+            console.log(this.selectedPaymentMethod)
             this.form
                 .validateFields((err, values) => {
+                    values.method = method;
                     if (err) return;
                     httpRequest.post('/api/cart/payment', values).then((response) => {
                         this.info = response
                         console.log(response)
-                        if(response.data.link) {
+                        if (response.data.link) {
                             window.open(response.data.link, '_blank')
                         }
                         this.flagModalAdd = false
@@ -280,7 +310,8 @@ export default {
                     })
                     this.form.resetFields();
                 })
-        }
+            }
+        },
     },
     mounted() {
         this.getCart();
@@ -290,3 +321,25 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.button {
+    width: 100%;
+    height: 50px;
+    padding: 10px; /* Để tăng kích thước của nút một chút */
+    border: 0.5px solid;
+    background-color: transparent; /* Nền trong suốt */
+    cursor: pointer;
+    transition: font-weight 0.3s; /* Hiệu ứng chuyển đổi trọng lượng phông chữ */
+}
+
+.button:hover {
+    font-weight: bold; /* Chuyển sang chữ đậm khi rê chuột vào */
+}
+
+.button-image {
+    width: 40%;
+    height: 120%;
+    object-fit: cover;
+}
+</style>
