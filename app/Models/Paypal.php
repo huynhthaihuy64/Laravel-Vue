@@ -14,6 +14,7 @@ class Paypal extends Model
     protected $fillable = [
         'cart_id',
         'token',
-        'user_id'
+        'user_id',
+        'method'
     ];
 }

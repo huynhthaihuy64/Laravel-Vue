@@ -20,6 +20,7 @@ class CreatePaypalTable extends Migration
             $table->foreign('cart_id')->unsigned()->references('id')->on('carts')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->unsigned()->references('id')->on('users')->onDelete('cascade');
+            $table->string('method');
             $table->timestamps();
             $table->softDeletes();
         });

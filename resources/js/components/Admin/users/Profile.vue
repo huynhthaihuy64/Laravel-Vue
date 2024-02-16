@@ -331,7 +331,7 @@
                               <a-button> <a-icon
                                   type="upload" />{{ $store.getters.localizedStrings.profile.profile.upload }}</a-button>
                             </a-upload>
-                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img class="image-contain fileUpdate"
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img class="ml-2 image-contain fileUpdate"
                                 :src="`${initialValue.edit_avatar}`" height="100px" /></a>
                             <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img class="image-contain fileUpdate"
                                   src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" height="100px" /></a>

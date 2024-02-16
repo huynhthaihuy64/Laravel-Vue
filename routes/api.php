@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart'])->name('cart.store');
-    Route::get('cart/paypal-success', [App\Http\Controllers\CartController::class, 'success'])->name('cart.success');
+    Route::get('cart/payment-success', [App\Http\Controllers\CartController::class, 'success'])->name('cart.success');
     Route::get('cart/{id}', [App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
     Route::post('cart', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
     Route::post('cart/payment', [App\Http\Controllers\CartController::class, 'payment'])->name('cart.payment');
