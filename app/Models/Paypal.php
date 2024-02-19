@@ -15,6 +15,7 @@ class Paypal extends Model
         'cart_id',
         'token',
         'user_id',
-        'method'
+        'method',
+        'bank_name'
     ];
 }

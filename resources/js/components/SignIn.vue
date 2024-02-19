@@ -156,12 +156,17 @@ export default {
         loginWithGoogle() {
             // Handle Google login
             console.log("Login with Google");
-            this.$auth.authenticate('google')
+            axios.get('/api/redirect/google')
             .then(response => {
-                    // Xử lý sau khi người dùng đăng nhập thành công
+                    if (response.data) {
+                        window.open(response.data, '_blank')
+                    }
                 })
                 .catch(error => {
-                    // Xử lý khi có lỗi xảy ra
+                    Toast.fire({
+                        icon: 'error',
+                        title: error
+                    });
                 })
         },
         loginWithSlack() {

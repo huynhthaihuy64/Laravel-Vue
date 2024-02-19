@@ -62,12 +62,13 @@ class CartService
             if ($checkCart) {
                 throw new AppValidationException(__('messages.validation.cart.exists'));
             }
+            $price = $product->price_sale < $product->price ? $product->price_sale : $product->price;
             $cart = $this->cart->create([
                 'user_id' => $user->id,
                 'product_id' => $product->id,
                 'qty' => $params['qty'],
-                'price' => $product->price,
-                'total' => $params['qty'] * $product->price
+                'price' => $price,
+                'total' => $params['qty'] * $price
             ]);
             DB::commit();
             return $cart;
@@ -140,20 +141,22 @@ class CartService
     {
         $amount = $this->cart->whereIn('id', array_column($data['carts'], 'id'))->select(DB::raw("CAST(SUM(total) AS UNSIGNED) as amount"))->value('amount');
         switch ($data['method']) {
-            case "Paypal":
+            case env('PAYPAL_NAME'):
                 $paypal = $this->paypal($amount);
                 $this->addPayment($data, $paypal);
                 return response()->json(['link' => $paypal['link']]);
             case "VNPay":
                 $vnPay = $this->vnPay($data);
-                $vnPay['token'] = (string)Str::uuid();
                 $this->addPayment($data, $vnPay);
                 return response()->json(['link' => $vnPay['link']]);
             case "OnePay":
-                break;
+                $onePay = $this->onePay($data);
+                $this->addPayment($data, $onePay);
+                return response()->json(['link' => $onePay['link']]);
             case "Momo":
-                $this->paymentMomo($data);
-                break;
+                $momo = $this->paymentMomo($data);
+                $this->addPayment($data, $momo);
+                return response()->json(['link' => $momo['link']]);
         }
     }
 
@@ -163,9 +166,9 @@ class CartService
         $provider->setApiCredentials(config('paypal'));
         $paypalToken = $provider->getAccessToken();
         $response = $provider->createOrder([
-            "intent" => "CAPTURE",
+            "intent" => env('PAYPAL_INTENT'),
             "application_context" => [
-                "return_url" => route('cart.success', ['method' => 'Paypal']),
+                "return_url" => route('cart.success', ['method' => env('PAYPAL_NAME')]),
             ],
             "purchase_units" => [
                 [
@@ -176,10 +179,9 @@ class CartService
                 ]
             ]
         ]);
-
         if (isset($response['id']) && $response['id'] != null) {
             foreach ($response['links'] as $link) {
-                if ($link['rel'] === 'approve') {
+                if ($link['rel'] === env('PAYPAL_RESPONSE')) {
                     return ['link' => $link['href'], 'token' => $response['id']];
                 }
             }
@@ -190,15 +192,26 @@ class CartService
 
     public function success($param)
     {
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $paypalToken = $provider->getAccessToken();
-        $response = $provider->capturePaymentOrder($param->token);
         $data = $param->toArray();
-        $paypal = $this->paypal->where('token', $data['token'])->get()->toArray();
-        if (isset($response['status']) && $response['status'] === __('messages.cart.payment.complete')) {
+        if (isset($param['vnp_TxnRef'])) {
+            $token = $data['vnp_TxnRef'];
+        } elseif(isset($data['orderId'])) {
+            $token = $data['orderId'];
+        } else {
+            $provider = new PayPalClient;
+            $provider->setApiCredentials(config('paypal'));
+            $paypalToken = $provider->getAccessToken();
+            $response = $provider->capturePaymentOrder($param->token);
+            $token = $data['token'];
+        }
+        $paypal = $this->paypal->where('token', $token)->get()->toArray();
+        if ($paypal) {
             DB::beginTransaction();
-            return $this->handlePayment($paypal, $param);
+            if (isset($data['token']) && isset($response['status']) && $response['status'] === __('messages.cart.payment.complete')) {
+                return $this->handlePayment($paypal, $param);
+            } else {
+                return $this->handlePayment($paypal, $param);
+            }
         } else {
             return response()->json(['message' => __('messages.cart.payment.failed')]);
         }
@@ -206,26 +219,30 @@ class CartService
 
     private function vnPay($param)
     {
-        $vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        $vnpUrl = env('VNPAY_URL');
         $codeCart = rand(00, 9999);
         $vnpReturnUrl = route('cart.success');
-        $vnpTmnCode = "J84XCQOL"; //Mã website tại VNPAY 
-        $vnpHashSecret = "VTBZDFMGOGMTAZIPGFLEWAYAENKVNZQQ"; //Chuỗi bí mật
+        $vnpTmnCode = env('VNPAY_TMNCODE'); //Mã website tại VNPAY 
+        $vnpHashSecret = env('VNPAY_HASHSECRET'); //Chuỗi bí mật
 
-        $vnpTxnRef = $codeCart; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+        $vnpTxnRef = strval($codeCart); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnpOrderInfo = 'Test Đơn Hàng';
-        $vnpOrderType = 'billpayment';
-        $vnpAmount = 10000 * 100;
-        $vnpLocale = 'vn';
+        $vnpOrderType = env('VNPAY_ORDERTYPE');
+        $vnpAmount = 0;
+        foreach($param['carts'] as $val) {
+            $cart = $this->cart->where('id', $val['id'])->first()?->toArray();
+            $vnpAmount += $cart['total'];
+        }
+        $vnpLocale = env('VNPAY_LOCALE');
         $vnpBankCode = 'NCB';
         $vnpIpAddr = $_SERVER['REMOTE_ADDR'];
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnpTmnCode,
-            "vnp_Amount" => $vnpAmount,
+            "vnp_Amount" => $vnpAmount * 100,
             "vnp_Command" => "pay",
             "vnp_CreateDate" => date('YmdHis'),
-            "vnp_CurrCode" => "VND",
+            "vnp_CurrCode" => env('VNPAY_CURRENCY'),
             "vnp_IpAddr" => $vnpIpAddr,
             "vnp_Locale" => $vnpLocale,
             "vnp_OrderInfo" => $vnpOrderInfo,
@@ -262,11 +279,10 @@ class CartService
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         $returnData = array(
-            'code' => '00', 'message' => 'success', 'link' => $vnp_Url
+            'code' => '00', 'message' => 'success', 'link' => $vnp_Url, 'token' => $vnpTxnRef, 'bank' => $vnpBankCode
         );
         if (isset($_POST['redirect'])) {
-            header('Location: ' . $vnp_Url);
-            die();
+            return $vnp_Url;
         } else {
             return $returnData;
         }
@@ -281,6 +297,7 @@ class CartService
                     'cart_id' => $cart['id'],
                     'user_id' => auth()->user()->id,
                     'method' => $data['method'],
+                    'bank_name' => $payment['bank'] ?? ''
                 ]);
             }
         }
@@ -311,11 +328,140 @@ class CartService
             $user = $this->user->where('id', $data[0]['user_id'])->first()?->toArray();
             Mail::to($user['email'])->send(new ThankForBuy($param, $dataBuy));
             DB::commit();
-            return response()->json(['message' => __('messages.cart.payment.success')]);
+            // return response()->json(['message' => __('messages.cart.payment.success')]);
+            return redirect()->to(env('APP_URL'). '/cart');
         } catch (\Exception $e) {
             DB::rollback();
             Log::info($e->getMessage());
             return response()->json(['message' => __('messages.cart.payment.failed')]);
         }
+    }
+
+    private function paymentMomo($data)
+    {
+        $endpoint = env('MOMO_URL');
+
+        $partnerCode = env('MOMO_PARTNERCODE');
+        $accessKey = env('MOMO_ACCESSKEY');
+        $secretKey = env('MOMO_SECRETKEY');
+
+        $orderInfo = "Thanh toán qua MoMo";
+        $amount = 0;
+        foreach ($data['carts'] as $val) {
+            $cart = $this->cart->where('id', $val['id'])->first()?->toArray();
+            $amount += $cart['total'];
+        }
+        $orderId = time() . "";
+        $returnUrl = route('cart.success');
+        $notifyurl = route('cart.success');
+        // Lưu ý: link notifyUrl không phải là dạng localhost
+        $bankCode = "VCB";
+        $requestId = time() . "";
+        $requestType = env('MOMO_REQUEST_TYPE');
+        $extraData = "";
+        // echo $serectkey;die;
+        $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+
+        $data =  array(
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
+            'requestId' => $requestId,
+            'amount' => strval($amount),
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'returnUrl' => $returnUrl,
+            'bankCode' => $bankCode,
+            'notifyUrl' => $notifyurl,
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature
+        );
+        $result = $this->execPostRequest($endpoint, json_encode($data));
+        $jsonResult = json_decode($result, true);  // decode json
+        error_log(print_r($jsonResult, true));
+        $info = [
+            'link' => $jsonResult['payUrl'],
+            'bank' => $bankCode,
+            'token' => $orderId
+        ];
+        return $info;
+    }
+
+    private function execPostRequest($url, $data)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data)
+            )
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
+    }
+
+    private function onePay($data) {
+        $SECURE_SECRET = env('ONEPAY_SECURE_SECRET');
+
+        $vpcURL = env('ONEPAY_URL') . "?";
+        $amount = 0;
+        foreach ($data['carts'] as $val) {
+            $cart = $this->cart->where('id', $val['id'])->first()?->toArray();
+            $amount += $cart['total'];
+        }
+        $params = [
+            'vpc_Merchant' => env('ONEPAY_MERCHANT'),
+            'vpc_AccessCode' => env('ONEPAY_ACCESSCODE'),
+            'vpc_MerchTxnRef' => time() . "",
+            'vpc_OrderInfo' => env('ONEPAY_ORDER_INFO'),
+            'vpc_Amount' => $amount,
+            'vpc_ReturnURL' => route('cart.success'),
+            // 'vpc_Version' => '2',
+            'vpc_Command' => env('ONEPAY_COMMAND'),
+            'vpc_Locale' => env('ONEPAY_LOCALE'),
+            'vpc_Currency' => env('ONEPAY_CURRENCY')
+        ];
+        $stringHashData = "";
+        ksort($params);
+
+        $appendAmp = 0;
+
+        foreach ($params as $key => $value) {
+
+            if (strlen($value) > 0) {
+                if ($appendAmp == 0) {
+                    $vpcURL .= urlencode($key) . '=' . urlencode($value);
+                    $appendAmp = 1;
+                } else {
+                    $vpcURL .= '&' . urlencode($key) . "=" . urlencode($value);
+                }
+            
+                if ((strlen($value) > 0) && ((substr($key, 0, 4) == "vpc_") || (substr($key, 0, 5) == "user_"))) {
+                    $stringHashData .= $key . "=" . $value . "&";
+                }
+            }
+        }
+        
+        $stringHashData = rtrim($stringHashData, "&");
+        if (strlen($SECURE_SECRET) > 0) {
+            $vpcURL .= "&vpc_SecureHash=" . strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $SECURE_SECRET)));
+        }
+
+        $result = [
+            'token' => $params['vpc_MerchTxnRef'],
+            'link' => $vpcURL
+        ];
+        return $result;
     }
 }
