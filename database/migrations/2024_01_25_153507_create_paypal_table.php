@@ -21,6 +21,7 @@ class CreatePaypalTable extends Migration
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->unsigned()->references('id')->on('users')->onDelete('cascade');
             $table->string('method');
+            $table->string('bank_name')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

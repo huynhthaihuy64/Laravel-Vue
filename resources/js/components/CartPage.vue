@@ -31,7 +31,7 @@
                                                 </a-form-item>
                                             </td>
                                             <td class="column-3">
-                                                <p class="mt-4">{{ item.product.price | formatNumber }}</p>
+                                                <p class="mt-4">{{ item.product.price_sale < item.product.price ? item.product.price_sale : item.product.price | formatNumber }}</p>
                                             </td>
                                             <td class="column-4">
                                                 <a-form-item class="mt-3" no-style>
@@ -148,7 +148,7 @@
                                     <div class="bor8 bg0 m-b-12">
                                         <a-form-item>
                                             <a-textarea :rows="4" placeholder="Input Content" v-decorator="['content']"
-                                                :maxlength="6" />
+                                                :maxlength="500" />
                                         </a-form-item>
                                     </div>
 
@@ -326,15 +326,15 @@ export default {
 .button {
     width: 100%;
     height: 50px;
-    padding: 10px; /* Để tăng kích thước của nút một chút */
+    padding: 10px;
     border: 0.5px solid;
-    background-color: transparent; /* Nền trong suốt */
+    background-color: transparent;
     cursor: pointer;
-    transition: font-weight 0.3s; /* Hiệu ứng chuyển đổi trọng lượng phông chữ */
+    transition: font-weight 0.3s;
 }
 
 .button:hover {
-    font-weight: bold; /* Chuyển sang chữ đậm khi rê chuột vào */
+    font-weight: bold;
 }
 
 .button-image {

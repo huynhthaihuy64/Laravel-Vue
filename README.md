@@ -43,11 +43,19 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Simple Static Dashboard
 - Developer Options for OAuth Clients and Personal Access Token
 - Build with Docker
-- Payment by Paypal
+- Payment by Paypal, Momo, VNPay, OnePay
 - Chat with friend
 - Upload file AWS S3
 - Xhprof Test Performance
 - Send SMS Vonage
+
+## Document Payment
+- Paypal: srmklive/paypal
+- Momo: 
+    + test: https://developers.momo.vn/v3/vi/docs/payment/onboarding/test-instructions/
+    +document: https://github.com/momo-wallet/php
+- VNPay: https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/
+- OnePay: https://mtf.onepay.vn/developer/?page=modul_noidia_php
 
 ## Library
 

@@ -25,7 +25,7 @@
                     <div class="sidecart-price pl-0 col-5 bg-primary text-right d-flex justify-content-end align-items-center flex-wrap text-light">
                         <a-button type="danger" class="h-25 text-center" @click="removeItem(item.id)">X</a-button>
                         <div class=""><span class="text-dark"><b>Price:</b></span> <span
-                                class="product-price-total">{{ item.product.price }}</span></div>
+                                class="product-price-total">{{ item.product.price_sale < item.product.price ? item.product.price_sale : item.product.price | formatNumber }}</span></div>
                         <div class=""><span class="text-dark"><b>Total:</b></span> <span
                                 class="product-price-total">{{ item.total }}</span></div>
                     </div>

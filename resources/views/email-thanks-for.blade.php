@@ -134,7 +134,7 @@ table.body .article {
                         </table>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Danh sách sản phẩm đã mua: </p>
                         @foreach($param as $val)
-                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><b>{{$val['product']['name']}}</b> với số lượng là <b>{{$val['qty']}}</b> và Tổng tiền là: <b>{{$val['total']}}</b></p>
+                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><b>{{$val['product']['name']}}</b> với số lượng là <b>{{$val['qty']}}</b> và Tổng tiền là: <b>{{number_format($val['total'])}}</b></p>
                         @endforeach
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Good luck! Hope it works.</p>
                       </td>
