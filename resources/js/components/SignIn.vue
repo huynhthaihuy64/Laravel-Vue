@@ -155,7 +155,6 @@ export default {
         },
         loginWithGoogle() {
             // Handle Google login
-            console.log("Login with Google");
             axios.get('/api/redirect/google')
             .then(response => {
                     if (response.data) {

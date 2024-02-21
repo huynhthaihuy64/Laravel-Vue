@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartResource;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Product\ProductService;
@@ -21,7 +22,12 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
-        return $this->cartService->index($request->all());
+        $data = $this->cartService->index($request->all());
+        $result = [
+            'carts' => CartResource::collection($data['carts']),
+            'total_all' => $data['total_all']
+        ];
+        return $result;
     }
 
     public function show($id) {

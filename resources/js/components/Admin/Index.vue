@@ -51,6 +51,7 @@ export default {
         labels: [],
         datasets: [{ data: [] }]
       },
+      chartOptions: {},
       chartCustomer: [],
       chartRevenue: [],
       years: {},
@@ -94,6 +95,18 @@ export default {
           backgroundColor: "#f87979",
           borderWidth: 1,
         }]
+      },
+      this.chartOptions = {
+          scales: {
+            y: {
+              ticks: {
+                callback: function (value, index, values) {
+                  // Convert the tick value to an integer
+                  return Number.isInteger(value) ? value : '';
+                }
+              }
+            }
+          }
       }
     },
     createdChartRevenue() {

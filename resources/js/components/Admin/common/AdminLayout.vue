@@ -37,12 +37,12 @@ export default {
 }
 
 .sidebar {
-  flex: 0 0 30%; /* Sidebar chiếm 30%, không co giãn, không co nhỏ */
+  flex: 0 0 30%;
 }
 
 .content-wrapper {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  flex: 1; /* Content chiếm 70%, co giãn và co nhỏ theo nhu cầu */
+  flex: 1;
   border-radius: 5px;
 }
 

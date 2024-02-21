@@ -44,6 +44,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Developer Options for OAuth Clients and Personal Access Token
 - Build with Docker
 - Payment by Paypal, Momo, VNPay, OnePay
+- Exchange Currency
 - Chat with friend
 - Upload file AWS S3
 - Xhprof Test Performance
@@ -56,6 +57,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
     +document: https://github.com/momo-wallet/php
 - VNPay: https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/
 - OnePay: https://mtf.onepay.vn/developer/?page=modul_noidia_php
+- Exchange Currency: https://app.currencyapi.com/dashboard
 
 ## Library
 
@@ -82,6 +84,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - `npm install`
 - `npm run watch`
 - `php artisan serve`
+- `php artisan sync:currency`
 
 ## Install with Docker
 

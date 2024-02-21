@@ -5,6 +5,8 @@ namespace App\Http\Services\Product;
 
 use App\Models\Menu;
 use App\Models\Product;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
 
 class ProductService
 {
@@ -84,5 +86,26 @@ class ProductService
         $menu = Menu::where('name', $item['menu'])->first()?->toArray();
         $product = Product::updateOrCreate(['name' => $item['name']], $common);
         $product->menus()->sync($menu['id']);
+    }
+
+    public function updateListCurrency() 
+    {
+        $key = env('EXCHANGE_CURRENCY');
+        $url = "https://api.currencyapi.com/v3/historical?apikey=" . $key . '&date=' . Carbon::now()->subDay()->format('Y-m-d');
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $json = json_decode($response, true);
+
+        $jsonFilePath = storage_path('setting.json');
+        $jsonData = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonData, true);
+        $data = $json['data'];
+        $newJsonData = json_encode($data, JSON_PRETTY_PRINT);
+        file_put_contents($jsonFilePath, $newJsonData);
+        return true;
     }
 }

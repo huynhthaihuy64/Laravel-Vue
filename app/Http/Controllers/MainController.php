@@ -19,8 +19,10 @@ use App\Models\Product;
 use App\Models\Slider;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Config;
 
 class MainController extends Controller
 {
@@ -123,5 +125,26 @@ class MainController extends Controller
             //     return Excel::download(new UserExport($user), 'user.csv');
             //     break;
         }
+    }
+
+    public function getUserCurrency()
+    {
+        return response()->json(['currency' => Auth::user()->currency]);
+    }
+
+    public function changeCurrency(Request $request) {
+        $user = User::find(Auth::user()->id);
+        $user->update([
+            'currency' => $request->currency
+        ]);
+        return response()->json(['currency' => $user->currency]);
+    }
+
+    public function getListCurrency()
+    {
+        $jsonFilePath = storage_path('setting.json');
+        $jsonData = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonData, true);
+        return response()->json(['currency' => $data]);
     }
 }

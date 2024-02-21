@@ -84,18 +84,21 @@
                                         <input type="text" placeholder="Search.." v-model="searchFriend" id="myInput"
                                             @keyup="search()" class="h-100 w-100">
                                     </div>
-                                    <div class="mt-3" v-for="(item) in searchArr" :key="item.id">
+                                    <div class="mt-3 col-12" v-for="(item) in searchArr" :key="item.id">
                                         <a-popconfirm class="w-100 content-dropdown" title="Are you sure delete this task?"
-                                            ok-text="Yes" cancel-text="No" @confirm="addFriend(user.id,item.id)" @cancel="cancel">
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <img :src="item.avatar" class="image-contain h-50 w-100">
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <b class="ml-4">{{ item.name }}</b><br />
-                                                        <p class="ml-4 mt-4">{{ item.phone }}</p>
-                                                    </div>
+                                            ok-text="Yes" cancel-text="No" @confirm="addFriend(user.id, item.id)"
+                                            @cancel="cancel">
+                                            <div class="row">
+                                                <div class="pl-5 col-6" v-if="item.avatar">
+                                                    <img :src="item.avatar" class="h-50 w-100">
+                                                </div>
+                                                <div class="pl-5 col-6" v-if="!item.avatar">
+                                                    <img src="../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
+                                                        class="h-50 w-100">
+                                                </div>
+                                                <div class="col-6">
+                                                    <b class="ml-4">{{ item.name }}</b><br />
+                                                    <p class="ml-4 mt-4">{{ item.phone }}</p>
                                                 </div>
                                             </div>
                                         </a-popconfirm>
@@ -111,18 +114,15 @@
 </template>
 <script>
 import httpRequest from '../../axios'
-import { defineComponent } from 'vue';
 import { message } from 'ant-design-vue';
 export default {
     props: ['user'],
     setup() {
         const confirm = (e) => {
-            console.log(e);
             message.success('Click on Yes');
         };
 
         const cancel = (e) => {
-            console.log(e);
             message.error('Click on No');
         };
         return {
@@ -154,7 +154,6 @@ export default {
     created() {
         Echo.private('chat-room.' + 1 + '.' + 2)
             .listen('ChatRoomBroadCast', (e) => {
-                console.log('chat', this.chats)
                 this.chats.push(e.chatRoom);
             });
     },
@@ -463,7 +462,6 @@ body {
     z-index: 999;
 }
 
-/* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -482,7 +480,6 @@ body {
     z-index: 1;
 }
 
-/* Links inside the dropdown */
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -490,7 +487,6 @@ body {
     display: block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {
     background-color: #f1f1f1
 }
@@ -549,5 +545,4 @@ body {
         height: calc(100vh - 350px);
         overflow-x: auto
     }
-}
-</style>
+}</style>

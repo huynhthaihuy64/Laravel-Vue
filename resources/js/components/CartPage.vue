@@ -31,7 +31,17 @@
                                                 </a-form-item>
                                             </td>
                                             <td class="column-3">
-                                                <p class="mt-4">{{ item.product.price_sale < item.product.price ? item.product.price_sale : item.product.price | formatNumber }}</p>
+                                               <div v-if="!item.product.price_currency" class="mt-4">
+                                        <p>
+                                            {{ item.product.price_sale < item.product.price ? item.product.price_sale : item.product.price |
+                                                formatNumber }} {{ initialValue.user_currency }}</p>
+                                    </div>
+                                    <div v-if="item.product.price_currency" class="mt-4">
+                                        <p>
+                                            {{ item.product.price_sale_currency < item.product.price_currency ?
+                                                item.product.price_sale_currency : item.product.price_currency | formatNumber }} {{
+                                        initialValue.user_currency }} </p>
+                                    </div>
                                             </td>
                                             <td class="column-4">
                                                 <a-form-item class="mt-3" no-style>
@@ -41,9 +51,10 @@
                                                 </a-form-item>
                                             </td>
                                             <td class="column-5">
-                                                <p class="mt-4">{{ item.total }}</p>
+                                                <p class="mt-4">{{ item.total | formatNumber }} {{
+                                                    initialValue.user_currency }}</p>
                                             </td>
-                                            <td class="p-r-15">
+                                            <td class="p-r-15 px-4">
                                                 <div class="mt-4">
                                                     <a @click="removeItem(item.id)" style="color:red">{{
                                                         $store.getters.localizedStrings.cart_page.delete }}</a>
@@ -84,7 +95,8 @@
 
                             <div class="size-209 p-t-1">
                                 <span class="mtext-110 cl2">
-                                    {{ totalPrice | formatNumber }}
+                                    {{ totalPrice | formatNumber }} {{
+                                        initialValue.user_currency }}
                                 </span>
                             </div>
                         </div>
@@ -196,6 +208,7 @@ export default {
                 edit_phone: '',
                 edit_address: '',
                 role: 1,
+                user_currency: ''
             },
         }
     },
@@ -208,7 +221,7 @@ export default {
         getCart() {
             httpRequest.get('/api/carts')
                 .then(response => {
-                    this.carts = response.data.carts.data;
+                    this.carts = response.data.carts;
                     this.totalPrice = response.data.total_all;
                 })
         },
@@ -248,7 +261,6 @@ export default {
             e.preventDefault();
             await this.form
                 .validateFields((err, values) => {
-                    console.log(values);
                     if (err) return;
                     httpRequest.post('/api/cart', values).then((response) => {
                         this.info = response
@@ -266,29 +278,25 @@ export default {
             httpRequest
                 .get('/api/admin/users/currentUser')
                 .then((response) => {
-                    this.initialValue.edit_name = response.data.name;
-                    this.initialValue.edit_phone = response.data.phone;
-                    this.initialValue.edit_address = response.data.address;
-                    this.initialValue.edit_id = response.data.id;
-                    this.initialValue.edit_email = response.data.email;
-                    this.initialValue.role = response.data.admin;
+                    this.initialValue.edit_name = response.data.data.name;
+                    this.initialValue.edit_phone = response.data.data.phone;
+                    this.initialValue.edit_address = response.data.data.address;
+                    this.initialValue.edit_id = response.data.data.id;
+                    this.initialValue.edit_email = response.data.data.email;
+                    this.initialValue.role = response.data.data.admin;
+                    this.initialValue.user_currency = response.data.data.currency;
                 })
         },
         showPaymentModal() {
-            // Show payment modal
             this.paymentModalVisible = true;
         },
         selectPaymentMethod(method, e) {
-            // Set selected payment method
             this.selectedPaymentMethod = method;
             this.handlePayment(e, method);
-            // Optionally, you can directly handle payment here if needed
         },
         handlePayment(e, method) {
             e.preventDefault();
-            console.log(this.selectedPaymentMethod);
             if (this.selectedPaymentMethod) {
-            console.log(this.selectedPaymentMethod)
             this.form
                 .validateFields((err, values) => {
                     values.method = method;
@@ -316,6 +324,24 @@ export default {
     mounted() {
         this.getCart();
         this.getUser();
+        const status = this.$route.query.status;
+        if (status === 'success') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Payment Success'
+            });
+            setTimeout(() => {
+                this.$router.push({ name: 'cart' })
+            }, 2000);
+        } else if (status === 'fail') {
+            Toast.fire({
+                icon: 'error',
+                title: 'Payment Failed'
+            });
+            setTimeout(() => {
+                this.$router.push({ name: 'cart' })
+            }, 2000);
+        }
     },
     created() {
     },

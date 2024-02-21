@@ -84,64 +84,70 @@
                             {{ initialValue.edit_name }}
                         </h4>
 
-                        <span class="mtext-106 cl2">
+                        <span class="mtext-106 cl2" v-if="!initialValue.edit_price_currency">
                             {{ initialValue.edit_price_sale < initialValue.edit_price ? initialValue.edit_price_sale :
-                                initialValue.edit_price | formatNumber }} </span>
+                                initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}</span>
+                                <span class="mtext-106 cl2" v-if="initialValue.edit_price_currency">
+                                    {{ initialValue.edit_price_sale_currency < initialValue.edit_price_currency ?
+                                        initialValue.edit_price_sale_currency : initialValue.edit_price_currency |
+                                        formatNumber }} {{ initialValue.user_currency }} </span>
+                                        <p class="stext-102 cl3 p-t-23">
+                                            {{ initialValue.edit_description | truncate(30, '...') }}
+                                        </p>
 
-                                <p class="stext-102 cl3 p-t-23">
-                                    {{ initialValue.edit_description | truncate(30, '...') }}
-                                </p>
-
-                                <!--  -->
-                                <div class="p-t-33">
-                                    <div class="flex-w flex-r-m p-b-10">
-                                        <div class="size-204 flex-w flex-m respon6-next">
-                                            <a-form :form="form" id="form-container" @submit="addToCart">
-                                                <!-- @if ($product->price !== NULL) -->
-                                                <a-form-item class="form-item">
-                                                    <a-input v-decorator="['product_id', {
-                                                        initialValue: initialValue.edit_id,
-                                                    }]" type="hidden" />
-                                                </a-form-item>
-                                                <a-form-item name="input-number" no-style>
-                                                    <a-input-number v-decorator="['qty', {
-                                                        initialValue: 1,
-                                                    }]" :min="1" :max="100" />
-                                                </a-form-item>
-                                                <a-button html-type="submit"
-                                                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
-                                                    {{ $store.getters.localizedStrings.product.detail.add_cart }}
-                                                </a-button>
-                                            </a-form>
+                                        <!--  -->
+                                        <div class="p-t-33">
+                                            <div class="flex-w flex-r-m p-b-10">
+                                                <div class="size-204 flex-w flex-m respon6-next">
+                                                    <a-form :form="form" id="form-container" @submit="addToCart">
+                                                        <!-- @if ($product->price !== NULL) -->
+                                                        <a-form-item class="form-item">
+                                                            <a-input v-decorator="['product_id', {
+                                                                initialValue: initialValue.edit_id,
+                                                            }]" type="hidden" />
+                                                        </a-form-item>
+                                                        <a-form-item name="input-number" no-style>
+                                                            <a-input-number v-decorator="['qty', {
+                                                                initialValue: 1,
+                                                            }]" :min="1" :max="100" />
+                                                        </a-form-item>
+                                                        <a-button html-type="submit"
+                                                            class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
+                                                            {{ $store.getters.localizedStrings.product.detail.add_cart }}
+                                                        </a-button>
+                                                    </a-form>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!--  -->
-                                <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                                    <div class="flex-m bor9 p-r-10 m-r-11">
-                                        <a href="#"
-                                            class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                            data-tooltip="Add to Wishlist">
-                                            <i class="zmdi zmdi-favorite"></i>
-                                        </a>
-                                    </div>
+                                        <!--  -->
+                                        <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+                                            <div class="flex-m bor9 p-r-10 m-r-11">
+                                                <a href="#"
+                                                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
+                                                    data-tooltip="Add to Wishlist">
+                                                    <i class="zmdi zmdi-favorite"></i>
+                                                </a>
+                                            </div>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Facebook">
-                                        <i class="fab fa-1x fa-facebook"></i>
-                                    </a>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Facebook">
+                                                <i class="fab fa-1x fa-facebook"></i>
+                                            </a>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Instagram">
-                                        <i class="fab fa-1x fa-instagram-square"></i>
-                                    </a>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Instagram">
+                                                <i class="fab fa-1x fa-instagram-square"></i>
+                                            </a>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Tik Tok">
-                                        <i class="fab fa-1x fa-tiktok"></i>
-                                    </a>
-                                </div>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Tik Tok">
+                                                <i class="fab fa-1x fa-tiktok"></i>
+                                            </a>
+                                        </div>
                     </div>
                 </div>
             </div>
@@ -188,7 +194,7 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price }}
+                                            {{ initialValue.edit_price_currency ? initialValue.edit_price_currency : initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}
                                         </span>
                                     </li>
 
@@ -198,7 +204,7 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price_sale }}
+                                            {{ initialValue.edit_price_sale_currency ? initialValue.edit_price_sale_currency : initialValue.edit_price_sale | formatNumber }} {{ initialValue.user_currency }}
                                         </span>
                                     </li>
 
@@ -360,11 +366,17 @@
                                         </a>
 
                                         <span class="stext-105 cl3">
-                                            <div v-if="product.price_sale != 0">
-                                                <p>{{ product.price_sale | formatNumber }}</p>
+                                            <div v-if="!product.price_currency">
+                                                <p>
+                                                    {{ product.price_sale < product.price ?
+                                                        product.price_sale : product.price | formatNumber }} {{
+                                                initialValue.user_currency }}</p>
                                             </div>
-                                            <div v-if="product.price_sale == 0 || product.price_sale == null">
-                                                <p>{{ product.price | formatNumber }}</p>
+                                            <div v-if="product.price_currency">
+                                                <p>
+                                                    {{ product.price_sale_currency < product.price_currency ?
+                                                        product.price_sale_currency : product.price_currency |
+                                                        formatNumber }} {{ initialValue.user_currency }} </p>
                                             </div>
                                         </span>
                                     </div>
@@ -427,6 +439,9 @@ export default {
                 edit_active: 1,
                 edit_id: 1,
                 content: '',
+                edit_price_sale_currency: 20,
+                edit_price_currency: 10,
+                user_currency: '',
             },
             form2: {
                 body: '',
@@ -444,6 +459,8 @@ export default {
                             this.initialValue.edit_description = data.data.description,
                             this.initialValue.edit_price = data.data.price,
                             this.initialValue.edit_price_sale = data.data.price_sale,
+                            this.initialValue.edit_price_currency = data.data.price_currency,
+                            this.initialValue.edit_price_sale_currency = data.data.price_sale_currency,
                             this.initialValue.content = data.data.content,
                             this.initialValue.edit_img = data.data.file,
                             this.initialValue.edit_active = data.data.active,
@@ -498,9 +515,7 @@ export default {
             httpRequest
                 .get('/api/admin/users/currentUser')
                 .then((response) => {
-                    this.initialValue.user_name = response.data.name;
-                    this.initialValue.user_id = response.data.id;
-                    this.initialValue.user_avatar = response.data.avatar;
+                    this.initialValue.user_currency = response.data.data.currency;
                 })
         },
         getComment() {

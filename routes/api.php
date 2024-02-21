@@ -51,6 +51,11 @@ Route::get('/callback/{social}', [SocialAuthController::class, 'callback'])->nam
 Route::post('/admin/users/login/store', [LoginController::class, 'login'])->name('login');
 Route::post('/admin/users/register/store', [LoginController::class, 'register'])->name('register');
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::prefix('currency')->group(function () {
+        Route::get('/', [App\Http\Controllers\MainController::class, 'getListCurrency'])->name('getListCurrency');
+        Route::get('/current-currency', [App\Http\Controllers\MainController::class, 'getUserCurrency'])->name('getUserCurrency');
+        Route::post('/', [App\Http\Controllers\MainController::class, 'changeCurrency'])->name('currency');
+    });
     Route::prefix('files')->group(function () {
         Route::get('/getAnimeByUrl', [GetAnimeByUrlController::class, 'getAnimeByUrl'])->name('files.getAnimeByUrl');
         Route::get('/listFile', [FileHistoryController::class, 'getList'])->name('files.list');

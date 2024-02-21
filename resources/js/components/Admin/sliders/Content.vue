@@ -504,7 +504,6 @@ export default {
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 .sortType:hover {
