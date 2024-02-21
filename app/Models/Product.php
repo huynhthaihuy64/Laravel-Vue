@@ -25,6 +25,7 @@ class Product extends Model
         'creator_id',
         'modifier_id'
     ];
+    protected $appends = ['price_sale_currency', 'price_currency'];
     public function menus()
     {
         return $this->belongsToMany(Menu::class)->select(['name', 'id']);
@@ -48,6 +49,27 @@ class Product extends Model
     public function userProducts()
     {
         return $this->hasMay(UserProduct::class, 'product_id', 'id');
+    }
+
+    public function getPriceSaleCurrencyAttribute()
+    {
+        if (isset($this->attributes['price_sale'])) {
+            $jsonFilePath = storage_path('setting.json');
+            $jsonData = file_get_contents($jsonFilePath);
+            $data = json_decode($jsonData, true);
+            $priceCurrency = round($data[auth()->user()->currency]['value'] * $this->attributes['price_sale'],4);
+            return $priceCurrency;
+        }
+        return null;
+    }
+
+    public function getPriceCurrencyAttribute()
+    {
+        $jsonFilePath = storage_path('setting.json');
+        $jsonData = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonData, true);
+        $priceCurrency = round($data[auth()->user()->currency]['value'] * $this->attributes['price'], 4);
+        return $priceCurrency;
     }
 
     /**

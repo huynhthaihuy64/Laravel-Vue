@@ -26,6 +26,8 @@ class UserResource extends JsonResource
             'gender' => $this->gender === 0 ? __('messages.user.gender.male') : __('messages.user.gender.female'),
             'role_id' => $this->role_id,
             'address' => $this->address,
+            'avatar' => $this->avatar,
+            'currency' => $this->currency,
             'created_at' => Carbon::parse($this->created_at)->format('Y/m/d'),
             'images' => UserAlbums::collection($this->userAlbums)
           ];

@@ -19,18 +19,18 @@
                                         <carousel v-if="sliders.length === 0">
                                             <div class="image-contain">
                                                 <h5 style="text:center">FaceBook</h5>
-                                                <a href="https://www.facebook.com/" target="_blank"><img src="../../../public/images/facebook.png"
-                                                        style="height:300px"></a>
+                                                <a href="https://www.facebook.com/" target="_blank"><img
+                                                        src="../../../public/images/facebook.png" style="height:300px"></a>
                                             </div>
                                             <div class="image-contain">
                                                 <h5 style="text:center">Instagram</h5>
-                                                <a href="https://www.instagram.com/" target="_blank"><img src="../../../public/images/Instagram.png"
-                                                        style="height:300px"></a>
+                                                <a href="https://www.instagram.com/" target="_blank"><img
+                                                        src="../../../public/images/Instagram.png" style="height:300px"></a>
                                             </div>
                                             <div class="image-contain">
                                                 <h5 style="text:center">Tik Tok</h5>
-                                                <a href="https://www.tiktok.com/en/" target="_blank"><img src="../../../public/images/tiktok.png"
-                                                        style="height:300px"></a>
+                                                <a href="https://www.tiktok.com/en/" target="_blank"><img
+                                                        src="../../../public/images/tiktok.png" style="height:300px"></a>
                                             </div>
                                         </carousel>
                                     </div>
@@ -77,7 +77,7 @@
 
                 <div class="flex-w flex-sb-m p-b-52">
                     <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-                        <a href="/" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1">
+                        <a href="/categories/1" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1">
                             {{ $store.getters.localizedStrings.product.all }}
                         </a>
                     </div>
@@ -90,11 +90,12 @@
 
                 <div>
                     <div class="row card-all">
-                        <div v-for="product in products" :key="product.id" class="card-item" >
+                        <div v-for="product in products" :key="product.id" class="card-item">
                             <div>
                                 <div class="block2 w-100">
-                                    <div class="block2-pic hov-img0">
-                                        <img :src="product.file" height="200px" class="image-contain w-100">
+                                    <div class="block2-pic hov-img0" style="width: 300px; height: 200px;">
+                                        <img :src="product.file" class="image-contain w-100"
+                                            style="object-fit: cover; width: 100%; height: 100%;">
                                         <a @click="goToDetail(product.id)"
                                             class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1 justify-content-center">
                                             Quick View
@@ -109,11 +110,18 @@
                                             </a>
 
                                             <span class="stext-105 cl3">
-                                                <div v-if="product.price_sale != 0">
-                                                    <p>{{ product.price_sale | formatNumber }}</p>
+                                                <div v-if="!product.price_currency">
+                                                    <p>
+                                                        {{ product.price_sale < product.price ? product.price_sale :
+                                                            product.price | formatNumber }} {{ initialValue.user_currency
+                                                    }}</p>
                                                 </div>
-                                                <div v-if="product.price_sale == 0 || product.price_sale == null">
-                                                    <p>{{ product.price | formatNumber }}</p>
+                                                <div v-if="product.price_currency">
+                                                    <p>
+                                                        {{ product.price_sale_currency < product.price_currency ?
+                                                            product.price_sale_currency : product.price_currency |
+                                                            formatNumber }} {{ initialValue.user_currency }} 
+                                                    </p>
                                                 </div>
                                             </span>
                                         </div>
@@ -163,6 +171,9 @@ export default {
                 "from": 1,
                 "to": 10
             },
+            initialValue: {
+                user_currency: ''
+            }
         }
     },
     methods: {
@@ -226,6 +237,13 @@ export default {
                 this.meta.to = this.totalPage
             }
         },
+        getUser() {
+            httpRequest
+                .get('/api/admin/users/currentUser')
+                .then((response) => {
+                    this.initialValue.user_currency = response.data.data.currency;
+                })
+        },
     },
     mounted() {
         this.getResult()
@@ -235,6 +253,7 @@ export default {
         this.$Progress.start()
         this.getResult()
         this.getProductList(this.page)
+        this.getUser()
         this.$Progress.finish()
     },
 }

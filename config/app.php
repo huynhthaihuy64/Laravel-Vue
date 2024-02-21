@@ -82,6 +82,8 @@ return [
 
     'locale' => 'en',
 
+    'currency' => 'VND',
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale

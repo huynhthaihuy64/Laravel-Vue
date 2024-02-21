@@ -10,7 +10,7 @@
                         </h4>
                         <ul>
                             <li class="p-b-10" v-for="(item) in menus" :key="item.id">
-                                <a href="#" target="_blank" class="stext-107 cl7 hov-cl1 trans-04">
+                                <a :href="'/categories/' + item.id " class="stext-107 cl7 hov-cl1 trans-04">
                                     {{item.name}}
                                 </a>
                             </li>
@@ -115,8 +115,6 @@
             </div>
         </footer>
 
-
-        <!-- Back to top -->
         <div class="btn-back-to-top" id="myBtn">
             <span class="symbol-btn-back-to-top">
                 <i class="zmdi zmdi-chevron-up"></i>

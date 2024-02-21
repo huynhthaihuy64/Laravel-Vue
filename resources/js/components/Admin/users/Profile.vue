@@ -1,9 +1,7 @@
 <template v-bind:class="{ 'dark': darkMode }">
   <section>
     <div class="wrapper">
-      <!-- Content Wrapper. Contains page content -->
       <div class="content-fluid" style="background-color: #f4f6f9; margin-left: 15px;">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
@@ -21,13 +19,11 @@
           </div>
         </section>
 
-        <!-- Main content -->
         <section class="content">
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-3">
 
-                <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                   <div class="card-body box-profile">
                     <div class="text-center">
@@ -59,22 +55,18 @@
                     <a href="#" class="btn btn-primary btn-block"><b>{{
                       $store.getters.localizedStrings.profile.activity.follow }}</b></a>
                   </div>
-                  <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
 
-                <!-- About Me Box -->
                 <div class="card card-primary">
                   <div class="card-header">
                     <h3 class="card-title">{{ $store.getters.localizedStrings.profile.activity.about }}</h3>
                   </div>
-                  <!-- /.card-header -->
                   <div class="card-body">
                     <strong><i class="fas fa-venus-mars mr-1"></i> {{
                       $store.getters.localizedStrings.profile.profile.gender.title }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_gender == 0 ? 'Male' : 'Female' }}
+                      {{ initialValue.edit_gender ?? '' }}
                     </p>
 
                     <hr>
@@ -82,7 +74,7 @@
                     <strong><i class="fas fa-map-marker-alt mr-1"></i> {{
                       $store.getters.localizedStrings.profile.profile.address }}</strong>
 
-                    <p class="text-muted">{{ initialValue.edit_address }}</p>
+                    <p class="text-muted">{{ initialValue.edit_address ?? '' }}</p>
 
                     <hr>
 
@@ -90,7 +82,7 @@
                       $store.getters.localizedStrings.profile.profile.birthday }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_birthday }}
+                      {{ initialValue.edit_birthday ?? ''}}
                     </p>
 
                     <hr>
@@ -99,14 +91,11 @@
                     }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_phone }}
+                      {{ initialValue.edit_phone ?? ''}}
                     </p>
                   </div>
-                  <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
               </div>
-              <!-- /.col -->
               <div class="col-md-9">
                 <div class="card">
                   <div class="card-header p-2">
@@ -118,11 +107,10 @@
                       <li class="nav-item"><a class="nav-link" href="#setting" data-toggle="tab">{{
                         $store.getters.localizedStrings.profile.setting }}</a></li>
                     </ul>
-                  </div><!-- /.card-header -->
+                  </div>
                   <div class="card-body">
                     <div class="tab-content">
                       <div class="active tab-pane" id="activity">
-                        <!-- Post -->
                         <div class="post">
                           <div class="user-block">
                             <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user1-128x128.jpg"
@@ -133,7 +121,6 @@
                             </span>
                             <span class="description">Shared publicly - 7:30 PM today</span>
                           </div>
-                          <!-- /.user-block -->
                           <p>
                             Lorem ipsum represents a long-held tradition for designers,
                             typographers and the like. Some people hate it and argue for
@@ -154,9 +141,7 @@
 
                           <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
                         </div>
-                        <!-- /.post -->
 
-                        <!-- Post -->
                         <div class="post clearfix">
                           <div class="user-block">
                             <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user7-128x128.jpg"
@@ -167,7 +152,6 @@
                             </span>
                             <span class="description">Sent you a message - 3 days ago</span>
                           </div>
-                          <!-- /.user-block -->
                           <p>
                             Lorem ipsum represents a long-held tradition for designers,
                             typographers and the like. Some people hate it and argue for
@@ -185,9 +169,7 @@
                             </div>
                           </form>
                         </div>
-                        <!-- /.post -->
 
-                        <!-- Post -->
                         <div class="post">
                           <div class="user-block">
                             <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user6-128x128.jpg"
@@ -198,30 +180,23 @@
                             </span>
                             <span class="description">Posted 5 photos - 5 days ago</span>
                           </div>
-                          <!-- /.user-block -->
                           <div class="row mb-3">
                             <div class="col-sm-6">
                               <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
                             </div>
-                            <!-- /.col -->
                             <div class="col-sm-6">
                               <div class="row">
                                 <div class="col-sm-6">
                                   <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo2.png" alt="Photo">
                                   <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg" alt="Photo">
                                 </div>
-                                <!-- /.col -->
                                 <div class="col-sm-6">
                                   <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
                                   <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
                                 </div>
-                                <!-- /.col -->
                               </div>
-                              <!-- /.row -->
                             </div>
-                            <!-- /.col -->
                           </div>
-                          <!-- /.row -->
 
                           <p>
                             <a href="#" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i> Share</a>
@@ -235,7 +210,6 @@
 
                           <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
                         </div>
-                        <!-- /.post -->
                       </div>
 
                       <div class="tab-pane" id="profile">
@@ -387,36 +361,24 @@
                           </div>
                         </div>
                       </div>
-                      <!-- /.tab-pane -->
                     </div>
-                    <!-- /.tab-content -->
-                  </div><!-- /.card-body -->
+                  </div>
                 </div>
-                <!-- /.card -->
               </div>
-              <!-- /.col -->
             </div>
-            <!-- /.row -->
-          </div><!-- /.container-fluid -->
+          </div>
         </section>
-        <!-- /.content -->
       </div>
-      <!-- /.content-wrapper -->
-      <!-- Control Sidebar -->
       <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
       </aside>
-      <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
   </section>
-  <!-- jQuery -->
 </template>
 
 <script>
 import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
-import { reactive, computed, ref } from "vue";
+import { ref } from "vue";
 import httpRequest from '../../../axios'
 
 const isDark = ref();
@@ -482,17 +444,17 @@ export default {
       httpRequest
         .get('/api/admin/users/currentUser')
         .then((response) => {
-          this.initialValue.edit_name = response.data.name;
-          this.initialValue.edit_email = response.data.email;
-          this.initialValue.edit_password = response.data.password;
-          this.initialValue.edit_phone = response.data.phone;
-          this.initialValue.edit_department = response.data.department;
-          this.initialValue.edit_gender = response.data.gender;
-          this.initialValue.edit_birthday = response.data.birthday;
-          this.initialValue.edit_address = response.data.address;
-          this.initialValue.edit_id = response.data.id;
-          this.initialValue.edit_avatar = response.data.avatar;
-          response.data.images.map((item, index) => {
+          this.initialValue.edit_name = response.data.data.name;
+          this.initialValue.edit_email = response.data.data.email;
+          this.initialValue.edit_password = response.data.data.password;
+          this.initialValue.edit_phone = response.data.data.phone;
+          this.initialValue.edit_department = response.data.data.department;
+          this.initialValue.edit_gender = response.data.data.gender;
+          this.initialValue.edit_birthday = response.data.data.birthday;
+          this.initialValue.edit_address = response.data.data.address;
+          this.initialValue.edit_id = response.data.data.id;
+          this.initialValue.edit_avatar = response.data.data.avatar;
+          response.data.data.images.map((item, index) => {
             const file = {
               name: item.name,
               uid: item.id,

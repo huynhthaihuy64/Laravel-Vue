@@ -271,21 +271,7 @@ class LoginController extends ResponseController
     public function getCurrentUser()
     {
         $user = User::find(auth()->user()->id);
-        $listUsers = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'password' => $user->password,
-            'avatar' => $user->avatar,
-            'images' => $user->userAlbums()->get(),
-            'department' => $user->department,
-            'birthday' => Carbon::parse($user->birthday)->format('Y/m/d'),
-            'gender' => $user->gender,
-            'address' => $user->address,
-            'role_id' => $user->role_id,
-            'created_at' => Carbon::parse($user->created_at)->format('Y/m/d'),
-        ];
+        $listUsers = UserResource::make($user);
         return $listUsers;
     }
 

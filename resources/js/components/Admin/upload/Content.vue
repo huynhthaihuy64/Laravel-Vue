@@ -42,7 +42,6 @@ export default {
             this.fileList.splice(index, 1);
         },
         submitFiles() {
-            console.log(this.fileList);
             if (this.fileList.length === 0) {
                 message.warning('Please select a file to upload');
                 return;
@@ -58,8 +57,7 @@ export default {
                     const url = URL.createObjectURL(new Blob([response.data], { type: 'application/zip' }));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'Super.zip'); // Đặt tên tệp Zip tải xuống
-                    // Thêm phần tử 'a' vào body và nhấp vào nó để tải xuống tệp zip
+                    link.setAttribute('download', 'Super.zip');
                     document.body.appendChild(link);
                     link.click();
                     link.remove();
@@ -70,8 +68,6 @@ export default {
                 })
                 .catch((error) => {
                     message.error('Upload error');
-                    // Handle error from the API (if needed)
-                    console.log(error);
                 });
         },
     },

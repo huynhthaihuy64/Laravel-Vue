@@ -111,8 +111,6 @@ export default {
   padding-top: 19px;
   padding-bottom: 13px;
 
-  // padding-left: 15px;
-  // padding-right: 15px;
   &::before {
     content: '';
     display: block;

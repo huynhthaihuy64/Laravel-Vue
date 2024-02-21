@@ -15,12 +15,12 @@ class AddCreatorAndModifierToAllTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('creator_id')
-            ->nullable()
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->comment('Creator ID');
             $table->foreignId('modifier_id')
-            ->nullable()
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->comment('Modifier ID');
@@ -33,7 +33,7 @@ class AddCreatorAndModifierToAllTable extends Migration
                 ->cascadeOnUpdate()
                 ->comment('Creator ID');
             $table->foreignId('modifier_id')
-            ->nullable()
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->comment('Modifier ID');
@@ -41,12 +41,12 @@ class AddCreatorAndModifierToAllTable extends Migration
 
         Schema::table('sliders', function (Blueprint $table) {
             $table->foreignId('creator_id')
-            ->nullable()
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->comment('Creator ID');
             $table->foreignId('modifier_id')
-            ->nullable()
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->comment('Modifier ID');
@@ -60,8 +60,17 @@ class AddCreatorAndModifierToAllTable extends Migration
      */
     public function down()
     {
-        Schema::table('all', function (Blueprint $table) {
-            //
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign(['creator_id']);
+            $table->dropForeign(['modifier_id']);
+        });
+        Schema::table('menus', function (Blueprint $table) {
+            $table->dropForeign(['creator_id']);
+            $table->dropForeign(['modifier_id']);
+        });
+        Schema::table('sliders', function (Blueprint $table) {
+            $table->dropForeign(['creator_id']);
+            $table->dropForeign(['modifier_id']);
         });
     }
 }

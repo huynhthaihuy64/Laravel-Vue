@@ -19,7 +19,8 @@
 					<div class="space60">&nbsp;</div>
 					<div class="row">
 						<div class="col-sm-3">
-							<ul class="aside-menu border-top menu-side my-0 mx-0 bg-secondary text-white" v-for="menu in menus" :key="menu.id">
+							<ul class="aside-menu border-top menu-side my-0 mx-0 bg-secondary text-white"
+								v-for="menu in menus" :key="menu.id">
 								<li class="ml-2 mt-2"><a @click="goToMenuDetail(menu.id)">{{ menu.name }}</a></li>
 							</ul>
 						</div>
@@ -35,8 +36,9 @@
 									<div v-for="product in products" :key="product.id" class="card-item col-sm-4">
 										<div>
 											<div class="block2 w-100">
-												<div class="block2-pic hov-img0">
-													<img :src="product.file" height="200px" class="image-contain w-100">
+												<div class="block2-pic hov-img0" style="width: 300px; height: 200px;">
+													<img :src="product.file" class="image-contain w-100"
+														style="object-fit: cover; width: 100%; height: 100%;">
 													<a @click="goToDetail(product.id)"
 														class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1 justify-content-center">
 														Quick View
@@ -51,12 +53,18 @@
 														</a>
 
 														<span class="stext-105 cl3">
-															<div v-if="product.price_sale != 0">
-																<p>{{ product.price_sale | formatNumber }}</p>
+															<div v-if="!product.price_currency">
+																<p>
+																	{{ product.price_sale < product.price ?
+																		product.price_sale : product.price | formatNumber }}
+																		{{ initialValue.user_currency }}</p>
 															</div>
-															<div
-																v-if="product.price_sale == 0 || product.price_sale == null">
-																<p>{{ product.price | formatNumber }}</p>
+															<div v-if="product.price_currency">
+																<p>
+																	{{ product.price_sale_currency < product.price_currency
+																		? product.price_sale_currency :
+																		product.price_currency | formatNumber }} {{
+		initialValue.user_currency }} </p>
 															</div>
 														</span>
 													</div>
@@ -77,16 +85,14 @@
 										<font-awesome-icon :icon="['fas', 'chevron-right']" />
 									</a-button>
 								</div>
-							</div> <!-- .beta-products-list -->
+							</div>
 
 							<div class="space50">&nbsp;</div>
 						</div>
-					</div> <!-- end section with sidebar and main content -->
-
-
-				</div> <!-- .main-content -->
-			</div> <!-- #content -->
-		</div> <!-- .container -->
+					</div>
+				</div>
+			</div>
+		</div>
 	</section>
 </template>
 <script>
@@ -113,6 +119,7 @@ export default {
 				edit_active: '',
 				edit_description: '',
 				content: '',
+				user_currency: ''
 			},
 		}
 	},
@@ -139,18 +146,18 @@ export default {
 			this.$router.go();
 		},
 		getProductMenu(row, page) {
-			  const self = this;
-				httpRequest
-					.get('/api/products/productMenu?menu_id=' + this.$route.params.id + '&limit=' + row + '&page=' + page)
-					.then(
-						({ data }) => {
-							(self.lastPage = data.meta.last_page),
+			const self = this;
+			httpRequest
+				.get('/api/products/productMenu?menu_id=' + this.$route.params.id + '&limit=' + row + '&page=' + page)
+				.then(
+					({ data }) => {
+						(self.lastPage = data.meta.last_page),
 							(self.products = data.data)
-							(self.totalPage = data.meta.total),
+								(self.totalPage = data.meta.total),
 							(self.checkPage()),
 							(self.checkRow())
-						}
-					);
+					}
+				);
 		},
 		getMenu() {
 			httpRequest
@@ -174,7 +181,7 @@ export default {
 				this.page = this.page + 1;
 			}
 			this.checkPage();
-			this.getProductMenu(this.row,this.page);
+			this.getProductMenu(this.row, this.page);
 		},
 		checkPage() {
 			if (this.page == this.lastPage) {
@@ -198,6 +205,13 @@ export default {
 		goToDetail(id) {
 			this.$router.push({ name: "productDetail", params: { id: id } });
 		},
+		getUser() {
+			httpRequest
+				.get('/api/admin/users/currentUser')
+				.then((response) => {
+					this.initialValue.user_currency = response.data.data.currency;
+				})
+		},
 	},
 	mounted() {
 		this.getMenu()
@@ -206,6 +220,7 @@ export default {
 		this.$Progress.start()
 		this.getMenuDetail(this.page)
 		this.getProductMenu(this.row, this.page)
+		this.getUser()
 		this.$Progress.finish()
 	},
 }
@@ -214,5 +229,4 @@ export default {
 <style lang="scss" scoped>
 .menu-side {
 	height: 50px;
-}
-</style>
+}</style>

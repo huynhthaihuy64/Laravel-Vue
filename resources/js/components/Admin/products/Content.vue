@@ -669,7 +669,6 @@ export default {
           const responseUpload = await httpRequest.post('/api/files/upload-file', formData)
           uploadFileIds.push(responseUpload.data.data.id);
         }
-        console.log('ids',uploadFileIds);
         const responseImport = await httpRequest.post('/api/products/import-product', { ids: uploadFileIds, type: 1 });
         this.info = responseImport;
         Toast.fire({
@@ -700,7 +699,6 @@ export default {
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 table {

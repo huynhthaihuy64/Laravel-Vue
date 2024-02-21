@@ -14,8 +14,10 @@ use App\Models\UserProduct;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Support\Str;
+use Omnipay\Omnipay;
 
 class CartService
 {
@@ -39,12 +41,15 @@ class CartService
     {
         $carts = $this->cart->with('product', 'user')->paginate($params['limit'] ?? 10);
         $totalAll = 0;
+        $jsonFilePath = storage_path('setting.json');
+        $jsonData = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonData, true);
         foreach ($carts as $cart) {
             $totalAll += $cart->total;
         }
         $data = [
             'carts' => $carts,
-            'total_all' => $totalAll
+            'total_all' => round($data[auth()->user()->currency]['value'] * $totalAll,2)
         ];
         return $data;
     }
@@ -193,19 +198,23 @@ class CartService
     public function success($param)
     {
         $data = $param->toArray();
+        $code = '';
         if (isset($param['vnp_TxnRef'])) {
             $token = $data['vnp_TxnRef'];
+            $code = $data['vnp_TransactionStatus'];
         } elseif(isset($data['orderId'])) {
             $token = $data['orderId'];
+            $code = $data['errorCode'];
         } else {
             $provider = new PayPalClient;
             $provider->setApiCredentials(config('paypal'));
             $paypalToken = $provider->getAccessToken();
             $response = $provider->capturePaymentOrder($param->token);
             $token = $data['token'];
+            $code = $response['status'];
         }
         $paypal = $this->paypal->where('token', $token)->get()->toArray();
-        if ($paypal) {
+        if ($paypal && in_array($code,['0','00', 'COMPLETED'])) {
             DB::beginTransaction();
             if (isset($data['token']) && isset($response['status']) && $response['status'] === __('messages.cart.payment.complete')) {
                 return $this->handlePayment($paypal, $param);
@@ -213,7 +222,7 @@ class CartService
                 return $this->handlePayment($paypal, $param);
             }
         } else {
-            return response()->json(['message' => __('messages.cart.payment.failed')]);
+            return Redirect::to(env('APP_URL') . '/cart?status=fail');
         }
     }
 
@@ -254,20 +263,17 @@ class CartService
         if (isset($vnpBankCode) && $vnpBankCode != "") {
             $inputData['vnp_BankCode'] = $vnpBankCode;
         }
-        if (isset($vnp_Bill_State) && $vnp_Bill_State != "") {
-            $inputData['vnp_Bill_State'] = $vnp_Bill_State;
-        }
 
         //var_dump($inputData);
         ksort($inputData);
         $query = "";
         $i = 0;
-        $hashdata = "";
+        $hashData = "";
         foreach ($inputData as $key => $value) {
             if ($i == 1) {
-                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+                $hashData .= '&' . urlencode($key) . "=" . urlencode($value);
             } else {
-                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $hashData .= urlencode($key) . "=" . urlencode($value);
                 $i = 1;
             }
             $query .= urlencode($key) . "=" . urlencode($value) . '&';
@@ -275,7 +281,7 @@ class CartService
 
         $vnp_Url = $vnpUrl . "?" . $query;
         if (isset($vnpHashSecret)) {
-            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnpHashSecret); //  
+            $vnpSecureHash =   hash_hmac('sha512', $hashData, $vnpHashSecret); //  
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         $returnData = array(
@@ -329,11 +335,12 @@ class CartService
             Mail::to($user['email'])->send(new ThankForBuy($param, $dataBuy));
             DB::commit();
             // return response()->json(['message' => __('messages.cart.payment.success')]);
-            return redirect()->to(env('APP_URL'). '/cart');
+            return redirect()->to(env('APP_URL'). '/cart?status=success');
         } catch (\Exception $e) {
             DB::rollback();
             Log::info($e->getMessage());
-            return response()->json(['message' => __('messages.cart.payment.failed')]);
+            return
+            redirect()->to(env('APP_URL') . '/cart?status=fail');
         }
     }
 

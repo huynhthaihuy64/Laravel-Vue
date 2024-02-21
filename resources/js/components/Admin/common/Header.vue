@@ -20,8 +20,8 @@
             <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
           </li>
           <li class="nav-item ml-5">
-          <div class="dropdown w-50 d-flex justify-content-center w-100">
-            <button @click="listCategory()" class="nav-link">Category</button>
+            <div class="dropdown w-50 d-flex justify-content-center w-100">
+              <button @click="listCategory()" class="nav-link">Category</button>
               <div id="myCategory" class="dropdown-category scrollable-menu mt-5 w-25" role="menu">
                 <div class="content-dropdown container mt-4 w-100 mb-2" v-for="(item) in menus" :key="item.id">
                   <a @click="goToMenuDetail(item.id)" class="w-100 content-dropdown ">
@@ -29,10 +29,18 @@
                   </a>
                 </div>
               </div>
-          </div>
+            </div>
           </li>
           <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
+          </li>
+          <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
+            <a-space>
+              <a-select :value="currency" ref="select" style="width: 120px" @focus="focus" @change="handleChange">
+                <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
+                }}</a-select-option>
+              </a-select>
+            </a-space>
           </li>
         </ul>
       </div>
@@ -66,7 +74,8 @@
         <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
       </div>
       <div class="flex-shrink-0" v-if="!initialValue.edit_avatar">
-        <img src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" alt="Generic placeholder image" class="image-contain avatar" />
+        <img src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" alt="Generic placeholder image"
+          class="image-contain avatar" />
       </div>
       <div class="info">
         <a-dropdown>
@@ -116,6 +125,7 @@ export default {
     return {
       routeName: '',
       menus: {},
+      listCurrency: {},
       name: '',
       initialValue: {
         edit_name: '',
@@ -125,6 +135,7 @@ export default {
       },
       searchText: '',
       searchArr: {},
+      currency: ''
     }
   },
   computed: {
@@ -173,7 +184,7 @@ export default {
       }
     },
     handleChat() {
-      this.$router.push({ name: "listFriend"});
+      this.$router.push({ name: "listFriend" });
       this.$router.go();
     },
     goToDetail(id) {
@@ -185,28 +196,72 @@ export default {
       httpRequest
         .get('/api/admin/users/currentUser')
         .then((response) => {
-          this.initialValue.edit_name = response.data.name;
-          this.initialValue.edit_id = response.data.id;
-          this.initialValue.edit_avatar = response.data.avatar;
-          this.initialValue.role = response.data.role_id;
+          this.initialValue.edit_name = response.data.data.name;
+          this.initialValue.edit_id = response.data.data.id;
+          this.initialValue.edit_avatar = response.data.data.avatar;
+          this.initialValue.role = response.data.data.role_id;
         })
     },
     goToMenuDetail(id) {
-          this.$router.push({ name: "Category", params: { id: id } });
+      const url = `/categories/${id}`;
+      window.location.href = url;
     },
     getMenu() {
-        httpRequest
-            .get('/api/menus/list')
-            .then(
-                ({ data }) => (
-                    (this.menus = data.data)
-                )
-            );
+      httpRequest
+        .get('/api/menus/list')
+        .then(
+          ({ data }) => (
+            (this.menus = data.data)
+          )
+        );
     },
+    getCurrency() {
+      httpRequest
+        .get('/api/currency/current-currency')
+        .then(
+          ({ data }) => (
+            (this.currency = data.currency)
+          )
+        );
+    },
+    getListCurrency() {
+      httpRequest
+        .get('/api/currency')
+        .then(
+          ({ data }) => (
+            (this.listCurrency = data.currency)
+          )
+        );
+    },
+    handleChange(value) {
+      httpRequest.post('/api/currency', {
+        currency: value
+      })
+        .then(response => {
+          this.info = response
+          Toast.fire({
+            icon: 'success',
+            title: 'Change Currency Success'
+          });
+          setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        }).catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: 'Change Currency Error'
+          });
+          setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        });
+    }
   },
   mounted() {
     this.getUser()
     this.getMenu()
+    this.getCurrency()
+    this.getListCurrency()
   },
   created() {
     this.routeName = this.$route.name
@@ -258,7 +313,6 @@ export default {
   cursor: pointer;
 }
 
-/* Dropdown Button */
 .dropbtn {
   background-color: #04AA6D;
   color: white;
@@ -268,13 +322,11 @@ export default {
   cursor: pointer;
 }
 
-/* Dropdown button on hover & focus */
 .dropbtn:hover,
 .dropbtn:focus {
   background-color: #3e8e41;
 }
 
-/* The search field */
 #myInput {
   box-sizing: border-box;
   background-position: 14px 12px;
@@ -285,19 +337,16 @@ export default {
   border-bottom: 1px solid #ddd;
 }
 
-/* The search field when it gets focus/clicked on */
 #myInput:focus {
   outline: 3px solid #ddd;
 }
 
-/* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
   display: inline-block;
   z-index: 999;
 }
 
-/* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -306,6 +355,7 @@ export default {
   border: 1px solid #ddd;
   z-index: 1;
 }
+
 .dropdown-category {
   display: none;
   position: absolute;
@@ -314,7 +364,7 @@ export default {
   border: 1px solid #ddd;
   z-index: 1;
 }
-/* Links inside the dropdown */
+
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -322,14 +372,14 @@ export default {
   display: block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {
   background-color: #f1f1f1
 }
+
 .content-dropdown {
   max-height: 150px;
 }
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+
 .show {
   display: block;
 }
