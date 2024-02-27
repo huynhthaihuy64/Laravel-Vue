@@ -6,7 +6,6 @@ namespace App\Http\Services\Product;
 use App\Models\Menu;
 use App\Models\Product;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 
 class ProductService
 {
@@ -21,7 +20,6 @@ class ProductService
             })
             ->limit(self::LIMIT)
             ->paginate(4);
-        // ->get();
     }
 
     public function getByMenu($id)
