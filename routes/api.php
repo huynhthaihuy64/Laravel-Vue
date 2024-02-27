@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     Route::prefix('files')->group(function () {
         Route::get('/getAnimeByUrl', [GetAnimeByUrlController::class, 'getAnimeByUrl'])->name('files.getAnimeByUrl');
+        Route::post('/getAnimeByImage', [GetAnimeByUrlController::class, 'getAnimeByImage'])->name('files.getAnimeByImage');
         Route::get('/listFile', [FileHistoryController::class, 'getList'])->name('files.list');
         Route::post('/upload-file', [UploadController::class, 'uploadFileExcel'])->name('files.uploadFile');
         Route::get('/download/{id}', [UploadController::class, 'download'])->name('files.download');
