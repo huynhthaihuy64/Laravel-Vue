@@ -54,7 +54,13 @@ window.Vue = require("vue");
 window.Form = Form;
 var numeral = require("numeral");
 Vue.filter("formatNumber", function (value) {
-    return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+      if (!isNaN(value)) {
+          // Sử dụng .toFixed(5) để định dạng số với tối đa 5 chữ số thập phân
+          return numeral(value).format("0,0.[00000]");
+      } else {
+          // Nếu value không phải là số, trả về giá trị ban đầu
+          return value;
+      }
 });
 
 library.add(

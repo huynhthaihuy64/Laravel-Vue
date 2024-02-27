@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use App\Exceptions\AppValidationException;
 use App\Exceptions\NotFoundException;
 use App\Mail\ThankForBuy;
 use App\Models\Cart;
@@ -11,13 +10,12 @@ use App\Models\Paypal;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\UserProduct;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
-use Illuminate\Support\Str;
-use Omnipay\Omnipay;
 
 class CartService
 {
@@ -65,7 +63,7 @@ class CartService
             DB::beginTransaction();
             $checkCart = $this->cart->where('user_id', $user->id)->where('product_id', $product->id)->first();
             if ($checkCart) {
-                throw new AppValidationException(__('messages.validation.cart.exists'));
+                throw new Exception(__('messages.validation.cart.exists'));
             }
             $price = $product->price_sale < $product->price ? $product->price_sale : $product->price;
             $cart = $this->cart->create([
