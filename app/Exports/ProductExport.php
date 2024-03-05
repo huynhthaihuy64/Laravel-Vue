@@ -35,6 +35,7 @@ class ProductExport implements FromArray, WithHeadings, WithMapping
             'Description',
             'Price',
             'Price_sale',
+            'Image',
             'Active',
             'Created_at',
         ];
@@ -52,6 +53,7 @@ class ProductExport implements FromArray, WithHeadings, WithMapping
             $item['description'],
             $item['price'],
             $item['price_sale'],
+            env('APP_URL').$item['file'],
             $item['active'] == 0 ? 'InActive' : 'Active',
             Carbon::parse($item['created_at'])->format('Y-m-d'),
         ];

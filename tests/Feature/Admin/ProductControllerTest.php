@@ -3,15 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
+    //Chạy trước mỗi method test. Sử dụng khi muốn khởi tạo môi trường test
     public function setUp(): void
     {
         parent::setUp();
@@ -33,10 +30,22 @@ class ProductControllerTest extends TestCase
         $response = $this->getJson(route('products.list'));
         $response->assertStatus(Response::HTTP_OK);
 
-        $response->assertJson(fn (AssertableJson $json) => 
-            $json->has('data')
-                ->has('links')
-                ->has('meta')
-        );
+        //Check tồn tại
+        // $response->assertJson(fn (AssertableJson $json) => 
+        //     $json->has('data')
+        //         ->has('links')
+        //         ->has('meta')
+        // );
+
+        //Check cấu trúc return Json
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => ['*' => [
+                    'id',
+                    'name',
+                    'price',
+                    'created_at',
+                ]]
+            ]);
     }
 }
