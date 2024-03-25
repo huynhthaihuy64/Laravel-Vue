@@ -42,7 +42,8 @@
                         </h4>
 
                         <p class="stext-107 cl7 size-201">
-                            Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us
+                            Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call
+                            us
                             on (+1) 96 716 6879
                         </p>
 
@@ -115,7 +116,7 @@
             </div>
         </footer>
 
-        <div class="btn-back-to-top" id="myBtn">
+        <div class="btn-back-to-top" id="myBtn" style="margin-right: 20%;">
             <span class="symbol-btn-back-to-top">
                 <i class="zmdi zmdi-chevron-up"></i>
             </span>
