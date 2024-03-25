@@ -53,7 +53,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body>
+<body style="" class="mt-0 pt-0">
 	<div id="app">
 		<router-view>
 		</router-view>
@@ -174,6 +174,14 @@
 	</script>
 	<!-- Upload File !-->
 	<script src="/template/admin/js/main.js"></script>
+	<script>
+		var botmanWidget = {
+	        aboutText: 'Start the conversation with Hi',
+	        introMessage: 'WELCOME TO ALL ABOUT LARAVEL',
+	        chatServer: '{{ url("/api/botman") }}'
+	    };
+	</script>
+	<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 </body>
 
 </html>

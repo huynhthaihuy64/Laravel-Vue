@@ -45,6 +45,10 @@ class UserService
                     ]));
                 }
             }
+
+            if (isset($data['gender']) && !empty($data['gender'])) {
+                $gender = $data['gender'] === 'Male' ? 0 : 1;
+            }
             $result = [
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -54,7 +58,7 @@ class UserService
                 'department' => $data['department'],
                 'birthday' => $data['birthday'],
                 'address' => $data['address'],
-                'gender' => $data['gender'],
+                'gender' => $gender,
             ];
             $userOrigin->update($result);
             if (isset($data['removeFiles'])) {

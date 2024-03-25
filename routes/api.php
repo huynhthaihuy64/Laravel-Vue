@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\BotManController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\MainController as PageController;
@@ -48,8 +49,8 @@ Route::get('/', [MainController::class, 'index'])->name('admin');
 Route::get('/redirect/{social}', [SocialAuthController::class, 'redirect'])->name('socialite.redirect');
 Route::get('/callback/{social}', [SocialAuthController::class, 'callback'])->name('socialite.callback');
 
-Route::post('/admin/users/login/store', [LoginController::class, 'login'])->name('login');
-Route::post('/admin/users/register/store', [LoginController::class, 'register'])->name('register');
+Route::post('/admin/users/login/store', [LoginController::class, 'login']);
+Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('currency')->group(function () {
         Route::get('/', [App\Http\Controllers\MainController::class, 'getListCurrency'])->name('getListCurrency');
@@ -65,7 +66,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('/upload-file-s3', [UploadController::class, 'uploadFileS3'])->name('files.uploadS3');
     });
     Route::post('/sendMailAll', [SendMailAllUserController::class, 'sendAll'])->name('sendMailALl');
-    Route::post('/admin/users/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::post('/admin/users/logout', [LoginController::class, 'logout']);
     Route::get('/admin/users/currentUser', [LoginController::class, 'getCurrentUser'])->name('getCurrentUser');
     Route::post('/admin/users/updateCurrentUser', [LoginController::class, 'updateCurrentUser'])->name('updateCurrentUser');
     Route::get('/admin/users/role', [UserRoleController::class, 'index'])->name('roles.list');
@@ -132,7 +133,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     Route::get('search-friend', [ChatController::class, 'searchFriend'])->name('chat.searchFriend');
     Route::post('add-friend', [ChatController::class, 'addFriend'])->name('chat.addFriend');
-    Route::post('import-multiple', [ImportMultipleController::class, 'importMultiple'])->name('import');
+    Route::post('import-multiple', [ImportMultipleController::class, 'importMultiple'])->name('import-multiple');
 });
 Route::post('reset-password', [ResetPasswordController::class, 'sendMail'])->name('common.resetPasswordSendMail');
 Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset'])->name('common.resetPassword');
@@ -144,3 +145,6 @@ Route::get('/danh-muc/{id}', [App\Http\Controllers\MenuController::class, 'index
 Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'index'])->name('products.pageList');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/botman', [BotManController::class, 'handle']);
+// Route::post('/botman', [BotManController::class, 'handle']);
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);

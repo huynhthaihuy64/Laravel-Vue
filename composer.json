@@ -10,6 +10,10 @@
     "require": {
         "php": "^8.2",
         "aws/aws-sdk-php": "^3.296",
+        "botman/botman": "^2.8",
+        "botman/driver-facebook": "^1.11",
+        "botman/driver-web": "^1.5",
+        "botman/tinker": "dev-master",
         "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.7",
         "guzzlehttp/guzzle": "^7.0.1",
