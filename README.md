@@ -49,6 +49,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Upload file AWS S3
 - Xhprof Test Performance
 - Send SMS Vonage
+- Integration Botman to shop
 
 ## Document Payment
 - Paypal: srmklive/paypal
@@ -69,6 +70,8 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - flysystem-aws-s3-v3
 - maatwebsite
 - srmklive/paypal
+- botman/botman
+- botman/driver-web
 
 ## Installation
 

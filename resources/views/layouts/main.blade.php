@@ -53,7 +53,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body style="" class="mt-0 pt-0">
+<body style="background-color: #F5F5F5" class="mt-0 pt-0">
 	<div id="app">
 		<router-view>
 		</router-view>
