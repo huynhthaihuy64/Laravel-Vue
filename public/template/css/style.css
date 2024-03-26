@@ -2608,3 +2608,7 @@ body {
  .goog-te-gadget .goog-te-combo {
     color: red !important;
  }
+
+ #messageArea button {
+    height: 30px;
+ }
