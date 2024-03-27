@@ -63,24 +63,19 @@ class MainController extends Controller
         switch ($option) {
             case 1:
                 $product = Product::all()->toArray();
-                return Excel::download(new ProductExport($product), 'products' . Carbon::now()->format('Y-m-d') .'.csv');
-                break;
+                return Excel::download(new ProductExport($product), 'products' . Carbon::now()->format('Y-m-d') . '.xlsx');
             case 2:
                 $slider = Slider::all()->toArray();
-                return Excel::download(new SliderExport($slider), 'slider'. Carbon::now()->format('Y-m-d') . '.csv');
-                break;
+                return Excel::download(new SliderExport($slider), 'slider' . Carbon::now()->format('Y-m-d') . '.xlsx');
             case 3:
                 $menu = Menu::all()->toArray();
-                return Excel::download(new MenuExport($menu), 'menu'. Carbon::now()->format('Y-m-d') . '.csv');
-                break;
+                return Excel::download(new MenuExport($menu), 'menu' . Carbon::now()->format('Y-m-d') . '.xlsx');
             case 4:
                 $user = User::all()->toArray();
-                return Excel::download(new UserExport($user), 'user' . Carbon::now()->format('Y-m-d') . '.csv');
-                break;
+                return Excel::download(new UserExport($user), 'user' . Carbon::now()->format('Y-m-d') . '.xlsx');
             case 5:
                 $customer = Customer::all()->toArray();
-                return Excel::download(new CustomerExport($customer), 'customer'. Carbon::now()->format('Y-m-d') . '.csv');
-                break;
+                return Excel::download(new CustomerExport($customer), 'customer' . Carbon::now()->format('Y-m-d') . '.xlsx');
         }
     }
 
@@ -88,41 +83,41 @@ class MainController extends Controller
     {
         $this->validate($request, [
             'type' => 'required|int|min:1|max:13',
-            'file' => 'required|mimes:csv,txt',
+            'file' => 'required|mimes:csv,txt,xlsx',
         ]);
 
         $file = $request->file('file');
         switch ($request->type) {
-            // case 1:
-            //     $product = Product::all()->toArray();
-            //     return Excel::download(new ProductExport($product), 'products.csv');
-            //     break;
-            // case 2:
-            //     $slider = Slider::all()->toArray();
-            //     return Excel::download(new SliderExport($slider), 'slider.csv');
-            //     break;
-            // case 3:
-            //     try {
-            //         Excel::import(new CustomerImport, $file);
-            //         return response()->json(['message' => 'import ClassifyConstructImport success']); 
-            //         break;
-            //     } catch (\Exception $ex) {
-            //         return response()->json(($ex->getMessage()), 400);
-            //     }
-            //     break;
+                // case 1:
+                //     $product = Product::all()->toArray();
+                //     return Excel::download(new ProductExport($product), 'products.csv');
+                //     break;
+                // case 2:
+                //     $slider = Slider::all()->toArray();
+                //     return Excel::download(new SliderExport($slider), 'slider.csv');
+                //     break;
+                // case 3:
+                //     try {
+                //         Excel::import(new CustomerImport, $file);
+                //         return response()->json(['message' => 'import ClassifyConstructImport success']); 
+                //         break;
+                //     } catch (\Exception $ex) {
+                //         return response()->json(($ex->getMessage()), 400);
+                //     }
+                //     break;
             case 4:
                 try {
                     Excel::import(new MenuImport, $file);
-                    return response()->json(['message' => __('messages.import.menu')]); 
+                    return response()->json(['message' => __('messages.import.menu')]);
                     break;
                 } catch (\Exception $ex) {
                     return response()->json(($ex->getMessage()), 400);
                 }
                 break;
-            // case 5:
-            //     $user = User::all()->toArray();
-            //     return Excel::download(new UserExport($user), 'user.csv');
-            //     break;
+                // case 5:
+                //     $user = User::all()->toArray();
+                //     return Excel::download(new UserExport($user), 'user.csv');
+                //     break;
         }
     }
 
@@ -131,7 +126,8 @@ class MainController extends Controller
         return response()->json(['currency' => Auth::user()->currency]);
     }
 
-    public function changeCurrency(Request $request) {
+    public function changeCurrency(Request $request)
+    {
         $user = User::find(Auth::user()->id);
         $user->update([
             'currency' => $request->currency

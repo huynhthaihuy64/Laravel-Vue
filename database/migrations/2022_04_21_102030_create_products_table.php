@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->longtext('content');
             $table->integer('price');
             $table->integer('price_sale')->nullable();
+            $table->unsignedBigInteger('inventory_number');
             $table->integer('active');
             $table->string('file')->nullable();
             $table->json('images_quick_view')->nullable();
