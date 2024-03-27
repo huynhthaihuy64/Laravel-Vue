@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CartService
 {
@@ -319,6 +320,13 @@ class CartService
                 if (!$product) {
                     throw new NotFoundException(Product::class);
                 }
+                $inventory = $product->inventory_number - $cart->qty;
+                if ($inventory < 0) {
+                    throw new BadRequestException(__('Insufficient inventory'));
+                }
+                $product->update([
+                    'inventory_number' => $inventory,
+                ]);
                 $this->userProduct->create([
                     'user_id' => auth()->user()->id,
                     'product_id' => $product->id,
@@ -364,7 +372,6 @@ class CartService
         $requestId = time() . "";
         $requestType = env('MOMO_REQUEST_TYPE');
         $extraData = "";
-        // echo $serectkey;die;
         $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
 

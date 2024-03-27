@@ -22,6 +22,7 @@ class Product extends Model
         'active',
         'file',
         'images_quick_view',
+        'inventory_number',
         'creator_id',
         'modifier_id'
     ];

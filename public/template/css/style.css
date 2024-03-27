@@ -2612,3 +2612,7 @@ body {
  #messageArea button {
     height: 30px;
  }
+
+ #botmanWidgetRoot {
+    min-width: 100px
+ }

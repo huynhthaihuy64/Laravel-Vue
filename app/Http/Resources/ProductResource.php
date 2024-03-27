@@ -36,6 +36,7 @@ class ProductResource extends JsonResource
             'images' => $this->images,
             'price_currency' => $this->price_currency,
             'price_sale_currency' => $this->price_sale_currency,
+            'inventory_number' => $this->inventory_number,
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y'),
         ];
     }

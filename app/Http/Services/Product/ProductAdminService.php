@@ -61,6 +61,7 @@ class ProductAdminService
                 'content' => isset($request['content']) ? $request['content'] : null,
                 'file' => $request['file'],
                 'active' => $request['active'],
+                'inventory_number' => $request['inventory_number'] ?? 0,
             ]);
             if (isset($request['images']) && !empty($request['images'])) {
                 $uploadFiles = [];
@@ -129,6 +130,7 @@ class ProductAdminService
                 'description' => $request['description'],
                 'content' => isset($request['content']) ? $request['content'] : null,
                 'active' => $request['active'],
+                'inventory_number' => $request['inventory_number'] ?? 0,
             ];
             if (isset($request['file'])) {
                 $data['file'] = $request['file'];

@@ -523,7 +523,7 @@ export default {
                     var fileURL = window.URL.createObjectURL(new Blob([response.data]));
                     var fileLink = document.createElement('a');
                     fileLink.href = fileURL;
-                    fileLink.setAttribute('download', 'menu.csv');
+                    fileLink.setAttribute('download', 'menu.xlsx');
                     document.body.appendChild(fileLink);
                     fileLink.click();
                     Toast.fire({

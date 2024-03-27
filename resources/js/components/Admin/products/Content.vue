@@ -31,10 +31,13 @@
             <th class="center-text">Description</th>
             <th class="center-text">Category</th>
             <th class="sortType center-text"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
-            <th class="sortType center-text"><a @click="toggleSort('price_sale')">Price_Sale <i class="fas fa-sort"></i></a></th>
-            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('price_sale')">Price_Sale <i
+                  class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a>
+            </th>
             <th class="center-text">Image</th>
-            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i
+                  class="fas fa-sort"></i></a></th>
             <th class="center-text">Action</th>
           </tr>
         </thead>
@@ -42,7 +45,8 @@
           <tr v-for="(item, index) in products" :key="item.id">
             <th scope="row" class="center-text">{{ index + 1 }}</th>
             <td class="center-text">{{ item.name }}</td>
-            <td class="center-text">{{ item.description !== null ? item.description.length > 30 ? item.description.slice(0, 30) + '...' :
+            <td class="center-text">{{ item.description !== null ? item.description.length > 30 ?
+              item.description.slice(0, 30) + '...' :
               item.description : '' }}</td>
             <td class="center-text">{{ item.menuName }}</td>
             <td class="center-text">{{ item.price | formatNumber }}</td>
@@ -91,34 +95,34 @@
             <a-col :span="12">
               <a-form-item label="Name">
                 <a-input v-decorator="[
-                  'name',
-                  {
-                    initialValue: '',
-                    rules: [{ required: true, message: 'Please input your name!' }],
-                  },
-                ]" />
+          'name',
+          {
+            initialValue: '',
+            rules: [{ required: true, message: 'Please input your name!' }],
+          },
+        ]" />
               </a-form-item>
               <a-form-item label="Price">
                 <a-input v-decorator="['price',
-                  {
-                    initialValue: '',
-                  }
-                ]" />
+          {
+            initialValue: '',
+          }
+        ]" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item label="Menu">
                 <a-select v-decorator="[
-                  'menu_id',
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Menu is not null',
-                      },
-                    ],
-                  },
-                ]" mode="multiple" placeholder="Choose Menu" labelInValue optionFilterProp="filterProps" showSearch>
+          'menu_id',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Menu is not null',
+              },
+            ],
+          },
+        ]" mode="multiple" placeholder="Choose Menu" labelInValue optionFilterProp="filterProps" showSearch>
                   <a-select-option v-for="(menu) in menus" :value="menu.id" :key="menu.id" :filterProps="menu.name">
                     {{ menu.name }}
                   </a-select-option>
@@ -126,25 +130,27 @@
               </a-form-item>
               <a-form-item label="Price_Sale">
                 <a-input v-decorator="['price_sale',
-                  {
-                    initialValue: '',
-                  }
-                ]" />
+          {
+            initialValue: '',
+          }
+        ]" />
               </a-form-item>
             </a-col>
           </a-row>
           <a-form-item label="Description">
             <textarea v-decorator="[
-              'description',
-              {
-                initialValue: '',
-                rules: [{ required: true, message: 'Please input your description!' }],
-              },
-            ]" type="text" class="textarea"></textarea>
+          'description',
+          {
+            initialValue: '',
+            rules: [{ required: true, message: 'Please input your description!' }],
+          },
+        ]" type="text" class="textarea"></textarea>
           </a-form-item>
           <a-form-item label="Content"></a-form-item>
           <div :class="{ error: contentIsError, content: true }">
-            <VueEditor v-model="content" :placeholder="placeholderContent" @text-change="handleChangeContent" />
+            <VueEditor v-model="content" :placeholder="placeholderContent" @text-change="handleChangeContent"
+              :init-value="''"
+              />
           </div>
           <p class="msg-error" v-if="contentIsError">Content is not null</p>
           <a-row :gutter="20">
@@ -160,17 +166,17 @@
             <a-col :span="12">
               <a-form-item label="Status">
                 <a-select v-decorator="[
-                  'active',
-                  {
-                    initialValue: '',
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Status is not null',
-                      },
-                    ],
-                  },
-                ]" placeholder="Choose Status">
+          'active',
+          {
+            initialValue: 0,
+            rules: [
+              {
+                required: true,
+                message: 'Status is not null',
+              },
+            ],
+          },
+        ]" placeholder="Choose Status">
                   <a-select-option :value="0">
                     InActive
                   </a-select-option>
@@ -187,6 +193,15 @@
                   action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
                   <a-button> <a-icon type="upload" />Choose Your Album</a-button>
                 </a-upload>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="Inventory">
+                <a-input v-decorator="['inventory_number',
+                    {
+                      initialValue: '',
+                    }
+                  ]" type="number" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -229,36 +244,36 @@
           <a-col :span="12">
             <a-form-item label="Name">
               <a-input v-decorator="[
-                'name',
-                {
-                  initialValue: initialValue.edit_name,
-                  rules: [{ required: true, message: 'Please input your name!' }],
-                },
-              ]" />
+          'name',
+          {
+            initialValue: initialValue.edit_name,
+            rules: [{ required: true, message: 'Please input your name!' }],
+          },
+        ]" />
             </a-form-item>
             <a-form-item label="Price">
               <a-input v-decorator="[
-                'price',
-                {
-                  initialValue: initialValue.edit_price,
-                },
-              ]" />
+          'price',
+          {
+            initialValue: initialValue.edit_price,
+          },
+        ]" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="Menu">
               <a-select v-decorator="[
-                'menu_id',
-                {
-                  initialValue: initialValue.menus,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Menu is not null'
-                    }
-                  ]
-                }
-              ]" mode="multiple" placeholder="Choose Menu" labelInValue>
+          'menu_id',
+          {
+            initialValue: initialValue.menus,
+            rules: [
+              {
+                required: true,
+                message: 'Menu is not null'
+              }
+            ]
+          }
+        ]" mode="multiple" placeholder="Choose Menu" labelInValue>
                 <a-select-option v-for="(menu) in menus" :value="menu.id" :key="menu.id">
                   {{ menu.name }}
                 </a-select-option>
@@ -266,22 +281,22 @@
             </a-form-item>
             <a-form-item label="Price_Sale">
               <a-input v-decorator="[
-                'price_sale',
-                {
-                  initialValue: initialValue.edit_price_sale,
-                },
-              ]" />
+          'price_sale',
+          {
+            initialValue: initialValue.edit_price_sale,
+          },
+        ]" />
             </a-form-item>
           </a-col>
         </a-row>
         <a-form-item label="Description">
           <textarea v-decorator="[
-            'description',
-            {
-              initialValue: initialValue.edit_description,
-              rules: [{ required: true, message: 'Please input your description!' }],
-            },
-          ]" type="text" class="textarea"></textarea>
+          'description',
+          {
+            initialValue: initialValue.edit_description,
+            rules: [{ required: true, message: 'Please input your description!' }],
+          },
+        ]" type="text" class="textarea"></textarea>
         </a-form-item>
         <a-form-item label="Content"></a-form-item>
         <div :class="{ error: contentIsError, content: true }">
@@ -302,17 +317,17 @@
           <a-col :span="12">
             <a-form-item label="Status">
               <a-select v-decorator="[
-                'active',
-                {
-                  initialValue: initialValue.edit_active,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Status is not null',
-                    },
-                  ],
-                },
-              ]" placeholder="Choose Status">
+          'active',
+          {
+            initialValue: initialValue.edit_active,
+            rules: [
+              {
+                required: true,
+                message: 'Status is not null',
+              },
+            ],
+          },
+        ]" placeholder="Choose Status">
                 <a-select-option :value="0">
                   InActive
                 </a-select-option>
@@ -322,12 +337,21 @@
               </a-select>
             </a-form-item>
           </a-col>
+          <a-col :span="12">
+            <a-form-item label="Inventory">
+              <a-input v-decorator="['inventory_number',
+          {
+            initialValue: initialValue.edit_inventory_number ?? 0,
+          }
+        ]" type="number" />
+            </a-form-item>
+          </a-col>
         </a-row>
       </a-form>
     </a-modal>
   </div>
 </template>
-  
+
 <script>
 import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
@@ -373,7 +397,8 @@ export default {
         edit_file: [],
         menus: [],
         edit_active: 1,
-        edit_id: 1
+        edit_id: 1,
+        edit_inventory_number: 1
       },
       isSorter: false,
       field: '',
@@ -490,6 +515,7 @@ export default {
           formData.append("description", values.description);
           formData.append("content", this.content);
           formData.append("active", values.active);
+          formData.append("inventory_number", values.inventory_number);
           values.menu_id.forEach((item, index) => {
             formData.append('menu_id[]', item.key);
           });
@@ -569,12 +595,13 @@ export default {
         .then((response) => {
           this.initialValue.edit_name = response.data.data.name;
           this.initialValue.edit_description = response.data.data.description,
-            this.initialValue.edit_price = response.data.data.price,
-            this.initialValue.edit_price_sale = response.data.data.price_sale,
-            this.content = response.data.data.content,
-            this.initialValue.edit_file = response.data.data.file,
-            this.initialValue.edit_active = response.data.data.active
+          this.initialValue.edit_price = response.data.data.price,
+          this.initialValue.edit_price_sale = response.data.data.price_sale,
+          this.content = response.data.data.content,
+          this.initialValue.edit_file = response.data.data.file,
+          this.initialValue.edit_active = response.data.data.active
           this.initialValue.edit_id = response.data.data.id
+          this.initialValue.edit_inventory_number = response.data.data.inventory_number
           this.initialValue.menus = response.data.data.menus.map((item) => {
             return {
               key: item.id,
@@ -604,6 +631,7 @@ export default {
           formData.append("description", values.description);
           formData.append("content", this.content);
           formData.append("active", values.active);
+          formData.append("inventory_number", values.inventory_number);
           values.menu_id.forEach((item, index) => {
             formData.append('menu_id[]', item.key);
           });
@@ -638,7 +666,7 @@ export default {
           var fileURL = window.URL.createObjectURL(new Blob([response.data]));
           var fileLink = document.createElement('a');
           fileLink.href = fileURL;
-          fileLink.setAttribute('download', 'product.csv');
+          fileLink.setAttribute('download', 'product.xlsx');
           document.body.appendChild(fileLink);
           fileLink.click();
           Toast.fire({
@@ -694,7 +722,7 @@ export default {
   },
 }
 </script>
-  
+
 <style lang="scss" scoped>
 .table {
   overflow-y: auto;

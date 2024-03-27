@@ -37,7 +37,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content','images');
+        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content','images','inventory_number');
         $product = $this->productService->insert($data);
         return $product;
     }
@@ -51,7 +51,7 @@ class ProductController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content');
+        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content', 'inventory_number');
         $result = $this->productService->update($data, $id);
         if (!$result) {
             return false;

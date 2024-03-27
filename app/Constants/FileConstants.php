@@ -29,4 +29,6 @@ class FileConstants
     public const MAX_FILE_UPLOADS = 10;
     public const FOLDER_TEMP = 'temp';
     public const UPLOADS_FOLDER = 'upload';
+    public const UPLOADS_IMAGE = 'uploads';
+    public const PUBLIC_FOLDER = 'public';
 }
