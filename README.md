@@ -62,15 +62,15 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 
 ## Library
 
-- aws-sdk
-- l5-swagger
-- slack-notification
-- socialite
-- vonage-notification-chanel
-- flysystem-aws-s3-v3
-- maatwebsite
-- srmklive/paypal
-- botman/botman
+- aws-sdk `sdk for aws`
+- l5-swagger `document api`
+- slack-notification `notification with slack`
+- socialite `package for login social`
+- vonage-notification-chanel `send sms`
+- flysystem-aws-s3-v3 `upload s3 aws`
+- maatwebsite `Excel`
+- srmklive/paypal `payment with paypal`
+- botman/botman `bot chat with laravel widget`
 - botman/driver-web
 
 ## Installation
@@ -100,6 +100,10 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan passport:install`
+- `php artisan storage:link`
+
+# Run UI VueJS:
+- `npm run development` hoặc `npm run watch`
 
 ## Unit Test
 

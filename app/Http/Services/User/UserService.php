@@ -53,13 +53,15 @@ class UserService
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
-                'password' => Hash::make($data['password']),
                 'avatar' => $avatar_path,
                 'department' => $data['department'],
                 'birthday' => $data['birthday'],
                 'address' => $data['address'],
                 'gender' => $gender,
             ];
+            if ($data['password']) {
+                $result['password'] = Hash::make($data['password']);
+            }
             $userOrigin->update($result);
             if (isset($data['removeFiles'])) {
                 foreach ($data['removeFiles'] as $file) {

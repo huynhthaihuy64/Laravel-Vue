@@ -5,11 +5,11 @@
       <div class="content-wrapper mx-0 px-0">
         <router-view :user="user"></router-view>
       </div>
-      <Cart v-if="isActive === true" :is-active="isActive" v-on:updateActive="updateActive" />
+      <Cart v-if="isActive === true" :is-active="isActive" v-on:updateActive="updateActive" class="cart"/>
     </div>
-    <!-- <button id="fixedButton" class="bg-primary" @click="toggleChatBox">
-      <img class="image-chat" src="../../../../../public/images/Chatbox-PR.png">
-    </button> -->
+    <!-- <button id=" fixedButton" class="bg-primary" @click="toggleChatBox">
+          <img class="image-chat" src="../../../../../public/images/Chatbox-PR.png">
+          </button> -->
     <MainFooter />
     <!-- <ChatBox v-if="showChatBox"></ChatBox> -->
   </div>
@@ -70,6 +70,8 @@ export default {
 .content-wrapper {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   flex: 1;
+  position: relative;
+  z-index:1;
   border-radius: 5px;
   margin-right: 17px;
 }
@@ -81,22 +83,15 @@ export default {
 
 #fixedButton {
   position: fixed;
-  /* Cố định vị trí */
   bottom: 100px;
-  /* Khoảng cách từ dưới của màn hình */
   right: 20px;
-  /* Khoảng cách từ phải của màn hình */
   z-index: 9999;
-  /* Đảm bảo nút hiển thị trên các phần tử khác */
   display: block;
-  /* Hiển thị nút mặc định */
   transition: opacity 0.3s ease;
-  /* Thêm hiệu ứng khi hiển thị */
 }
 
 #fixedButton.show {
   opacity: 1;
-  /* Hiển thị nút khi có class 'show' */
 }
 
 .image-chat {
@@ -104,6 +99,16 @@ export default {
   height:100px;
   width: 100px;
   object-fit: cover;
+}
+
+.cart {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
 }
 </style>
   

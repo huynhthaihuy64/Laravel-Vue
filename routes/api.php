@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\MainController as PageController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ProductController;
@@ -43,8 +41,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/2fa', [TwoFAController::class, 'index'])->name('2fa.index');
 Route::post('/2fa', [TwoFAController::class, 'store'])->name('2fa.post');
 Route::get('/2fa/reset', [TwoFAController::class, 'resend'])->name('2fa.resend');
-
-Route::get('/', [MainController::class, 'index'])->name('admin');
 
 Route::get('/redirect/{social}', [SocialAuthController::class, 'redirect'])->name('socialite.redirect');
 Route::get('/callback/{social}', [SocialAuthController::class, 'callback'])->name('socialite.callback');

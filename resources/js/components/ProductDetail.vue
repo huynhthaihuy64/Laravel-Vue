@@ -17,12 +17,12 @@
                 <div class="col-md-6 col-lg-7 p-b-30">
                     <div class="p-l-25 p-r-30 p-lr-0-lg">
                         <div class="wrap-slick3 flex-sb flex-w">
-                            <a-tabs v-if="initialValue.images.length > 0" tab-position="left" :style="{ height: '600px' }"
-                                class="w-100">
+                            <a-tabs v-if="initialValue.images.length > 0" tab-position="left"
+                                :style="{ height: '600px' }" class="w-100">
                                 <a-tab-pane v-for="(item, index) in initialValue.images" :key="item.id">
                                     <template slot="tab">
-                                        <img :class="{ 'active': index === 0 }" :src="item.url" :alt="'Tab ' + (index + 1)"
-                                            style="width: 200px" />
+                                        <img :class="{ 'active': index === 0 }" :src="item.url"
+                                            :alt="'Tab ' + (index + 1)" style="width: 200px" />
                                     </template>
                                     <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane"
                                         :class="{ 'active show': index === 0 }">
@@ -84,6 +84,9 @@
                             {{ initialValue.edit_name }}
                         </h4>
 
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">inventory:
+                            {{initialValue.edit_inventory_number}}</h4>
+
                         <span class="mtext-106 cl2" v-if="!initialValue.edit_price_currency">
                             {{ initialValue.edit_price_sale < initialValue.edit_price ? initialValue.edit_price_sale :
                                 initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}</span>
@@ -107,13 +110,13 @@
                                                             }]" type="hidden" />
                                                         </a-form-item>
                                                         <a-form-item name="input-number" no-style>
-                                                            <a-input-number v-decorator="['qty', {
-                                                                initialValue: 1,
-                                                            }]" :min="1" :max="100" />
+                                                            <a-input-number v-decorator="['qty', { initialValue: 1 }]"
+                                                                :min="1" :max="initialValue.edit_inventory_number" />
                                                         </a-form-item>
                                                         <a-button html-type="submit"
                                                             class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
-                                                            {{ $store.getters.localizedStrings.product.detail.add_cart }}
+                                                            {{ $store.getters.localizedStrings.product.detail.add_cart
+                                                            }}
                                                         </a-button>
                                                     </a-form>
                                                 </div>
@@ -194,7 +197,8 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price_currency ? initialValue.edit_price_currency : initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}
+                                            {{ initialValue.edit_price_currency ? initialValue.edit_price_currency :
+                                            initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}
                                         </span>
                                     </li>
 
@@ -204,7 +208,9 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price_sale_currency ? initialValue.edit_price_sale_currency : initialValue.edit_price_sale | formatNumber }} {{ initialValue.user_currency }}
+                                            {{ initialValue.edit_price_sale_currency ?
+                                            initialValue.edit_price_sale_currency : initialValue.edit_price_sale |
+                                            formatNumber }} {{ initialValue.user_currency }}
                                         </span>
                                     </li>
 
@@ -282,7 +288,8 @@
                                                         <a-input v-decorator="['body']"
                                                             placeholder="Write Something..."></a-input>
                                                     </a-form-item>
-                                                    <a-button type="primary" html-type="submit" class="login-form-button">
+                                                    <a-button type="primary" html-type="submit"
+                                                        class="login-form-button">
                                                         {{ $store.getters.localizedStrings.comment.reply }}
                                                     </a-button>
                                                 </a-form>
@@ -317,9 +324,11 @@
                                         </a-form-item>
 
                                         <a-form-item class="form-item">
-                                            <a-textarea v-model="form2.body" placeholder="Write Something..."></a-textarea>
+                                            <a-textarea v-model="form2.body"
+                                                placeholder="Write Something..."></a-textarea>
                                         </a-form-item>
-                                        <a-button type="primary" @click.prevent="createComment" class="login-form-button">
+                                        <a-button type="primary" @click.prevent="createComment"
+                                            class="login-form-button">
                                             {{ $store.getters.localizedStrings.comment.add_comment }}
                                         </a-button>
                                     </a-form>
@@ -368,9 +377,9 @@
                                         <span class="stext-105 cl3">
                                             <div v-if="!product.price_currency">
                                                 <p>
-                                                    {{ product.price_sale < product.price ?
-                                                        product.price_sale : product.price | formatNumber }} {{
-                                                initialValue.user_currency }}</p>
+                                                    {{ product.price_sale < product.price ? product.price_sale :
+                                                        product.price | formatNumber }} {{ initialValue.user_currency
+                                                        }}</p>
                                             </div>
                                             <div v-if="product.price_currency">
                                                 <p>
@@ -441,6 +450,7 @@ export default {
                 content: '',
                 edit_price_sale_currency: 20,
                 edit_price_currency: 10,
+                edit_inventory_number: 0,
                 user_currency: '',
             },
             form2: {
@@ -466,6 +476,7 @@ export default {
                             this.initialValue.edit_active = data.data.active,
                             this.initialValue.edit_id = data.data.id,
                             this.initialValue.menuName = data.data.menuName,
+                            this.initialValue.edit_inventory_number = data.data.inventory_number,
                             this.initialValue.menus = data.data.menus.map((item) => {
                                 return {
                                     id: item.id,

@@ -59,5 +59,6 @@ class MenuController extends Controller
 
     public function getProductsWithMenu(int $id) {
         $menu = $this->menuService->getProductsWithMenu($id);
+        return $menu;
     }
 }
