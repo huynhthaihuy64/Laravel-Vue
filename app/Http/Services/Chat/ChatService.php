@@ -7,6 +7,7 @@ use App\Exceptions\NotFoundException;
 use App\Models\ChatRoom;
 use App\Models\Friend;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +25,7 @@ class ChatService
     }
     public function index($params)
     {
-        $friends = auth()->user()->friends();
+        $friends = Auth::user()->friends();
         return $friends;
     }
 
@@ -40,10 +41,10 @@ class ChatService
     public function history($params, $friendId)
     {
         $chatRoom = $this->chatRoom->where(function ($query) use ($friendId) {
-            $query->where('user_id', auth()->user()->id)
+            $query->where('user_id', Auth::user()->id)
                 ->where('friend_id', $friendId);
         })->orWhere(function ($query) use ($friendId) {
-            $query->where('friend_id', auth()->user()->id)
+            $query->where('friend_id', Auth::user()->id)
                 ->where('user_id', $friendId);
         })->orderBy('created_at', 'asc')
             ->with(['user'])
@@ -56,13 +57,14 @@ class ChatService
         DB::beginTransaction();
         try {
             $chatRoom = $this->chatRoom->create([
-                'user_id' => $params['user_id'],
+                'user_id' => Auth::user()->id,
                 'friend_id' => $params['friend_id'],
                 'chat' => $params['chat']
             ]);
             $chatRoom->load('user');
             broadcast(new ChatRoomBroadCast($chatRoom))->toOthers();
             DB::commit();
+            return $params['chat'];
         } catch (\Exception $err) {
             Log::info($err->getMessage());
             DB::rollback();
@@ -74,7 +76,7 @@ class ChatService
     {
         $users = $this->user->when(isset($params['keyword']), function ($q) use ($params) {
             $q->whereLike(['name', 'phone', 'email'], $params['keyword']);
-        })
+        })->where('id', '!=', Auth::user()->id)
             ->get();
         return $users;
     }
@@ -84,7 +86,7 @@ class ChatService
         DB::beginTransaction();
         try {
             $friend = $this->friend->create([
-                'user_id' => $params['user_id'],
+                'user_id' => Auth::user()->id,
                 'friend_id' => $params['friend_id'],
             ]);
             DB::commit();

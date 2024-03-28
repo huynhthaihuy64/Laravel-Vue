@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -140,7 +141,7 @@ class Handler extends ExceptionHandler
         $traces = array_filter($e->getTrace(), fn ($trace) => isset($trace['file']) && strpos($trace['file'], '/app/'));
 
         $requestPayload = [
-            'auth_user' => UserResource::make(auth()->user()),
+            'auth_user' => UserResource::make(Auth::user()),
             'info' => [
                 'method' => $request->method(),
                 'name' => $request->route()->getName() ?? '',

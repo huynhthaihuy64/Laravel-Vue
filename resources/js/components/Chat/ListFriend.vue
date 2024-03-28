@@ -4,7 +4,7 @@
             <div class="row clearfix">
                 <div class="col-lg-12">
                     <div class="card chat-app">
-                        <div id="plist" class="people-list">
+                        <div id="plist" class="people-list my-0 py-0">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-search"></i></span>
@@ -12,16 +12,22 @@
                                 <input type="text" class="form-control" placeholder="Search...">
                             </div>
                             <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li class="clearfix" v-for="(friend) in friends" :key="friend.id"
+                                <li class="clearfix" v-for="(friend, index) in friends" :key="friend.id"
                                     @click="showChat(index, friend.id)">
-                                    <img :src="friend.avatar" alt="avatar" height="40px">
+                                    <div class="pl-5 col-6" v-if="friend.avatar">
+                                        <img :src="friend.avatar" alt="avatar" height="40px">
+                                    </div>
+                                    <div class="pl-5 col-6" v-if="!friend.avatar">
+                                        <img src="../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
+                                            height="40px">
+                                    </div>
                                     <div class="about">
                                         <div class="name">{{ friend.name }}</div>
                                         <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>
                                     </div>
                                 </li>
                             </ul>
-                            <a-button type="primary" @click="showAddMenu()" class="button-type mt-3">
+                            <a-button type="primary" @click="showAddMenu()" class="button-type mt-3 mb-2">
                                 <a-icon type="plus" />
                                 Add Friend
                             </a-button>
@@ -30,8 +36,14 @@
                             <div class="chat-header clearfix">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                            <img :src="friend.avatar" alt="avatar">
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info"
+                                            v-if="friend.avatar">
+                                            <img :src="friend.avatar" alt="avatar" height="40px">
+                                    </a>
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info"
+                                            v-if="!friend.avatar">
+                                            <img src="../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
+                                                height="40px">
                                         </a>
                                         <div class="chat-about">
                                             <h6 class="m-b-0">{{ friend.name }}</h6>
@@ -74,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a-modal title="Add new menu" :visible="this.flagModalAdd" @cancel="() => cancelModalAdd()">
+                        <a-modal title="Add new friend" :visible="this.flagModalAdd" @cancel="() => cancelModalAdd()">
                             <template #footer>
                                 <a-button class="btn-button-cancel" @click="cancelModalAdd">Cancel</a-button>
                             </template>
@@ -85,9 +97,9 @@
                                             @keyup="search()" class="h-100 w-100">
                                     </div>
                                     <div class="mt-3 col-12" v-for="(item) in searchArr" :key="item.id">
-                                        <a-popconfirm class="w-100 content-dropdown" title="Are you sure delete this task?"
-                                            ok-text="Yes" cancel-text="No" @confirm="addFriend(user.id, item.id)"
-                                            @cancel="cancel">
+                                        <a-popconfirm class="w-100 content-dropdown"
+                                            title="Are you sure add this friend?" ok-text="Yes" cancel-text="No"
+                                            @confirm="addFriend(item.id)" @cancel="cancel">
                                             <div class="row">
                                                 <div class="pl-5 col-6" v-if="item.avatar">
                                                     <img :src="item.avatar" class="h-50 w-100">
@@ -221,9 +233,8 @@ export default {
                     this.searchArr = response.data;
                 });
         },
-        addFriend(userId, friendId) {
+        addFriend(friendId) {
             const formData = new FormData();
-            formData.append("user_id", userId);
             formData.append("friend_id", friendId);
             httpRequest.post('/api/add-friend', formData).then((response) => {
                 this.info = response
@@ -237,7 +248,7 @@ export default {
             this.searchFriend = '';
         },
     },
-    mounted() {
+    created() {
         this.getListFriends()
     },
 }

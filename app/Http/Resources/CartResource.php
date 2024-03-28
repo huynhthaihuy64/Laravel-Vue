@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class CartResource extends JsonResource
 {
@@ -25,7 +26,7 @@ class CartResource extends JsonResource
             'qty' => $this->qty,
             'product' => $this->product,
             'price' => $this->price,
-            'total' => round($data[auth()->user()->currency]['value'] * $this->total,2),
+            'total' => round($data[Auth::user()->currency]['value'] * $this->total,2),
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y')
           ];
     }

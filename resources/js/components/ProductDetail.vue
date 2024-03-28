@@ -628,8 +628,6 @@ export default {
                 });
         }
     },
-    mounted() {
-    },
     created() {
         this.$Progress.start()
         this.getProductDetail(this.page)

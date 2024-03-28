@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Services\Product\ProductService;
 use App\Models\User;
 use Illuminate\Http\Request;
-  
+use Illuminate\Support\Facades\Auth;
+
 class TwoFAController extends Controller
 {
 
@@ -24,7 +25,7 @@ class TwoFAController extends Controller
      */
     public function index()
     {
-        $users = User::where('id', '!=', auth()->user()->id)->get();
+        $users = User::where('id', '!=', Auth::user()->id)->get();
         return view('2fa',[
             'title' => __('messages.user.sms.messages.send-otp'),
             'searchProducts' => $this->product->getAll(),
@@ -43,7 +44,7 @@ class TwoFAController extends Controller
         $basic  = new \Vonage\Client\Credentials\Basic("18ecdbf2", "eVbulaJ47tN6CySj");
         $client = new \Vonage\Client($basic);
         $user = User::select('phone')->find($request->id);
-        $test = new \Vonage\SMS\Message\SMS(auth()->user()->phone,$user, $request->code);
+        $test = new \Vonage\SMS\Message\SMS(Auth::user()->phone,$user, $request->code);
         $response = $client->sms()->send(
             $test
         );
@@ -63,7 +64,7 @@ class TwoFAController extends Controller
      */
     public function resend()
     {
-        auth()->user()->generateCode();
+        Auth::user()->generateCode();
   
         return back()->with('success', 'We sent you code on your mobile number.');
     }

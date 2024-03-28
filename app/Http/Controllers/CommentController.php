@@ -6,6 +6,7 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -32,7 +33,7 @@ class CommentController extends Controller
         ]);
    
         $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
+        $input['user_id'] = Auth::user()->id;
         if(!isset($input['parent_id'])){
             $input['parent_id'] = 0;
         }

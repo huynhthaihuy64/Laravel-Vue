@@ -61,7 +61,7 @@ class LoginController extends ResponseController
 
     public function checkAuth()
     {
-        $auth = auth()->user();
+        $auth = Auth::user();
         return $auth;
     }
 
@@ -154,7 +154,7 @@ class LoginController extends ResponseController
 
     public function updateCurrentUser(Request $request)
     {
-        $id = auth()->user()->id;
+        $id = Auth::user()->id;
         return $this->userService->update($request->only(
             'name',
             'email',
@@ -269,7 +269,7 @@ class LoginController extends ResponseController
 
     public function getCurrentUser()
     {
-        $user = User::find(auth()->user()->id);
+        $user = User::find(Auth::user()->id);
         $listUsers = UserResource::make($user);
         return $listUsers;
     }

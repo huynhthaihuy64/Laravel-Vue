@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\UserProduct;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -48,14 +49,14 @@ class CartService
         }
         $data = [
             'carts' => $carts,
-            'total_all' => round($data[auth()->user()->currency]['value'] * $totalAll,2)
+            'total_all' => round($data[Auth::user()->currency]['value'] * $totalAll,2)
         ];
         return $data;
     }
 
     public function store($params)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $product = $this->product->find($params['product_id']);
         if (!$product) {
             throw new NotFoundException(Product::class);
@@ -300,7 +301,7 @@ class CartService
                 $this->paypal->create([
                     'token' => $payment['token'],
                     'cart_id' => $cart['id'],
-                    'user_id' => auth()->user()->id,
+                    'user_id' => Auth::user()->id,
                     'method' => $data['method'],
                     'bank_name' => $payment['bank'] ?? ''
                 ]);
@@ -328,7 +329,7 @@ class CartService
                     'inventory_number' => $inventory,
                 ]);
                 $this->userProduct->create([
-                    'user_id' => auth()->user()->id,
+                    'user_id' => Auth::user()->id,
                     'product_id' => $product->id,
                     'qty' => $cart->qty,
                     'price' => $cart->price,

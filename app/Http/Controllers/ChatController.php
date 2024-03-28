@@ -29,7 +29,7 @@ class ChatController extends Controller
     /**
      * Fetch all messages
      *
-     * @return Message
+     *
      */
     public function show($userId)
     {
@@ -45,7 +45,7 @@ class ChatController extends Controller
      * Persist message to database
      *
      * @param  Request $request
-     * @return Response
+     *
      */
     public function history(Request $request, $friendId)
     {
@@ -62,7 +62,7 @@ class ChatController extends Controller
      * Persist message to database
      *
      * @param  Request $request
-     * @return Response
+     *
      */
     public function sendChat(Request $request)
     {
@@ -73,7 +73,7 @@ class ChatController extends Controller
      * Persist message to database
      *
      * @param  Request $request
-     * @return Response
+     *
      */
     public function searchFriend(Request $request)
     {
@@ -84,7 +84,7 @@ class ChatController extends Controller
      * Persist message to database
      *
      * @param  Request $request
-     * @return Response
+     *
      */
     public function addFriend(Request $request)
     {

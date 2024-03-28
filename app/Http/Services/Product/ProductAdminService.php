@@ -12,6 +12,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -167,7 +168,7 @@ class ProductAdminService
             $path = str_replace('storage', 'public', $product->file);
             Storage::delete($path);
             $product->delete();
-            Log::channel('history')->info('Người dùng ' . auth()->user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($product) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . auth()->user()->name);
+            Log::channel('history')->info('Người dùng ' . Auth::user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($product) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . Auth::user()->name);
             DB::commit();
             return true;
         } catch (\Exception $err) {
