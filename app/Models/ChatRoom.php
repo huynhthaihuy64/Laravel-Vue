@@ -17,9 +17,9 @@ class ChatRoom extends Model
         'chat'
     ];
 
-    protected $dispatchesEvents = [
-        'created' => ChatRoomBroadCast::class,
-    ];
+    // protected $dispatchesEvents = [
+    //     'created' => ChatRoomBroadCast::class,
+    // ];
 
     public function user() 
     {

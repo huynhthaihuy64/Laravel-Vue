@@ -1,4 +1,5 @@
 import Antd from "ant-design-vue";
+import Vue from "vue";
 import "ant-design-vue/dist/antd.css";
 import router from "./routes";
 import store from "./store";
@@ -46,7 +47,6 @@ import {
     faGithub,
     faGoogle,
 } from "@fortawesome/free-brands-svg-icons";
-import Vue from "vue";
 require("./bootstrap");
 
 window.Vue = require("vue");

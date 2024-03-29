@@ -91,7 +91,7 @@ class AuthService
     {
         // Nếu dung sanctum:
         // try {
-        //     $user = auth()->user();
+        //     $user = Auth::user();
         //     $user->currentAccessToken()->delete();
         //     return true;
         // } catch (\Exception $e) {

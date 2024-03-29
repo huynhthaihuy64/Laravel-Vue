@@ -36,7 +36,7 @@
           </li>
           <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
             <a-space>
-              <a-select :value="currency" ref="select" style="width: 120px" @focus="focus" @change="handleChange">
+              <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
                 <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
                 }}</a-select-option>
               </a-select>

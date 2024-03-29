@@ -39,7 +39,7 @@
                                         <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info"
                                             v-if="friend.avatar">
                                             <img :src="friend.avatar" alt="avatar" height="40px">
-                                    </a>
+                                        </a>
                                         <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info"
                                             v-if="!friend.avatar">
                                             <img src="../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
@@ -127,19 +127,24 @@
 <script>
 import httpRequest from '../../axios'
 import { message } from 'ant-design-vue';
+import Echo from 'laravel-echo';
+import { getUserInfo } from '../../auth'
+import { ref } from 'vue';
 export default {
-    props: ['user'],
     setup() {
         const confirm = (e) => {
             message.success('Click on Yes');
         };
-
+        const searchFriend = ref('');
         const cancel = (e) => {
             message.error('Click on No');
         };
+        const user = ref(JSON.parse(getUserInfo())); 
         return {
             confirm,
             cancel,
+            user,
+            searchFriend,
         };
     },
     data() {
@@ -162,12 +167,6 @@ export default {
             },
             searchArr: {},
         }
-    },
-    created() {
-        Echo.private('chat-room.' + 1 + '.' + 2)
-            .listen('ChatRoomBroadCast', (e) => {
-                this.chats.push(e.chatRoom);
-            });
     },
     methods: {
         getListFriends() {
@@ -247,6 +246,16 @@ export default {
             })
             this.searchFriend = '';
         },
+    },
+    mounted() {
+        Echo.private('chat')
+            .listen('ChatRoomBroadCast', (e) => {
+                console.log(123);
+                this.messages.push({
+                    message: e.message.message,
+                    user: e.user
+                });
+            });
     },
     created() {
         this.getListFriends()

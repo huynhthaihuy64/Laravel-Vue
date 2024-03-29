@@ -62,7 +62,7 @@ class ChatService
                 'chat' => $params['chat']
             ]);
             $chatRoom->load('user');
-            broadcast(new ChatRoomBroadCast($chatRoom))->toOthers();
+            broadcast(new ChatRoomBroadCast(Auth::user(), $params['chat']))->toOthers();
             DB::commit();
             return $params['chat'];
         } catch (\Exception $err) {

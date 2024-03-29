@@ -10,6 +10,7 @@ use Laravel\Passport\HasApiTokens;
 use Twilio\Rest\Client;
 use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
@@ -63,11 +64,11 @@ class User extends Authenticatable
         $code = rand(1000, 9999);
   
         UserCode::updateOrCreate(
-            [ 'user_id' => auth()->user()->id ],
+            [ 'user_id' => Auth::user()->id ],
             [ 'code' => $code ]
         );
   
-        $receiverNumber = auth()->user()->phone;
+        $receiverNumber = Auth::user()->phone;
         $message = "2FA login code is ". $code;
     
         try {
@@ -101,9 +102,9 @@ class User extends Authenticatable
     public function routeNotificationForMail($notification)
     {
         // Return email address only...
-        // return auth()->user()->email;
-        if(auth()->user()){
-            return auth()->user()->email;
+        // return Auth::user()->email;
+        if(Auth::user()){
+            return Auth::user()->email;
         }
         return $this->email;
     }
@@ -124,8 +125,8 @@ class User extends Authenticatable
     //  */
     // public function routeNotificationForVonage($notification)
     // {
-    //     if(auth()->user()){
-    //         return auth()->user()->phone;
+    //     if(Auth::user())){
+    //         return Auth::user()->phone;
     //     }
     //     return $this->phone;
     // }
