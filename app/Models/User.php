@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Sortable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, Sortable, SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -62,34 +62,34 @@ class User extends Authenticatable
     public function generateCode()
     {
         $code = rand(1000, 9999);
-  
+
         UserCode::updateOrCreate(
-            [ 'user_id' => Auth::user()->id ],
-            [ 'code' => $code ]
+            ['user_id' => Auth::user()->id],
+            ['code' => $code]
         );
-  
+
         $receiverNumber = Auth::user()->phone;
-        $message = "2FA login code is ". $code;
-    
+        $message = "2FA login code is " . $code;
+
         try {
-   
+
             $account_sid = getenv("TWILIO_SID");
             $auth_token = getenv("TWILIO_TOKEN");
             $twilio_number = getenv("TWILIO_FROM");
-    
+
             $client = new Client($account_sid, $auth_token);
             $client->messages->create($receiverNumber, [
-                'from' => $twilio_number, 
-                'body' => $message]);
-    
+                'from' => $twilio_number,
+                'body' => $message
+            ]);
         } catch (Exception $e) {
-            info("Error: ". $e->getMessage());
+            info("Error: " . $e->getMessage());
         }
     }
 
     public function messages()
     {
-    return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class);
     }
     public function carts()
     {
@@ -103,12 +103,12 @@ class User extends Authenticatable
     {
         // Return email address only...
         // return Auth::user()->email;
-        if(Auth::user()){
+        if (Auth::user()) {
             return Auth::user()->email;
         }
         return $this->email;
     }
-    
+
     /* 
         Notify Slack
     */
@@ -161,31 +161,37 @@ class User extends Authenticatable
         return $this->hasMany(ChatRoom::class);
     }
 
+    public function unseenMessages()
+    {
+        return $this->hasMany(ChatRoom::class, 'user_id')->where('seen', 1)->where('friend_id', auth()->user()->id);
+    }
+
     public function fileUploads()
     {
         return $this->hasMany(FileUpload::class);
     }
 
-    public function scopeWhereLike($query, $fields, $keyword) {
+    public function scopeWhereLike($query, $fields, $keyword)
+    {
         $query->where(function ($q) use ($fields, $keyword) {
             foreach ($fields as $field) {
-                $q->orWhere($field, 'LIKE', '%'.$keyword.'%');
+                $q->orWhere($field, 'LIKE', '%' . $keyword . '%');
             }
         });
     }
 
-     /**
+    /**
      * Catch event.
      */
     public static function boot()
     {
         parent::boot();
-        
+
         static::deleting(function ($user) {
             DB::beginTransaction();
             try {
-                $friendId = Friend::where('user_id',$user->id)->orWhere('friend_id',$user->id)->select('id')->get();
-                $chatRoomId = ChatRoom::where('user_id',$user->id)->orWhere('friend_id',$user->id)->select('id')->get();
+                $friendId = Friend::where('user_id', $user->id)->orWhere('friend_id', $user->id)->select('id')->get();
+                $chatRoomId = ChatRoom::where('user_id', $user->id)->orWhere('friend_id', $user->id)->select('id')->get();
                 Friend::destroy($friendId);
                 ChatRoom::destroy($chatRoomId);
                 DB::commit();

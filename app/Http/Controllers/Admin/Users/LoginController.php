@@ -274,23 +274,8 @@ class LoginController extends ResponseController
         return $listUsers;
     }
 
-    // public function refreshToken($request)
-    // {
-    //     try {
-    //         if (empty($token = $request->header('Authorization'))) {
-    //             throw new ModelNotFoundException(__('Token Not Found'));
-    //         }
-    //         $token = $request->bearerToken();
-    //         $personal = PersonalAccessToken::findToken($token);
-    //         if (empty($token) || empty($token = PersonalAccessToken::findToken($token))) {
-    //             throw new ModelNotFoundException(__('Token Not Found'));
-    //         }
-    //         $data = $useCase->__invoke($personal);
-    //         $response = Response::success($data, __('auth.login.success'));
-    //         return $response->withCookie(cookie(env('AUTH_COOKIE_NAME','login'), $data['access_token'], env('COOKIE_LIFETIME',60*24*7)));
-    //     } catch (Exception $ex) {
-    //         $code = $ex->getCode() ? $ex->getCode() : HTTPStatus::NOT_FOUND->value;
-    //         return Response::error($ex->getMessage(), $code);
-    //     }
-    // }
+    public function getOnlineUsers() {
+        $users = $this->userService->getOnlineUsers();
+        return UserResource::collection($users);
+    }
 }

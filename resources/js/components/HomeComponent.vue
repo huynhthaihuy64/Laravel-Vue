@@ -245,10 +245,6 @@ export default {
                 })
         },
     },
-    mounted() {
-        this.getResult()
-        this.getProductList(this.page)
-    },
     created() {
         this.$Progress.start()
         this.getResult()

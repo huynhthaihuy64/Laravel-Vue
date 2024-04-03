@@ -18,6 +18,7 @@ class CreateChatRoomsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('friend_id');
             $table->text('chat');
+            $table->tinyInteger('seen')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

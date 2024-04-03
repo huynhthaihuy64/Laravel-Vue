@@ -25,8 +25,14 @@ class ChatService
     }
     public function index($params)
     {
-        $friends = Auth::user()->friends();
-        return $friends;
+        try {
+            $users = $this->user->where('id', '!=', Auth::user()->id)->with('unseenMessages')->get();
+            return $users;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
 
     public function show($userId)
@@ -40,15 +46,24 @@ class ChatService
 
     public function history($params, $friendId)
     {
+        //Select * from chat_rooms where ((user_id = 1 and receiver_id = 2) or (receiver_id = 1 and user_id = 2)) ORDERBY created_at asc
         $chatRoom = $this->chatRoom->where(function ($query) use ($friendId) {
             $query->where('user_id', Auth::user()->id)
                 ->where('friend_id', $friendId);
         })->orWhere(function ($query) use ($friendId) {
             $query->where('friend_id', Auth::user()->id)
                 ->where('user_id', $friendId);
-        })->orderBy('created_at', 'asc')
+        })->orderBy('created_at', 'desc')->limit($params['limit'] ?? 10)
             ->with(['user'])
             ->get();
+        
+        if ($chatRoom->count()) {
+            foreach($chatRoom as $msg) {
+                if((int) $msg->friend_id === auth()->user()->id) {
+                    $msg->update(['seen' => 2]);
+                }
+            } 
+        }
         return $chatRoom;
     }
 
@@ -62,7 +77,8 @@ class ChatService
                 'chat' => $params['chat']
             ]);
             $chatRoom->load('user');
-            broadcast(new ChatRoomBroadCast(Auth::user(), $params['chat']))->toOthers();
+            $message = $this->chatRoom->with('user','friend')->find($chatRoom->id);
+            broadcast(new ChatRoomBroadCast(Auth::user(), $message))->toOthers();
             DB::commit();
             return $params['chat'];
         } catch (\Exception $err) {

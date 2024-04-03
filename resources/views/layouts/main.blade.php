@@ -184,6 +184,7 @@
 	    };
 	</script>
 	<script src='/template/js/widget.js'></script>
+	<script> window._base_url = '{{url("/")}}'</script>
 </body>
 
 </html>

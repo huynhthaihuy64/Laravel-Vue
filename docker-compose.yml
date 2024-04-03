@@ -27,7 +27,6 @@ services:
         depends_on:
             - mysql
             - redis
-            - laravel_echo_server
     mysql:
         image: 'mysql/mysql-server:8.0'
         restart: unless-stopped
@@ -55,6 +54,11 @@ services:
             timeout: 5s
     mailpit:
         image: 'axllent/mailpit:latest'
+        environment:
+            MP_UI_AUTH_FILE: '/mail_auth'
+        volumes:
+            - 'mail-data:/data'
+            - './mail_auth:/mail_auth'
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
@@ -79,15 +83,6 @@ services:
             - "6379:6379"
         networks:
             - sail
-    laravel_echo_server:
-        build:
-            context: ./docker/laravel-echo-server
-            dockerfile: Dockerfile
-        volumes:
-            - .env:/app/.env
-        networks:
-            - sail
-        restart: unless-stopped
 
 networks:
     sail:
@@ -98,4 +93,6 @@ volumes:
     sail-redis:
         driver: local
     sail-laravel_echo_server:
+        driver: local
+    mail-data:
         driver: local

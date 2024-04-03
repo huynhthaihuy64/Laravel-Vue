@@ -50,6 +50,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Xhprof Test Performance
 - Send SMS Vonage
 - Integration Botman to shop
+- Chat with Pusher
 
 ## Document Payment
 - Paypal: srmklive/paypal
@@ -59,6 +60,7 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - VNPay: https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/
 - OnePay: https://mtf.onepay.vn/developer/?page=modul_noidia_php
 - Exchange Currency: https://app.currencyapi.com/dashboard
+- Pusher: https://www.youtube.com/watch?v=fFizsY6n8yY&list=PLRKk5RpSyRSVGzvQ8zzkLtb-cU_M6F9GK&index=36&ab_channel=webmobtuts
 
 ## Library
 

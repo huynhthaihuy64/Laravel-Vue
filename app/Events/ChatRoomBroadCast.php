@@ -3,8 +3,6 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -21,7 +19,7 @@ class ChatRoomBroadCast implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($user,string $message)
+    public function __construct($user, $message)
     {
         $this->user = $user;
         $this->message = $message;
@@ -34,7 +32,7 @@ class ChatRoomBroadCast implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chat');
+        return new PrivateChannel('messages.' . $this->message['friend_id']);
     }
 
     public function broadcastWith()

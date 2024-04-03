@@ -5,6 +5,7 @@ namespace App\Http\Services\User;
 use App\Http\Services\UploadService;
 use App\Models\User;
 use App\Models\UserAlbum;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -14,13 +15,15 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 class UserService
 {
     protected $uploadService;
-    public function __construct(UploadService $uploadService)
+    protected $user;
+    public function __construct(UploadService $uploadService, User $user)
     {
         $this->uploadService = $uploadService;
+        $this->user = $user;
     }
     public function update($data, $id)
     {
-        $userOrigin = User::find($id);
+        $userOrigin = $this->user->find($id);
         try {
             DB::beginTransaction();
             if (isset($data['avatar'])) {
@@ -94,6 +97,22 @@ class UserService
             $postFile->delete();
             DB::commit();
             return $postFile;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * get online user
+     *
+     */
+    public function getOnlineUsers()
+    {
+        try {
+            $users = $this->user->where('id', '!=', Auth::user()->id)->with('unseenMessages')->get();
+            return $users;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::rollBack();

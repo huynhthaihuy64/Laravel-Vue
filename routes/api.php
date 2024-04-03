@@ -104,6 +104,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('edit/{id}', [LoginController::class, 'editUser'])->name('users.show');
         Route::put('edit/{id}', [LoginController::class, 'updateUser'])->name('users.update');
         Route::delete('destroy/{id}', [LoginController::class, 'destroy'])->name('users.delete');
+        Route::get('users-online', [LoginController::class, 'getOnlineUsers'])->name('users.list-users-online');
     });
     Route::prefix('charts')->group(function () {
         Route::get('customers/chart', [CustomerController::class, 'chartCustomer'])->name('charts.customer');

@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'avatar' => $this->avatar,
             'currency' => $this->currency,
+            'unseen_messages' => $this->unseenMessages ?? [],
             'created_at' => Carbon::parse($this->created_at)->format('Y/m/d'),
             'images' => UserAlbums::collection($this->userAlbums)
           ];
