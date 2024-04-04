@@ -41,6 +41,18 @@ export default {
         deleteFile(index) {
             this.fileList.splice(index, 1);
         },
+        onUploadSuccess(response) {
+            Toast.fire({
+                icon: 'success',
+                title: 'Upload Success'
+            });
+        },
+        onUploadError(response) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Upload Error'
+            });
+        },
         submitFiles() {
             if (this.fileList.length === 0) {
                 message.warning('Please select a file to upload');

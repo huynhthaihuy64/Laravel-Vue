@@ -39,7 +39,6 @@ export default {
         const getHistory = () => {
             httpRequest.get('/api/customers/purchase-history')
                 .then((data) => {
-                    console.log(data)
                     history.value = data.data;
                 }).catch(error => {
                     console.error('Error fetching chat history:', error);

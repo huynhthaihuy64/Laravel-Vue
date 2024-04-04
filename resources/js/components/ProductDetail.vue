@@ -19,7 +19,7 @@
                         <div class="wrap-slick3 flex-sb flex-w">
                             <a-tabs v-if="initialValue.images.length > 0" tab-position="left"
                                 :style="{ height: '600px' }" class="w-100">
-                                <a-tab-pane v-for="(item, index) in initialValue.images" :key="item.id">
+                                <a-tab-pane v-for="(item, index) in initialValue.images" :key="index">
                                     <template slot="tab">
                                         <img :class="{ 'active': index === 0 }" :src="item.url"
                                             :alt="'Tab ' + (index + 1)" style="width: 200px" />
@@ -428,6 +428,7 @@ export default {
             CountData: 10,
             pageSize: 10,
             lastPage: '',
+            index: 0,
             totalPage: 2,
             page: 1,
             row: 10,

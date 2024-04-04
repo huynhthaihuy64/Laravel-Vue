@@ -314,20 +314,6 @@ export default {
   cursor: pointer;
 }
 
-.dropbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover,
-.dropbtn:focus {
-  background-color: #3e8e41;
-}
-
 #myInput {
   box-sizing: border-box;
   background-position: 14px 12px;

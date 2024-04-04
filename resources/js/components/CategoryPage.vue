@@ -149,15 +149,16 @@ export default {
 			const self = this;
 			httpRequest
 				.get('/api/products/productMenu?menu_id=' + this.$route.params.id + '&limit=' + row + '&page=' + page)
-				.then(
-					({ data }) => {
-						(self.lastPage = data.meta.last_page),
-							(self.products = data.data)
-								(self.totalPage = data.meta.total),
-							(self.checkPage()),
-							(self.checkRow())
-					}
-				);
+				.then(({ data }) => {
+					self.lastPage = data.meta.last_page;
+					self.products = data.data;
+					self.totalPage = data.meta.total;
+					self.checkPage();
+					self.checkRow();
+				})
+				.catch((error) => {
+					console.error("Error occurred:", error);
+				});
 		},
 		getMenu() {
 			httpRequest

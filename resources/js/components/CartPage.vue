@@ -303,7 +303,6 @@ export default {
                     if (err) return;
                     httpRequest.post('/api/cart/payment', values).then((response) => {
                         this.info = response
-                        console.log(response)
                         if (response.data.link) {
                             window.open(response.data.link, '_blank')
                         }

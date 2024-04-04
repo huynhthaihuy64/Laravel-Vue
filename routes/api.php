@@ -79,7 +79,6 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::put('edit/{id}', [MenuController::class, 'update'])->name('menus.update');
         Route::delete('destroy/{id}', [MenuController::class, 'destroy'])->name('menus.delete');
     });
-    // Route::get('documentation');
     Route::prefix('products')->group(function () {
         Route::post('add', [ProductController::class, 'store'])->name('products.store');
         Route::get('list', [ProductController::class, 'index'])->name('products.list');
@@ -126,9 +125,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/history/{friendId}', [ChatController::class, 'history'])->name('chat.history');
     Route::post('/chat-room/sendChat', [ChatController::class, 'sendChat'])->name('chat.sendMessage');
-    Broadcast::channel('chat-room.{user_id}.{friend_id}', function ($user, $userId, $friendId) {
-        return $user->id == $friendId;
-    });
     Route::get('search-friend', [ChatController::class, 'searchFriend'])->name('chat.searchFriend');
     Route::post('add-friend', [ChatController::class, 'addFriend'])->name('chat.addFriend');
     Route::post('import-multiple', [ImportMultipleController::class, 'importMultiple'])->name('import-multiple');
@@ -143,6 +139,4 @@ Route::get('/danh-muc/{id}', [App\Http\Controllers\MenuController::class, 'index
 Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'index'])->name('products.pageList');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// Route::get('/botman', [BotManController::class, 'handle']);
-// Route::post('/botman', [BotManController::class, 'handle']);
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);

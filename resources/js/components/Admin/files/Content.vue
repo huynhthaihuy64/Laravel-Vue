@@ -204,7 +204,6 @@ export default {
     },
     mounted() {
         this.getResult(this.row, this.page)
-        this.getMenu()
     },
     created() {
         this.$Progress.start()

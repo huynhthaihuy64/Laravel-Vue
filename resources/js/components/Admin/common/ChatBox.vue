@@ -135,7 +135,6 @@ export default {
             httpRequest
                 .post('/api/botman', formData)
                 .then((response) => {
-                    console.log(response)
                     this.messages.push(response.data.messages);
                 })
             this.userMessage = ''; // Clear message input after sending

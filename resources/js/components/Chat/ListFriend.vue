@@ -340,7 +340,13 @@ export default {
         },
     },
     mounted() {
-        this.$refs.chatHistory.addEventListener('scroll', this.onScroll);
+        this.$nextTick(() => {
+            if (this.$refs.chatHistory) {
+                this.$refs.chatHistory.addEventListener('scroll', this.onScroll);
+            } else {
+                console.error("Element with ref 'chatHistory' not found in the DOM");
+            }
+        });
     },
     beforeDestroy() {
         // Trước khi component bị destroy, gỡ bỏ lắng nghe sự kiện scroll
