@@ -6,11 +6,12 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="text-black">{{ $store.getters.localizedStrings.profile.title }}</h1>
+                <h1 class="text-black text-left">{{ $store.getters.localizedStrings.profile.title }}</h1>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><router-link to="/">{{ $store.getters.localizedStrings.shop }}</router-link>
+                  <li class="breadcrumb-item"><router-link to="/">{{ $store.getters.localizedStrings.shop
+                      }}</router-link>
                   </li>
                   <li class="breadcrumb-item active">{{ $store.getters.localizedStrings.profile.title }}</li>
                 </ol>
@@ -28,9 +29,11 @@
                   <div class="card-body box-profile">
                     <div class="text-center">
                       <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img
-                          class="image-contain profile-user-img img-fluid img-circle" :src="`${initialValue.edit_avatar}`" /></a>
+                          class="image-contain profile-user-img img-fluid img-circle"
+                          :src="`${initialValue.edit_avatar}`" /></a>
                       <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img
-                            class="image-contain profile-user-img img-fluid img-circle" src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" /></a>
+                          class="image-contain profile-user-img img-fluid img-circle"
+                          src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" /></a>
                     </div>
 
                     <h3 class="profile-username text-center">{{ initialValue.edit_name }}</h3>
@@ -53,7 +56,7 @@
                     </ul>
 
                     <a href="#" class="btn btn-primary btn-block"><b>{{
-                      $store.getters.localizedStrings.profile.activity.follow }}</b></a>
+                        $store.getters.localizedStrings.profile.activity.follow }}</b></a>
                   </div>
                 </div>
 
@@ -88,7 +91,7 @@
                     <hr>
 
                     <strong><i class="fas fa-mobile mr-1"></i> {{ $store.getters.localizedStrings.profile.profile.phone
-                    }}</strong>
+                      }}</strong>
 
                     <p class="text-muted">
                       {{ initialValue.edit_phone ?? ''}}
@@ -101,11 +104,13 @@
                   <div class="card-header p-2">
                     <ul class="nav nav-pills">
                       <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.activity.title }}</a></li>
+                          $store.getters.localizedStrings.profile.activity.title }}</a></li>
                       <li class="nav-item"><a class="nav-link" href="#profile" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.profile.title }}</a></li>
+                          $store.getters.localizedStrings.profile.profile.title }}</a></li>
                       <li class="nav-item"><a class="nav-link" href="#setting" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.setting }}</a></li>
+                          $store.getters.localizedStrings.profile.setting }}</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#history" data-toggle="tab">{{
+                          $store.getters.localizedStrings.profile.history.title }}</a></li>
                     </ul>
                   </div>
                   <div class="card-body">
@@ -113,8 +118,8 @@
                       <div class="active tab-pane" id="activity">
                         <div class="post">
                           <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user1-128x128.jpg"
-                              alt="user image">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user1-128x128.jpg" alt="user image">
                             <span class="username">
                               <a href="#">Jonathan Burke Jr.</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -144,8 +149,8 @@
 
                         <div class="post clearfix">
                           <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user7-128x128.jpg"
-                              alt="User Image">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user7-128x128.jpg" alt="User Image">
                             <span class="username">
                               <a href="#">Sarah Ross</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -172,8 +177,8 @@
 
                         <div class="post">
                           <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user6-128x128.jpg"
-                              alt="User Image">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user6-128x128.jpg" alt="User Image">
                             <span class="username">
                               <a href="#">Adam Jones</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -182,17 +187,22 @@
                           </div>
                           <div class="row mb-3">
                             <div class="col-sm-6">
-                              <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                              <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
+                                alt="Photo">
                             </div>
                             <div class="col-sm-6">
                               <div class="row">
                                 <div class="col-sm-6">
-                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo2.png" alt="Photo">
-                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3"
+                                    src="../../../../../public/dist/img/photo2.png" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg"
+                                    alt="Photo">
                                 </div>
                                 <div class="col-sm-6">
-                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
-                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3"
+                                    src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
+                                    alt="Photo">
                                 </div>
                               </div>
                             </div>
@@ -302,13 +312,16 @@
                             <a-upload name="avatar" v-decorator="['avatar']" :headers="headers"
                               :supportServerRender="false" :beforeUpload="beforeUpload"
                               action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
-                              <a-button> <a-icon
-                                  type="upload" />{{ $store.getters.localizedStrings.profile.profile.upload }}</a-button>
+                              <a-button> <a-icon type="upload" />{{
+                                $store.getters.localizedStrings.profile.profile.upload }}</a-button>
                             </a-upload>
-                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img class="ml-2 image-contain fileUpdate"
-                                :src="`${initialValue.edit_avatar}`" height="100px" /></a>
-                            <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img class="image-contain fileUpdate"
-                                  src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" height="100px" /></a>
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img
+                                class="ml-2 image-contain fileUpdate" :src="`${initialValue.edit_avatar}`"
+                                height="100px" /></a>
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img
+                                class="image-contain fileUpdate"
+                                src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
+                                height="100px" /></a>
                           </a-form-item>
                           <a-form-item :label="$store.getters.localizedStrings.profile.profile.gender.album">
                             <a-upload v-decorator="['images']" name="images" :multiple="true"
@@ -361,6 +374,9 @@
                           </div>
                         </div>
                       </div>
+                      <div class="tab-pane" id="history">
+                        <History />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -380,11 +396,12 @@ import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
 import { ref } from "vue";
 import httpRequest from '../../../axios'
+import History from './History.vue'
 
 const isDark = ref();
 isDark.value = localStorage.getItem("darkMode") == "true";
 export default {
-  components: { IconDelete, IconEdit },
+  components: { IconDelete, IconEdit, History },
   computed: {
     currentLocale() {
       return this.$store.state.currentLocale;

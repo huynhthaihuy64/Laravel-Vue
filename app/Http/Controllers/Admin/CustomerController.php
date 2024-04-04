@@ -71,4 +71,10 @@ class CustomerController extends Controller
         $years = UserProduct::select(DB::raw('YEAR(created_at) year'))->distinct()->get();
         return $years;
     }
+
+    public function purchaseHistory()
+    {
+        $customer = $this->customerService->getCustomer();
+        return $customer;
+    }
 }

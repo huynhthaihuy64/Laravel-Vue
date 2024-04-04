@@ -49,7 +49,7 @@ class Product extends Model
 
     public function userProducts()
     {
-        return $this->hasMay(UserProduct::class, 'product_id', 'id');
+        return $this->hasMany(UserProduct::class, 'product_id', 'id');
     }
 
     public function getPriceSaleCurrencyAttribute()
@@ -66,11 +66,14 @@ class Product extends Model
 
     public function getPriceCurrencyAttribute()
     {
-        $jsonFilePath = storage_path('setting.json');
-        $jsonData = file_get_contents($jsonFilePath);
-        $data = json_decode($jsonData, true);
-        $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['price'], 4), 4);
-        return $priceCurrency;
+        if (isset($this->attributes['price'])) {
+            $jsonFilePath = storage_path('setting.json');
+            $jsonData = file_get_contents($jsonFilePath);
+            $data = json_decode($jsonData, true);
+            $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['price'], 4), 4);
+            return $priceCurrency;
+        }
+        return null;
     }
 
     /**

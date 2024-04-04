@@ -129,6 +129,9 @@ export default {
             upload: 'Avatar',
             album: 'Album',
             save: 'Save',
+        },
+        history: {
+            title: 'History'
         }
     },
     dark_mode: {

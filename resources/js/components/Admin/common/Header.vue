@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light header">
-    <div class="col-5 d-flex justify-content-center">
+    <div class="col-6 d-flex justify-content-center">
       <router-link to="/">
         <img src="../../../../../public/images/image.png" height="60px" width="80px" class="image-contain">
       </router-link>
@@ -38,20 +38,21 @@
             <a-space>
               <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
                 <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
-                }}</a-select-option>
+                  }}</a-select-option>
               </a-select>
             </a-space>
           </li>
         </ul>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="dropdown w-50 d-flex justify-content-center w-100">
         <button @click="searchToggle()">Search<i class="zmdi zmdi-search ml-2"></i></button>
         <div id="myDropdown" class="dropdown-content scrollable-menu mt-4 w-100" role="menu">
           <input type="text" placeholder="Search.." v-model="searchText" id="myInput" @keyup="search()">
-          <div class="content-dropdown container mt-4 w-100" v-for="(item) in searchArr" :key="item.id">
-            <a @click="goToDetail(item.id)" class="w-100 content-dropdown ">
+          <div class="content-dropdown container border border-primary mt-4 w-100" v-for="(item) in searchArr"
+            :key="item.id">
+            <a @click="goToDetail(item.id)" class="w-100 content-dropdown-item ">
               <div class="col-12">
                 <div class="row">
                   <div class="col-6">
@@ -378,6 +379,15 @@ export default {
 
 .content-dropdown {
   max-height: 150px;
+}
+
+.content-dropdown-item {
+  max-height: 145px;
+}
+
+.content-dropdown.container:hover {
+  border-color: transparent;
+  /* Đặt màu border khi hover thành transparent để không hiển thị */
 }
 
 .show {

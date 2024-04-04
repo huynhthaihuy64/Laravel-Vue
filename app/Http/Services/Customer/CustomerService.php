@@ -5,6 +5,7 @@ namespace App\Http\Services\Customer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\UserProduct;
 use App\Traits\Sortable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CustomerService
@@ -63,5 +64,13 @@ class CustomerService
             $q->whereYear('created_at', '=', $year);
         })->select(DB::raw("CAST(SUM(user_products.total) AS UNSIGNED) as amount"))->get('amount');
         return $customers;
+    }
+
+    public function getCustomer() 
+    {
+        return $this->userProduct->where('user_id', Auth::user()->id)
+            ->with('product', 'user')
+            ->get()
+            ->toArray();
     }
 }

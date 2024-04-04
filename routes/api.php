@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     Route::prefix('customers')->group(function () {
         Route::get('list', [CustomerController::class, 'index'])->name('customers.list');
+        Route::get('purchase-history', [CustomerController::class, 'purchaseHistory']);
     });
     Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart'])->name('cart.store');
