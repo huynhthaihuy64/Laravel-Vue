@@ -29,7 +29,7 @@ class ImportService
     {
         try {
             DB::beginTransaction();
-            $files = File::whereIn('id', $params['ids'])->get()->toArray();
+            $files = $this->file->whereIn('id', $params['ids'])->get()->toArray();
             foreach ($files as $file) {
                 ImportProductJob::dispatch(
                     $file,

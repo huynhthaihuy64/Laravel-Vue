@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Http;
 
 class UploadService
 {
+    protected $file;
+
+    public function __construct(ModelsFile $file)
+    {
+        $this->file = $file;
+    }
+
     public function uploadFile($file, $path)
     {
         if ($file) {
@@ -99,7 +106,7 @@ class UploadService
             FileConstants::FILE_TYPE => $extensionFile,
         ];
 
-        return ModelsFile::create($fileData);
+        return $this->file->create($fileData);
     }
 
     /**
@@ -121,7 +128,7 @@ class UploadService
      */
     public function getFileById(int $id): ModelsFile
     {
-        $file = ModelsFile::find($id);
+        $file = $this->file->find($id);
         if (!$file || !file_exists($file->file_path)) {
             throw new NotFoundException(File::class . $id);
         }

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 
 class AuthService
 {

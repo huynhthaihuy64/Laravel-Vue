@@ -163,7 +163,7 @@ class User extends Authenticatable
 
     public function unseenMessages()
     {
-        return $this->hasMany(ChatRoom::class, 'user_id')->where('seen', 1)->where('friend_id', auth()->user()->id);
+        return $this->hasMany(ChatRoom::class, 'user_id')->where('seen', 1)->where('friend_id', Auth::user()->id);
     }
 
     public function fileUploads()

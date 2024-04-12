@@ -53,14 +53,16 @@ A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - Chat with Pusher
 
 ## Document Payment
-- Paypal: srmklive/paypal
+- Paypal: srmklive/paypal, https://developer.paypal.com/: Login by account Personal,
+- Google: https://console.cloud.google.com/
 - Momo: 
     + test: https://developers.momo.vn/v3/vi/docs/payment/onboarding/test-instructions/
-    +document: https://github.com/momo-wallet/php
+    + document: https://github.com/momo-wallet/php
+    + Phone Success: "0919100100"
 - VNPay: https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/
 - OnePay: https://mtf.onepay.vn/developer/?page=modul_noidia_php
 - Exchange Currency: https://app.currencyapi.com/dashboard
-- Pusher: https://www.youtube.com/watch?v=fFizsY6n8yY&list=PLRKk5RpSyRSVGzvQ8zzkLtb-cU_M6F9GK&index=36&ab_channel=webmobtuts
+- Pusher: https://www.youtube.com/watch?v=fFizsY6n8yY&list=PLRKk5RpSyRSVGzvQ8zzkLtb-cU_M6F9GK&index=36&ab_channel=webmobtuts. Config broadcast driver trong env thành pusher
 
 ## Library
 

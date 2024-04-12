@@ -16,10 +16,12 @@ class UserService
 {
     protected $uploadService;
     protected $user;
-    public function __construct(UploadService $uploadService, User $user)
+    protected $userAlbum;
+    public function __construct(UploadService $uploadService, User $user, UserAlbum $userAlbum)
     {
         $this->uploadService = $uploadService;
         $this->user = $user;
+        $this->userAlbum = $userAlbum;
     }
     public function update($data, $id)
     {
@@ -42,10 +44,10 @@ class UserService
                     throw new BadRequestException(__('messages.upload-file.failed'));
                 }
                 foreach ($uploadFiles as $file) {
-                    $userOrigin->userAlbums()->save(new UserAlbum([
+                    $userOrigin->userAlbums()->create([
                         "name" => $file['file_name'],
                         "path" => $file['file_path']
-                    ]));
+                    ]);
                 }
             }
 
@@ -92,7 +94,7 @@ class UserService
     {
         try {
             DB::beginTransaction();
-            $postFile = UserAlbum::find($id);
+            $postFile = $this->userAlbum->find($id);
             File::delete(public_path($postFile['path']));
             $postFile->delete();
             DB::commit();

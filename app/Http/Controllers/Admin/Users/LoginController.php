@@ -48,15 +48,17 @@ class LoginController extends ResponseController
     protected $uploadService;
     protected $userService;
     protected $authService;
+    protected $user;
 
     public $successStatus = 200;
 
     use Sortable;
-    public function __construct(UploadService $uploadService, UserService $userService, AuthService $authService)
+    public function __construct(UploadService $uploadService, UserService $userService, AuthService $authService, User $user)
     {
         $this->uploadService = $uploadService;
         $this->userService = $userService;
         $this->authService = $authService;
+        $this->user = $user;
     }
 
     public function checkAuth()
@@ -87,7 +89,7 @@ class LoginController extends ResponseController
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-        $user = User::create($input);
+        $user = $this->user->create($input);
         return response()->json(
             [
                 'user' => $user,
@@ -115,7 +117,7 @@ class LoginController extends ResponseController
     public function listUser(Request $request)
     {
         $paginate = $request->limit ?? 10;
-        $users = User::sort($request->toArray())->paginate($paginate);
+        $users = $this->user->sort($request->toArray())->paginate($paginate);
 
         $listUsers = UserResource::collection($users);
         return $listUsers;
@@ -123,13 +125,13 @@ class LoginController extends ResponseController
 
     public function editUser($id)
     {
-        $user = User::with('role')->find($id);
+        $user = $this->user->with('role')->find($id);
         return $user;
     }
 
     public function updateUser(Request $request, $id)
     {
-        $userOrigin = User::find($id);
+        $userOrigin = $this->user->find($id);
         if ($request->hasFile('avatar')) {
             $avatar = $this->uploadService->uploadFile($request['avatar'], 'avatar');
             $avatar_path = $avatar['file_path'];
@@ -172,7 +174,7 @@ class LoginController extends ResponseController
 
     public function destroy($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = $this->user->where('id', $id)->first();
         if ($user) {
             $user->delete();
             return response()->json([
@@ -248,7 +250,7 @@ class LoginController extends ResponseController
 
                 // Updating user's status "isVerified" as 1.
 
-                User::where('id', $userId)->update(['isVerified' => 1]);
+                $this->user->where('id', $userId)->update(['isVerified' => 1]);
 
                 //Removing Session variable
                 Session::forget('OTP');
@@ -269,7 +271,7 @@ class LoginController extends ResponseController
 
     public function getCurrentUser()
     {
-        $user = User::find(Auth::user()->id);
+        $user = $this->user->find(Auth::user()->id);
         $listUsers = UserResource::make($user);
         return $listUsers;
     }

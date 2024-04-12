@@ -9,11 +9,19 @@ use Carbon\Carbon;
 
 class ProductService
 {
+    protected $menu;
+    protected $product;
+
+    public function __construct(Menu $menu, Product $product)
+    {
+        $this->menu = $menu;
+        $this->product = $product;
+    }
     const LIMIT = 1;
 
     public function get($page = null)
     {
-        return Product::select('id', 'name', 'price', 'price_sale', 'file')
+        return $this->product->select('id', 'name', 'price', 'price_sale', 'file')
             ->orderByDesc('id')
             ->when($page != null, function ($query) use ($page) {
                 $query->offset($page * self::LIMIT);
@@ -25,20 +33,20 @@ class ProductService
     public function getByMenu($id)
     {
         if($id == 0){
-            return Product::orderBy('created_at', 'desc')->paginate(4);
+            return $this->product->orderBy('created_at', 'desc')->paginate(4);
         }
-        return Product::where('menu_id', $id)->orderBy('created_at', 'desc')->paginate(4);
+        return $this->product->where('menu_id', $id)->orderBy('created_at', 'desc')->paginate(4);
     }
 
     public function getAll()
     {
-        return Product::all();
+        return $this->product->all();
     }
 
     
     public function show($id)
     {
-        return Product::where('id', $id)
+        return $this->product->where('id', $id)
             ->where('active', 1)
             ->with('menu')
             ->firstOrFail();
@@ -46,7 +54,7 @@ class ProductService
 
     public function more($id)
     {
-        return Product::select('id', 'name', 'price', 'price_sale', 'file')
+        return $this->product->select('id', 'name', 'price', 'price_sale', 'file')
             ->where('active', 1)
             ->where('id', '!=', $id)
             ->orderByDesc('id')
@@ -56,7 +64,7 @@ class ProductService
 
     public function search($data) {
         $textSearch = $data['name'] ?? null;
-        $products = Product::when(isset($textSearch), function($q) use($textSearch) {
+        $products = $this->product->when(isset($textSearch), function($q) use($textSearch) {
             $q->where('name', 'LIKE', "%$textSearch%");
         })->get();
         return $products;
@@ -81,8 +89,8 @@ class ProductService
             'active' => $item['active'],
             'updated_at' => $time
         ];
-        $menu = Menu::where('name', $item['menu'])->first()?->toArray();
-        $product = Product::updateOrCreate(['name' => $item['name']], $common);
+        $menu = $this->menu->where('name', $item['menu'])->first()?->toArray();
+        $product = $this->product->updateOrCreate(['name' => $item['name']], $common);
         $product->menus()->sync($menu['id']);
     }
 

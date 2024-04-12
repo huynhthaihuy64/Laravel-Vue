@@ -17,11 +17,13 @@ class CustomerController extends Controller
     protected $cart;
     
     protected $customerService;
+    protected $userProduct;
 
-    public function __construct(CartService $cart, CustomerService $customerService)
+    public function __construct(CartService $cart, CustomerService $customerService, UserProduct $userProduct)
     {
         $this->cart = $cart;
         $this->customerService = $customerService;
+        $this->userProduct = $userProduct;
     }
 
     public function index(Request $request)
@@ -68,7 +70,7 @@ class CustomerController extends Controller
     }
 
     public function getYear() {
-        $years = UserProduct::select(DB::raw('YEAR(created_at) year'))->distinct()->get();
+        $years = $this->userProduct->select(DB::raw('YEAR(created_at) year'))->distinct()->get();
         return $years;
     }
 

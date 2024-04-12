@@ -59,7 +59,7 @@ class ChatService
         
         if ($chatRoom->count()) {
             foreach($chatRoom as $msg) {
-                if((int) $msg->friend_id === auth()->user()->id) {
+                if((int) $msg->friend_id === Auth::user()->id) {
                     $msg->update(['seen' => 2]);
                 }
             } 

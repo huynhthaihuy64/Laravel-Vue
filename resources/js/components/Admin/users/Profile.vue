@@ -176,7 +176,16 @@
                         </div>
 
                         <div class="post">
-                          <div class="user-block">
+                          <div v-if="user" class="user-block">
+                            <img class="image-contain img-circle img-bordered-sm" :src="user.avatar" alt="User Image">
+                            <span class="username">
+                              <a href="#">{{user.name}}</a>
+                              <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
+                            </span>
+                            <span class="description">Posted {{ user.images.length }} photos - {{ user.modified_at
+                              }}</span>
+                          </div>
+                          <div v-if="!user" class="user-block">
                             <img class="image-contain img-circle img-bordered-sm"
                               src="../../../../../public/dist/img/user6-128x128.jpg" alt="User Image">
                             <span class="username">
@@ -185,7 +194,7 @@
                             </span>
                             <span class="description">Posted 5 photos - 5 days ago</span>
                           </div>
-                          <div class="row mb-3">
+                          <div v-if="!user" class="row mb-3">
                             <div class="col-sm-6">
                               <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
                                 alt="Photo">
@@ -203,6 +212,27 @@
                                     src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
                                   <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
                                     alt="Photo">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div v-if="user.images" class="row mb-3">
+                            <!-- Hiển thị ảnh đầu tiên -->
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-flex align-items-stretch">
+                              <img class="image-contain img-fluid" :src="user.images[0].path" alt="Photo">
+                            </div>
+                            <!-- Hiển thị các cặp ảnh tiếp theo -->
+                            <div v-if="user.images.length > 1"
+                              class="col-xs-12 col-sm-6 col-md-6 col-lg-6 d-flex flex-column">
+                              <div v-for="(pair, index) in imagePairs" :key="'pair-' + index" class="row flex-grow-1">
+                                <div v-if="pair[0]" class="col-6">
+                                  <img class="image-contain img-fluid mb-3" :src="pair[0].path"
+                                    :alt="'Photo ' + (2 * index + 1)">
+                                </div>
+                                <div v-if="pair[1]" class="col-6">
+                                  <img class="image-contain img-fluid mb-3" :src="pair[1].path"
+                                    :alt="'Photo ' + (2 * index + 2)">
                                 </div>
                               </div>
                             </div>
@@ -396,16 +426,44 @@ import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
 import { ref } from "vue";
 import httpRequest from '../../../axios'
+import { getUserInfo } from '../../../auth'
 import History from './History.vue'
 
 const isDark = ref();
 isDark.value = localStorage.getItem("darkMode") == "true";
 export default {
   components: { IconDelete, IconEdit, History },
+  setup() {
+    const user = ref(JSON.parse(getUserInfo()));
+
+    return {
+      user
+    };
+  },
   computed: {
     currentLocale() {
       return this.$store.state.currentLocale;
     },
+    imagePairs() {
+      let pairs = [];
+      const images = this.user.images;
+      // Kiểm tra nếu chỉ có một hình ảnh hoặc không có ảnh nào
+      if (images.length <= 1) {
+        return pairs;
+      }
+
+      // Bỏ qua ảnh đầu tiên và bắt đầu từ ảnh thứ hai
+      for (let i = 1; i < images.length; i += 2) {
+        // Kiểm tra xem có ảnh kế tiếp hay không
+        if (i + 1 < images.length) {
+          pairs.push([images[i], images[i + 1]]);
+        } else {
+          // Trường hợp ảnh cuối cùng không có cặp
+          pairs.push([images[i]]);
+        }
+      }
+      return pairs;
+    }
   },
   data() {
     return {

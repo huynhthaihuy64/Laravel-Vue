@@ -8,27 +8,35 @@ use Illuminate\Support\Facades\DB;
 
 class MenuService
 {
+    protected $menu;
+
+    public function __construct(Menu $menu)
+    {
+        $this->menu = $menu;
+    }
+
     use Sortable;
+    
     public function getAll($data,$paginate)
     {
-        return Menu::sort($data)->paginate($paginate);
+        return $this->menu->sort($data)->paginate($paginate);
     }
 
     public function show($id)
     {
-        return Menu::find($id);
+        return $this->menu->find($id);
     }
 
     public function getParent()
     {
-        return Menu::where('parent_id', 0)->get();
+        return $this->menu->where('parent_id', 0)->get();
     }
 
     public function create($data)
     {
         try {
             DB::beginTransaction();
-            $menu = Menu::create([
+            $menu = $this->menu->create([
                 'name' => $data['name'],
                 'parent_id' => $data['parent_id'],
                 'description' => $data['description'],
@@ -47,7 +55,7 @@ class MenuService
     public function update($data, $id)
     {
         try {
-            $menu = Menu::find($id);
+            $menu = $this->menu->find($id);
             $menu->update($data);
             return $menu;
         } catch (\Exception $err) {
@@ -58,7 +66,7 @@ class MenuService
 
     public function destroy($id)
     {
-        $menu = Menu::find($id);
+        $menu = $this->menu->find($id);
         if ($menu) {
             return $menu->delete();
         }
@@ -67,7 +75,7 @@ class MenuService
 
     public function getId($id)
     {
-        return Menu::where('id', $id)->where('parent_id', 0)->firstOrFail();
+        return $this->menu->where('id', $id)->where('parent_id', 0)->firstOrFail();
     }
 
     public function getProduct($menu, $request)
@@ -83,7 +91,7 @@ class MenuService
 
     public function getProductsWithMenu($id)
     {
-        $menu = Menu::find($id);
+        $menu = $this->menu->find($id);
         $products = $menu->products()->get();
         return $products;
     }

@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\DB;
 class SliderService
 {
     protected $uploadService;
+    protected $slider;
 
     use Sortable;
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, Slider $slider)
     {
         $this->uploadService = $uploadService;
+        $this->slider = $slider;
     }
     public function insert($data)
     {
@@ -24,7 +26,7 @@ class SliderService
         $data['file'] = $file['file_path'];
         try {
             DB::beginTransaction();
-            $slider = Slider::create([
+            $slider = $this->slider->create([
                 'name' => $data['name'],
                 'file' => $data['file'],
                 'url' => $data['url'],
@@ -42,7 +44,7 @@ class SliderService
 
     public function get($data, $paginate)
     {
-        return Slider::sort($data)->paginate($paginate);
+        return $this->slider->sort($data)->paginate($paginate);
     }
 
     public function update($data, $id)
@@ -51,7 +53,7 @@ class SliderService
         $data['file'] = $file['file_path'];
         try {
             DB::beginTransaction();
-            $slider = Slider::find($id);
+            $slider = $this->slider->find($id);
             $slider->update([
                 'name' => $data['name'],
                 'file' => $data['file'],
@@ -70,7 +72,7 @@ class SliderService
 
     public function destroy(int $id)
     {
-        $slider = Slider::find($id);
+        $slider = $this->slider->find($id);
         if ($slider) {
             try {
                 DB::beginTransaction();
@@ -89,6 +91,6 @@ class SliderService
 
     public function show($id)
     {
-        return Slider::find($id);
+        return $this->slider->find($id);
     }
 }

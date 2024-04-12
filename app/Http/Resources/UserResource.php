@@ -15,6 +15,10 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $modified_at = '';
+        if (isset($this->userAlbums) && !empty($this->userAlbums)) {
+            $modified_at = $this->userAlbums->max('created_at')?->diffForHumans();
+        }
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -30,6 +34,7 @@ class UserResource extends JsonResource
             'currency' => $this->currency,
             'unseen_messages' => $this->unseenMessages ?? [],
             'created_at' => Carbon::parse($this->created_at)->format('Y/m/d'),
+            'modified_at' => $modified_at,
             'images' => UserAlbums::collection($this->userAlbums)
           ];
     }

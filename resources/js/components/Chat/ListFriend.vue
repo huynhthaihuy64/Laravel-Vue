@@ -341,10 +341,10 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            if (this.$refs.chatHistory) {
-                this.$refs.chatHistory.addEventListener('scroll', this.onScroll);
+            if (this.$refs.chatHistoryRef) {
+                this.$refs.chatHistoryRef.addEventListener('scroll', this.onScroll);
             } else {
-                console.error("Element with ref 'chatHistory' not found in the DOM");
+                console.error("Element with ref 'chatHistoryRef' not found in the DOM");
             }
         });
     },

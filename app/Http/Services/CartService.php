@@ -436,11 +436,11 @@ class CartService
         $params = [
             'vpc_Merchant' => env('ONEPAY_MERCHANT'),
             'vpc_AccessCode' => env('ONEPAY_ACCESSCODE'),
-            'vpc_MerchTxnRef' => time() . "",
+            'vpc_MerchTxnRef' => time(),
             'vpc_OrderInfo' => env('ONEPAY_ORDER_INFO'),
             'vpc_Amount' => $amount,
             'vpc_ReturnURL' => route('cart.success'),
-            // 'vpc_Version' => '2',
+            'vpc_Version' => '2',
             'vpc_Command' => env('ONEPAY_COMMAND'),
             'vpc_Locale' => env('ONEPAY_LOCALE'),
             'vpc_Currency' => env('ONEPAY_CURRENCY')

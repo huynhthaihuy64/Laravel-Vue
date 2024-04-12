@@ -19,16 +19,20 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 class ProductAdminService
 {
     protected $uploadService;
+    protected $menu;
+    protected $product;
 
     use Sortable;
 
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, Menu $menu, Product $product)
     {
         $this->uploadService = $uploadService;
+        $this->menu = $menu;
+        $this->product = $product;
     }
     public function getMenu()
     {
-        return Menu::where('active', 1)->get();
+        return $this->menu->where('active', 1)->get();
     }
 
     protected function isValidPrice($request)
@@ -54,7 +58,7 @@ class ProductAdminService
         if ($isValidPrice === false) return false;
         try {
             DB::beginTransaction();
-            $product = Product::create([
+            $product = $this->product->create([
                 'name' => $request['name'],
                 'price' => $request['price'],
                 'price_sale' => $request['price_sale'],
@@ -73,10 +77,10 @@ class ProductAdminService
                     throw new BadRequestException(__('messages.upload-file.failed'));
                 }
                 foreach ($uploadFiles as $file) {
-                    $product->images()->save(new Image([
+                    $product->images()->create([
                         "name" => $file['file_name'],
                         "url" => $file['file_path']
-                    ]));
+                    ]);
                 }
             }
             $product->menus()->sync($request['menu_id']);
@@ -91,31 +95,31 @@ class ProductAdminService
 
     public function get($data, $paginate)
     {
-        return Product::sort($data)->with('menus')->paginate($paginate);
+        return $this->product->sort($data)->with('menus')->paginate($paginate);
     }
 
     public function getRelativeProduct($paginate, array $ids)
     {
-        return Product::with('menus')->whereHas('menus', function ($q) use ($ids) {
+        return $this->product->with('menus')->whereHas('menus', function ($q) use ($ids) {
             $q->whereIn('id', $ids);
         })->orderByDesc('id')->paginate($paginate);
     }
 
     public function show($id)
     {
-        return Product::with('menus', 'comments', 'images')->find($id);
+        return $this->product->with('menus', 'comments', 'images')->find($id);
     }
 
     public function getProductMenu($request, $paginate)
     {
-        $menu = Menu::find($request['menu_id']);
+        $menu = $this->menu->find($request['menu_id']);
         $products = $menu->products()->paginate($paginate);
         return $products;
     }
 
     public function update($request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->product->findOrFail($id);
         $isValidPrice = $this->isValidPrice($request);
         if (isset($request['file'])) {
             $file = $this->uploadService->uploadFile($request['file'], 'product');
@@ -161,7 +165,7 @@ class ProductAdminService
     {
         try {
             DB::beginTransaction();
-            $product = Product::find($id);
+            $product = $this->product->find($id);
             if (!$product) {
                 throw new NotFoundException(Product::class);
             }

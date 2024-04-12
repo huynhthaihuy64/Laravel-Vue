@@ -6,13 +6,16 @@ use App\Models\File;
 
 class FileService
 {
-    public function __construct()
+    protected $file;
+    
+    public function __construct(File $file)
     {
+        $this->file = $file;
     }
 
     public function getList($params)
     {
-        $files = File::with('user')->paginate($params['limit'] ?? 10);
+        $files = $this->file->with('user')->paginate($params['limit'] ?? 10);
         return $files;
     }
 }
