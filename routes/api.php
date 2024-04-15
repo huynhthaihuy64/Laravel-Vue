@@ -135,7 +135,6 @@ Route::put('reset-password/{token}', [ResetPasswordController::class, 'reset'])-
 #upload
 Route::post('upload/services', [UploadController::class, 'store'])->name('upload');
 
-Route::get('/danh-muc/{id}', [App\Http\Controllers\MenuController::class, 'index'])->name('menus.pageList');
 Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'index'])->name('products.pageList');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

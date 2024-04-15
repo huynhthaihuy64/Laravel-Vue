@@ -9,18 +9,15 @@
                     <th>Qty</th>
                     <th>Price</th>
                     <th>Total</th>
-                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in history" :key="item.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{item.product.name}}</td>
-                    <td>{{ item.qty }}</td>
-                    <td>{{ item.price_currency != null ? item.price_currency : item.price }}</td>
-                    <td>{{ item.price_currency != null ? (item.price_currency * item.qty) : (item.price * item.qty) }}
-                    </td>
-                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.total_product }}</td>
+                    <td>{{ formatPrice(item) }}</td>
+                    <td>{{ formatTotalPrice(item) }}</td>
                 </tr>
                 <!-- Add more rows as needed -->
             </tbody>
@@ -46,6 +43,25 @@ export default {
         }
         onMounted(getHistory);
         return { history }
+    },
+    methods: {
+        formatPrice(item) {
+            let totalPrice = item.price_currency != null ? parseFloat(item.price_currency.replace(/,/g, '')) : item.price;
+            let formattedPrice = totalPrice % 1 === 0 ?
+                this.$options.filters.formatNumber(totalPrice) :
+                this.$options.filters.formatNumber(totalPrice, 4);
+            return formattedPrice;
+        },
+        formatTotalPrice(item) {
+            let totalPrice = item.total_currency != null ?
+                parseFloat(item.total_currency.toString().replace(/,/g, '')) :
+                0;
+
+            let formattedPrice = totalPrice % 1 === 0 ?
+                this.$options.filters.formatNumber(totalPrice) :
+                this.$options.filters.formatNumber(totalPrice, 4);
+            return formattedPrice;
+        }
     }
 }
 </script>

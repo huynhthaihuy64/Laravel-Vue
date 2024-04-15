@@ -18,12 +18,13 @@ class CustomerService
         $this->userProduct = $userProduct;
     }
 
-    public function index($request) {
+    public function index($request)
+    {
         $results = $this->userProduct
-                    ->with('user')
-                    ->select('user_id')
-                    ->groupBy('user_id')
-                    ->get();
+            ->with('user')
+            ->select('user_id')
+            ->groupBy('user_id')
+            ->get();
 
         $perPage = $request['limit'] ?? 5;
         $page = request('page', 1);
@@ -43,33 +44,41 @@ class CustomerService
         return $pagination;
     }
 
-    public function chart($month,$year) 
+    public function chart($month, $year)
     {
-        $customers = $this->userProduct->when(isset($month), function($q) use($month) {
+        $customers = $this->userProduct->when(isset($month), function ($q) use ($month) {
             $q->whereMonth('created_at', '=', $month);
         })
-        ->when(isset($year), function($q) use($year) {
-            $q->whereYear('created_at', '=', $year);
-        })->select('user_id')->distinct()->get()->count();
-        
+            ->when(isset($year), function ($q) use ($year) {
+                $q->whereYear('created_at', '=', $year);
+            })->select('user_id')->distinct()->get()->count();
+
         return $customers;
     }
 
-    public function chartRevenue($month,$year) 
+    public function chartRevenue($month, $year)
     {
-        $customers = $this->userProduct->when(isset($month), function($q) use($month) {
+        $customers = $this->userProduct->when(isset($month), function ($q) use ($month) {
             $q->whereMonth('created_at', '=', $month);
         })
-        ->when(isset($year), function($q) use($year) {
-            $q->whereYear('created_at', '=', $year);
-        })->select(DB::raw("CAST(SUM(user_products.total) AS UNSIGNED) as amount"))->get('amount');
+            ->when(isset($year), function ($q) use ($year) {
+                $q->whereYear('created_at', '=', $year);
+            })->select(DB::raw("CAST(SUM(user_products.total) AS UNSIGNED) as amount"))->get('amount');
         return $customers;
     }
 
-    public function getCustomer() 
+    public function getCustomer()
     {
-        return $this->userProduct->where('user_id', Auth::user()->id)
-            ->with('product', 'user')
+        return $this->userProduct
+            ->select(
+                'product_id',
+                DB::raw('SUM(qty) as total_product'),
+                DB::raw('SUM(total) as price'),
+                DB::raw('(SUM(total) * SUM(qty)) as total_all')
+            )
+            ->where('user_id', Auth::user()->id)
+            ->with('product')
+            ->groupBy('product_id')
             ->get()
             ->toArray();
     }

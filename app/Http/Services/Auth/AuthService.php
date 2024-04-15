@@ -26,7 +26,7 @@ class AuthService
         $this->user = $user;
     }
 
-    public function login($request = [],$remember)
+    public function login($request = [],$remember = false)
     {
         $user = $this->user->where('email', $request['email'])->first();
         if ($user === null || !Auth::attempt($request)) {

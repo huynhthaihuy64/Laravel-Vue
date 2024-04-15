@@ -22,7 +22,7 @@ class UserProduct extends Model
         'price',
         'total'
     ];
-    protected $appends = ['price_currency'];
+    protected $appends = ['price_currency', 'total_currency'];
 
     public function product()
     {
@@ -51,6 +51,18 @@ class UserProduct extends Model
             $jsonData = file_get_contents($jsonFilePath);
             $data = json_decode($jsonData, true);
             $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['price'], 4), 4);
+            return $priceCurrency;
+        }
+        return null;
+    }
+
+    public function getTotalCurrencyAttribute()
+    {
+        if (isset($this->attributes['total_all'])) {
+            $jsonFilePath = storage_path('setting.json');
+            $jsonData = file_get_contents($jsonFilePath);
+            $data = json_decode($jsonData, true);
+            $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['total_all'], 4), 4);
             return $priceCurrency;
         }
         return null;
