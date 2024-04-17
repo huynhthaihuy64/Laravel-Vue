@@ -3,6 +3,7 @@ import Vue from "vue";
 import "ant-design-vue/dist/antd.css";
 import router from "./routes";
 import store from "./store";
+import VueCookies from "vue-cookies";
 /*Import SocialAuth Vue */
 import VueAuthenticate from "vue-authenticate";
 
@@ -104,6 +105,7 @@ Vue.use(VueProgressBar, {
     failedColor: "red",
     height: "3px",
 });
+Vue.use(VueCookies);
 Vue.config.productionTip = false;
 
 var filter = function (text, length, clamp) {

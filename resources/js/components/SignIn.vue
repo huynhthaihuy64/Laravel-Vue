@@ -87,6 +87,23 @@ export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'login_form' })
     },
+    // setup() {
+    //     const getCookieValue = (name = 'login') => {
+    //         const cookies = document.cookie.split(';');
+    //         for (let cookie of cookies) {
+    //             const c = cookie.trim();
+    //             if (c.startsWith(name + '=')) {
+    //                 return c.substring(name.length + 1);
+    //             }
+    //         }
+    //         return ''; // Trả về chuỗi rỗng nếu không tìm thấy cookie
+    //     };
+    //     onMounted(() => {
+    //         const loginCookie = getCookieValue();
+    //         console.log('test', this.$cookies)
+    //         // Xử lý logic dựa trên giá trị của cookie 'login' ở đây
+    //     });
+    // },
     data() {
         return {
             formData: {
@@ -156,21 +173,45 @@ export default {
         loginWithGoogle() {
             // Handle Google login
             axios.get('/api/redirect/google')
-            .then(response => {
+                .then(response => {
                     if (response.data) {
-                        window.open(response.data, '_blank')
+                        var popup = window.open(response.data, 'popup', 'width=600,height=600');
+                        if (popup) {
+                            popup.focus();
+                        } else {
+                            alert('Trình duyệt của bạn đã chặn cửa sổ popup, vui lòng cho phép và thử lại.');
+                        }
                     }
                 })
                 .catch(error => {
-                    Toast.fire({
-                        icon: 'error',
-                        title: error
-                    });
-                })
+                    console.error('Login failed:', error);
+                });
         },
         loginWithSlack() {
             // Handle Slack login
             console.log("Login with Slack");
+        },
+        getCookie(name) {
+            let value = `; ${document.cookie}`;
+            console.log('value', value);
+            let parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        },
+        fetchAccessToken() {
+            const accessToken = this.getCookie('login');
+            if (accessToken) {
+                setAccessToken(accessToken)
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Login Success'
+                });
+                setTimeout(function () {
+                    this.$router.push({ name: 'Home' })
+                    window.axios.defaults.headers.common['Authorization'] =
+                        'Bearer ' + accessToken
+                }, 2000)
+            }
+            console.log('Access Token:', accessToken);
         }
     },
     computed: {
@@ -178,6 +219,9 @@ export default {
             return this.isShowPassword ? 'text' : 'password'
         },
     },
+    mounted() {
+        this.fetchAccessToken();
+    }
 }
 </script>
 <style lang="scss" scoped>
