@@ -68,7 +68,7 @@
                    </h2>
                     <p>
                         <a href=
-"http://localhost:8000/contact"
+"{{ env('APP_URL') }}/contact"
                            style="text-decoration: none; 
                                   color:black; 
                                   border: 2px solid #4cb96b; 

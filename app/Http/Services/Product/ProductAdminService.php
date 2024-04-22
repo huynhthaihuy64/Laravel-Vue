@@ -5,16 +5,15 @@ namespace App\Http\Services\Product;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Services\UploadService;
-use App\Models\Image;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Log;
 use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Illuminate\Support\Facades\File;
 
 class ProductAdminService
 {
@@ -169,8 +168,7 @@ class ProductAdminService
             if (!$product) {
                 throw new NotFoundException(Product::class);
             }
-            $path = str_replace('storage', 'public', $product->file);
-            Storage::delete($path);
+            File::delete(public_path($product->file));
             $product->delete();
             Log::channel('history')->info('Người dùng ' . Auth::user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($product) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . Auth::user()->name);
             DB::commit();

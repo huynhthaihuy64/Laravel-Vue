@@ -58,7 +58,7 @@ class Product extends Model
             $jsonFilePath = storage_path('setting.json');
             $jsonData = file_get_contents($jsonFilePath);
             $data = json_decode($jsonData, true);
-            $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['price_sale'], 4), 4);
+            $priceCurrency = (float)(round($data[Auth::user()->currency]['value'] * $this->attributes['price_sale'], 4));
             return $priceCurrency;
         }
         return null;
@@ -70,7 +70,7 @@ class Product extends Model
             $jsonFilePath = storage_path('setting.json');
             $jsonData = file_get_contents($jsonFilePath);
             $data = json_decode($jsonData, true);
-            $priceCurrency = number_format(round($data[Auth::user()->currency]['value'] * $this->attributes['price'], 4), 4);
+            $priceCurrency = (float)(round($data[Auth::user()->currency]['value'] * $this->attributes['price'], 4));
             return $priceCurrency;
         }
         return null;

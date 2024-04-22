@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const webpack = require("webpack");
 require("dotenv").config({ path: ".env" });
 
 /*
@@ -12,6 +13,16 @@ require("dotenv").config({ path: ".env" });
  |
  */
 
- mix.js('resources/js/app.js', 'public/js')
- .vue()
-     .sass('resources/sass/app.scss', 'public/css').sourceMaps();
+mix.js("resources/js/app.js", "public/js")
+    .vue()
+    .sass("resources/sass/app.scss", "public/css")
+    .sourceMaps()
+    .webpackConfig({
+        plugins: [
+            new webpack.DefinePlugin({
+                "process.env": {
+                    APP_URL: JSON.stringify(process.env.APP_URL),
+                },
+            }),
+        ],
+    });

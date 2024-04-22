@@ -108,6 +108,8 @@ Vue.use(VueProgressBar, {
 Vue.use(VueCookies);
 Vue.config.productionTip = false;
 
+const baseUrl = process.env.APP_URL;
+
 var filter = function (text, length, clamp) {
     clamp = clamp || "...";
     var node = document.createElement("div");
@@ -121,12 +123,12 @@ Vue.filter("truncate", filter);
 
 /* Vue Auth */
 Vue.use(VueAuthenticate, {
-    baseUrl: "http://localhost:8083", // URL của Laravel backend
+    baseUrl: baseUrl, // URL của Laravel backend
     providers: {
         google: {
             clientId:
                 "163572698065-pi80unsfbobj2sf3tmr1n8nqm0pnjm0d.apps.googleusercontent.com",
-            redirectUri: "http://localhost:8083/auth/google/callback", // URL của VueJS frontend
+            redirectUri: baseUrl + "/auth/google/callback", // URL của VueJS frontend
         },
     },
 });

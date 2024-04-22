@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class SliderService
 {
@@ -76,8 +77,7 @@ class SliderService
         if ($slider) {
             try {
                 DB::beginTransaction();
-                $path = str_replace('storage', 'public', $slider->file);
-                Storage::delete($path);
+                File::delete(public_path($slider->path));
                 $slider->delete();
                 DB::commit();
                 return true;
