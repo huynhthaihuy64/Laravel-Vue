@@ -34,6 +34,7 @@
         "vform": "^1.0.1",
         "vue-authenticate": "^1.5.0",
         "vue-chartjs": "^5.2.0",
+        "vue-cookies": "^1.8.4",
         "vue-owl-carousel": "^2.0.3",
         "vue-progressbar": "^0.7.5",
         "vue-router": "^3.5.3",

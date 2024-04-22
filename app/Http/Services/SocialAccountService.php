@@ -19,15 +19,21 @@ class SocialAccountService
 
         if ($account) {
             $user = $account->user;
-            $details = [
-                'name' => $user->name,
-                'email' => $user->email,
-                'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở http://localhost:8083/signIn',
-                'url' => 'http://localhost:8083/signIn',
-                'title' => 'Login'
-            ];
-            Mail::to($details['email'])->send(new RegisterUser($details));
-            return response()->json(['message' => __('messages.mail.send.email')]);
+            if(!($user->provider)) {
+                $user->update([
+                    'provider' => $social
+                ]);
+            }
+            // $details = [
+            //     'name' => $user->name,
+            //     'email' => $user->email,
+            //     'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở http://localhost:8083/signIn',
+            //     'url' => 'http://localhost:8083/signIn',
+            //     'title' => 'Login'
+            // ];
+            // Mail::to($details['email'])->send(new RegisterUser($details));
+            // return response()->json(['message' => __('messages.mail.send.email')]);
+            return $user;
         } else {
             $email = $providerUser->getEmail() ?? $providerUser->getNickname();
             $account = new SocialAccount([
@@ -42,6 +48,7 @@ class SocialAccountService
                     'email' => $email,
                     'name' => $providerUser->getName(),
                     'password' => Hash::make('12345678'),
+                    'provider' => $social
                 ]);
             }
 
@@ -56,7 +63,8 @@ class SocialAccountService
                 'title' => 'Login'
             ];
             Mail::to($details['email'])->send(new RegisterUser($details));
-            return response()->json(['message' => __('messages.mail.send.email')]);
+            // return response()->json(['message' => __('messages.mail.send.email')]);
+            return $user;
         }
     }
 }

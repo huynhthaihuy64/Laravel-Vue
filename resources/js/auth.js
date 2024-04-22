@@ -11,8 +11,8 @@ export const getUserInfo = () => {
 }
 
 export const getAccessToken = () => {
-    const userInfo = getUserInfo()
-    return userInfo && window.localStorage.getItem('token')
+    // const userInfo = getUserInfo()
+    return window.localStorage.getItem('token')
 }
 
 export const revokeUser = () => {
@@ -37,9 +37,10 @@ export const permissionHome = (context) => {
 }
 
 export const isAuthenticated = () => {
-    const userInfo = getUserInfo()
+    // const userInfo = getUserInfo()
     const token = getAccessToken()
-    return !!userInfo && !!token
+    // return !!userInfo && !!token
+    return !!token
 }
 
 export function middlewarePipeline(context, middleware, index) {

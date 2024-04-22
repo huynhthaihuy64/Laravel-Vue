@@ -71,8 +71,9 @@
     </div>
 </template>
 <script>
-import { setUserInfo, setAccessToken } from '../auth';
+import { setUserInfo, setAccessToken, isAuthenticated } from '../auth';
 import { Modal, Button } from 'ant-design-vue';
+import httpRequest from '../axios'
 
 const hasErrors = (fieldsError) => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -87,6 +88,23 @@ export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'login_form' })
     },
+    // setup() {
+    //     const getCookieValue = (name = 'login') => {
+    //         const cookies = document.cookie.split(';');
+    //         for (let cookie of cookies) {
+    //             const c = cookie.trim();
+    //             if (c.startsWith(name + '=')) {
+    //                 return c.substring(name.length + 1);
+    //             }
+    //         }
+    //         return ''; // Trả về chuỗi rỗng nếu không tìm thấy cookie
+    //     };
+    //     onMounted(() => {
+    //         const loginCookie = getCookieValue();
+    //         console.log('test', this.$cookies)
+    //         // Xử lý logic dựa trên giá trị của cookie 'login' ở đây
+    //     });
+    // },
     data() {
         return {
             formData: {
@@ -151,32 +169,60 @@ export default {
         },
         loginWithFacebook() {
             // Handle Facebook login
-            console.log("Login with Facebook");
-        },
-        loginWithGoogle() {
-            // Handle Google login
-            axios.get('/api/redirect/google')
-            .then(response => {
+            axios.get('/api/redirect/facebook')
+                .then(response => {
                     if (response.data) {
                         window.open(response.data, '_blank')
                     }
                 })
                 .catch(error => {
-                    Toast.fire({
-                        icon: 'error',
-                        title: error
-                    });
+                    console.error('Login failed:', error);
+                });
+        },
+        loginWithGoogle() {
+            // Handle Google login
+            axios.get('/api/redirect/google')
+                .then(response => {
+                    if (response.data) {
+                        window.open(response.data, '_blank')
+                    }
                 })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
         },
         loginWithSlack() {
             // Handle Slack login
             console.log("Login with Slack");
-        }
+        },
     },
     computed: {
         inputType() {
             return this.isShowPassword ? 'text' : 'password'
         },
+    },
+    created() {
+        const token = new URLSearchParams(window.location.search).get('token');
+        console.log('token', token)
+        if (token && !this.$store.state.userInfo) {
+            console.log('token_login', token)
+            window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            setAccessToken(token)
+            if (isAuthenticated()) {
+                this.$router.push({ name: 'Home' })
+                httpRequest.get('/api/admin/users/currentUser')
+                    .then(response => {
+                        console.log('data', response.data.data);
+                        if (response.data.data) {
+                            setUserInfo(JSON.stringify(response.data.data));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error while fetching current user:', error);
+                        // Handle error (e.g., redirect to sign-in page)
+                    });
+            }
+        }
     },
 }
 </script>
