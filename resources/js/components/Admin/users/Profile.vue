@@ -217,7 +217,7 @@
                             </div>
                           </div>
 
-                          <div v-if="user.images" class="row mb-3">
+                          <div v-if="user.images.length > 0 " class="row mb-3">
                             <!-- Hiển thị ảnh đầu tiên -->
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-flex align-items-stretch">
                               <img class="image-contain img-fluid" :src="user.images[0].path" alt="Photo">

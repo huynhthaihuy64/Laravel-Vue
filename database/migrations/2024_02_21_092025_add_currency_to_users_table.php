@@ -15,6 +15,7 @@ class AddCurrencyToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('currency')->default('USD')->after('gender');
+            $table->string('provider')->nullable()->after('currency');
         });
     }
 
@@ -27,6 +28,7 @@ class AddCurrencyToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('currency');
+            $table->dropColumn('provider');
         });
     }
 }

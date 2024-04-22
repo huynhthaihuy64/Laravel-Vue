@@ -22,10 +22,11 @@ class Authenticate extends Middleware
 
     public function handle($request, Closure $next, ...$guards)
     {
-        if ($request->hasCookie(env('AUTH_COOKIE_NAME') ?? 'login')) {
-            $request->headers->set('Authorization', 'Bearer '. $request->cookie(env('AUTH_COOKIE_NAME') ?? 'login'));
+        //Check if login by account google or facebook ignore cookie
+        if ($request->hasCookie(env('AUTH_COOKIE_NAME') ?? 'login') &&
+             !(auth()->user()->provider)) {
+            $request->headers->set('Authorization', 'Bearer ' . $request->cookie(env('AUTH_COOKIE_NAME') ?? 'login'));
         }
-
         $this->authenticate($request, $guards);
 
         return $next($request);

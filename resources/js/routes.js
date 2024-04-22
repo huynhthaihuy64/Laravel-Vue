@@ -223,14 +223,17 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.middleware) {
     return next();
   }
-  const user = getUserInfo();
   const isLoggedIn = isAuthenticated();
   const { middleware } = to.meta;
-  const context = { to, from, next, user, isLoggedIn };
-  return middleware[0]({
-    ...context,
-    next: middlewarePipeline(context, middleware, 1)
-  });
+  if (!isLoggedIn) {
+      const user = getUserInfo();
+      const context = { to, from, next, user, isLoggedIn };
+      return middleware[0]({
+          ...context,
+          next: middlewarePipeline(context, middleware, 1),
+      });
+  }
+  return next();
 });
 
 export default router

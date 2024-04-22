@@ -19,6 +19,11 @@ class SocialAccountService
 
         if ($account) {
             $user = $account->user;
+            if(!($user->provider)) {
+                $user->update([
+                    'provider' => $social
+                ]);
+            }
             // $details = [
             //     'name' => $user->name,
             //     'email' => $user->email,
@@ -43,6 +48,7 @@ class SocialAccountService
                     'email' => $email,
                     'name' => $providerUser->getName(),
                     'password' => Hash::make('12345678'),
+                    'provider' => $social
                 ]);
             }
 

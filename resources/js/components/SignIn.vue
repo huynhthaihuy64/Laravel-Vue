@@ -71,8 +71,9 @@
     </div>
 </template>
 <script>
-import { setUserInfo, setAccessToken } from '../auth';
+import { setUserInfo, setAccessToken, isAuthenticated } from '../auth';
 import { Modal, Button } from 'ant-design-vue';
+import httpRequest from '../axios'
 
 const hasErrors = (fieldsError) => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -168,19 +169,22 @@ export default {
         },
         loginWithFacebook() {
             // Handle Facebook login
-            console.log("Login with Facebook");
+            axios.get('/api/redirect/facebook')
+                .then(response => {
+                    if (response.data) {
+                        window.open(response.data, '_blank')
+                    }
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
         },
         loginWithGoogle() {
             // Handle Google login
             axios.get('/api/redirect/google')
                 .then(response => {
                     if (response.data) {
-                        var popup = window.open(response.data, 'popup', 'width=600,height=600');
-                        if (popup) {
-                            popup.focus();
-                        } else {
-                            alert('Trình duyệt của bạn đã chặn cửa sổ popup, vui lòng cho phép và thử lại.');
-                        }
+                        window.open(response.data, '_blank')
                     }
                 })
                 .catch(error => {
@@ -191,37 +195,35 @@ export default {
             // Handle Slack login
             console.log("Login with Slack");
         },
-        getCookie(name) {
-            let value = `; ${document.cookie}`;
-            console.log('value', value);
-            let parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        },
-        fetchAccessToken() {
-            const accessToken = this.getCookie('login');
-            if (accessToken) {
-                setAccessToken(accessToken)
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Login Success'
-                });
-                setTimeout(function () {
-                    this.$router.push({ name: 'Home' })
-                    window.axios.defaults.headers.common['Authorization'] =
-                        'Bearer ' + accessToken
-                }, 2000)
-            }
-            console.log('Access Token:', accessToken);
-        }
     },
     computed: {
         inputType() {
             return this.isShowPassword ? 'text' : 'password'
         },
     },
-    mounted() {
-        this.fetchAccessToken();
-    }
+    created() {
+        const token = new URLSearchParams(window.location.search).get('token');
+        console.log('token', token)
+        if (token && !this.$store.state.userInfo) {
+            console.log('token_login', token)
+            window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            setAccessToken(token)
+            if (isAuthenticated()) {
+                this.$router.push({ name: 'Home' })
+                httpRequest.get('/api/admin/users/currentUser')
+                    .then(response => {
+                        console.log('data', response.data.data);
+                        if (response.data.data) {
+                            setUserInfo(JSON.stringify(response.data.data));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error while fetching current user:', error);
+                        // Handle error (e.g., redirect to sign-in page)
+                    });
+            }
+        }
+    },
 }
 </script>
 <style lang="scss" scoped>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Response;
 use App\Http\Resources\UserResource;
 use App\Http\Services\Auth\AuthService;
 use App\Http\Services\SocialAccountService;
@@ -39,18 +38,7 @@ class SocialAuthController extends Controller
             'expires_in' => Carbon::parse($tokenInfo->expires_at)->toDateTimeString(),
             'user' => new UserResource($user),
         ];
-        $response = response()->json($data);
-        return $response->withCookie(cookie(
-            env('AUTH_COOKIE_NAME', 'login'),
-            $data['access_token'],
-            env('COOKIE_LIFETIME', 60 * 24 * 7),
-            null,
-            null,
-            true,
-            false,
-            false,
-            'None'
-        ));
+        return redirect()->to('http://localhost:8083/signIn?token=' . $data['access_token']);
         // return redirect('http://localhost:8083/login/callback');
         // return response($script);
     }
