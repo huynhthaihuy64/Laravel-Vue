@@ -27,8 +27,8 @@ class SocialAccountService
             // $details = [
             //     'name' => $user->name,
             //     'email' => $user->email,
-            //     'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở http://localhost:8083/signIn',
-            //     'url' => 'http://localhost:8083/signIn',
+            //     'subject' => 'Bạn đã có tài khoản hãy thử đăng nhập tài khoản ở env('APP_URL').'/signIn',
+            //     'url' => env('APP_URL').'/signIn',
             //     'title' => 'Login'
             // ];
             // Mail::to($details['email'])->send(new RegisterUser($details));
@@ -59,7 +59,7 @@ class SocialAccountService
                 'name' => $user->name,
                 'email' => $user->email,
                 'subject' => 'Bạn đã tạo tài khoản thành công hãy thử đăng nhập với password là 12345678',
-                'url' => 'http://localhost:8083/signIn',
+                'url' => env('APP_URL').'/signIn',
                 'title' => 'Login'
             ];
             Mail::to($details['email'])->send(new RegisterUser($details));
