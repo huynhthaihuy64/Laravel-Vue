@@ -89,11 +89,11 @@
 
                         <span class="mtext-106 cl2" v-if="!initialValue.edit_price_currency">
                             {{ initialValue.edit_price_sale < initialValue.edit_price ? initialValue.edit_price_sale :
-                                initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}</span>
+                                initialValue.edit_price | formatNumber }} {{ user_currency }}</span>
                                 <span class="mtext-106 cl2" v-if="initialValue.edit_price_currency">
                                     {{ initialValue.edit_price_sale_currency < initialValue.edit_price_currency ?
                                         initialValue.edit_price_sale_currency : initialValue.edit_price_currency |
-                                        formatNumber }} {{ initialValue.user_currency }} </span>
+                                        formatNumber }} {{ user_currency }} </span>
                                         <p class="stext-102 cl3 p-t-23">
                                             {{ initialValue.edit_description | truncate(30, '...') }}
                                         </p>
@@ -204,7 +204,7 @@
 
                                         <span class="stext-102 cl6 size-206">
                                             {{ initialValue.edit_price_currency ? initialValue.edit_price_currency :
-                                            initialValue.edit_price | formatNumber }} {{ initialValue.user_currency }}
+                                            initialValue.edit_price | formatNumber }} {{ user_currency }}
                                         </span>
                                     </li>
 
@@ -216,7 +216,7 @@
                                         <span class="stext-102 cl6 size-206">
                                             {{ initialValue.edit_price_sale_currency ?
                                             initialValue.edit_price_sale_currency : initialValue.edit_price_sale |
-                                            formatNumber }} {{ initialValue.user_currency }}
+                                            formatNumber }} {{ user_currency }}
                                         </span>
                                     </li>
 
@@ -385,14 +385,14 @@
                                             <div v-if="!product.price_currency">
                                                 <p>
                                                     {{ product.price_sale < product.price ? product.price_sale :
-                                                        product.price | formatNumber }} {{ initialValue.user_currency
+                                                        product.price | formatNumber }} {{ user_currency
                                                         }}</p>
                                             </div>
                                             <div v-if="product.price_currency">
                                                 <p>
                                                     {{ product.price_sale_currency < product.price_currency ?
                                                         product.price_sale_currency : product.price_currency |
-                                                        formatNumber }} {{ initialValue.user_currency }} </p>
+                                                        formatNumber }} {{ user_currency }} </p>
                                             </div>
                                         </span>
                                     </div>
@@ -420,6 +420,7 @@
 <script>
 import httpRequest from '../axios'
 import { isAuthenticated } from "../auth"
+import { ref, onMounted } from "vue";
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -428,6 +429,25 @@ export default {
         truncate: function (text, length, suffix) {
             return text.substring(0, length) + suffix;
         },
+    },
+    setup() {
+        let isLogin = false;
+        let user_currency = ref('');
+        if (isAuthenticated()) {
+            async function getUser() {
+                httpRequest
+                    .get('/api/admin/users/currentUser')
+                    .then((response) => {
+                        user_currency = response.data.data.currency;
+                    })
+            }
+            onMounted(getUser);
+            isLogin = true;
+        }
+        return {
+            isLogin,
+            user_currency,
+        }
     },
     data() {
         return {
@@ -460,12 +480,10 @@ export default {
                 edit_price_sale_currency: 20,
                 edit_price_currency: 10,
                 edit_inventory_number: 0,
-                user_currency: '',
             },
             form2: {
                 body: '',
-            },
-            isLogin: false
+            }
         }
     },
     methods: {
@@ -531,13 +549,6 @@ export default {
         goToDetail(id) {
             this.$router.push({ name: "productDetail", params: { id: id } });
             this.$router.go();
-        },
-        getUser() {
-            httpRequest
-                .get('/api/admin/users/currentUser')
-                .then((response) => {
-                    this.initialValue.user_currency = response.data.data.currency;
-                })
         },
         getComment() {
             httpRequest
@@ -623,7 +634,7 @@ export default {
                     formData.append("qty", values.qty);
                     formData.append("product_id", values.product_id)
                     httpRequest.post('/api/add-cart', formData).then((response) => {
-                        this.info = response
+                        this.info = response;
                         Toast.fire({
                             icon: 'success',
                             title: 'Add Cart Success'
@@ -636,12 +647,6 @@ export default {
                         title: 'Add Cart Failed'
                     });
                 });
-        }
-    },
-    mounted() {
-        if (isAuthenticated()) {
-            this.getUser()
-            isLogin = true;
         }
     },
     created() {

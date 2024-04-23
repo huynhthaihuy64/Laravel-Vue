@@ -39,7 +39,7 @@ class CartService
     }
     public function index($params)
     {
-        $carts = $this->cart->with('product', 'user')->paginate($params['limit'] ?? 10);
+        $carts = $this->cart->where('user_id', Auth::user()->id)->with('product', 'user')->paginate($params['limit'] ?? 10);
         $totalAll = 0;
         $jsonFilePath = storage_path('setting.json');
         $jsonData = file_get_contents($jsonFilePath);

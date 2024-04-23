@@ -34,7 +34,7 @@
           <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
           </li>
-          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user">
+          <li class="nav-item ml-5" v-if="user">
             <a-space>
               <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
                 <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
@@ -90,8 +90,10 @@
                   <IconProfile />{{ $store.getters.localizedStrings.profile.title }}
                 </router-link>
               </a-menu-item>
-              <a-menu-item class="menu-item js-show-cart">
-                <a @click="handleClick"><font-awesome-icon :icon="['fas', 'cart-shopping']" />Show Cart</a>
+              <a-menu-item class="menu-item js-show-cart" style="position: relative;">
+                <a @click=" handleClick"><font-awesome-icon :icon="['fas', 'cart-shopping']" />
+                  <span class="bubble">{{ countCarts }}</span>
+                  Show Cart</a>
               </a-menu-item>
               <a-menu-item class="menu-item ml-1 menu-item">
                 <a @click="handleChat"><font-awesome-icon :icon="['fas', 'message']" />Chat</a>
@@ -126,7 +128,7 @@ import IconLogout from "../../icon/icon-logout.vue"
 import IconLogo from "../../icon/icon-logo.vue";
 import { revokeUser, isAuthenticated } from "../../../auth"
 import httpRequest from '../../../axios'
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 export default {
   components: { IconProfile, IconLogout, IconLogo },
   props: {
@@ -142,6 +144,9 @@ export default {
       avatar: null,
       role_id: null 
     });
+
+    const countCarts = ref(0);
+
     if (isAuthenticated()) {
       async function getUser() {
         try {
@@ -154,10 +159,21 @@ export default {
           console.error('Error fetching user:', error);
         }
       }
-      onMounted(getUser);
+
+      async function countCart() {
+        try {
+          const response = await httpRequest.get('/api/carts');
+          countCarts.value = response.data.carts.length;
+        } catch (error) {
+          console.error('Error fetching carts:', error);
+        }
+      }
+      onMounted(() => {
+        getUser();
+        countCart();
+      });
     }
-    console.log('hello',user)
-    return { user }
+    return { user, countCarts }
   },
   data() {
     return {
@@ -396,5 +412,25 @@ export default {
 
 .show {
   display: block;
+}
+
+.bubble {
+  position: absolute;
+  top: -5px;
+  /* Điều chỉnh vị trí theo ý của bạn */
+  right: -10px;
+  /* Điều chỉnh vị trí theo ý của bạn */
+  background-color: red;
+  /* Màu sắc của bong bóng */
+  color: white;
+  border-radius: 50%;
+  /* Làm cho bong bóng tròn */
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  /* Để chữ hiển thị ở giữa */
+  font-size: 15px;
+  /* Kích thước của chữ */
 }
 </style>
