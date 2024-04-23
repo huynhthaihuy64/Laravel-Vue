@@ -596,6 +596,7 @@ export default {
                 icon: 'success',
                 title: 'Edit Success'
               });
+              console.log('response', response)
               setTimeout(function () {
                 window.location.reload();
               }, 2000);

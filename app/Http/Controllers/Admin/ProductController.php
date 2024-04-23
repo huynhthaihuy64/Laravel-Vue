@@ -29,9 +29,7 @@ class ProductController extends Controller
     }
 
     public function relativeProducts(Request $request) {
-        $paginate = $request->limit ?? 5;
-        $ids = $request->ids;
-        $data = $this->productService->getRelativeProduct($paginate, $ids);
+        $data = $this->productService->getRelativeProduct($request->all());
         $listProducts = ProductResource::collection($data);
         return $listProducts;
     }

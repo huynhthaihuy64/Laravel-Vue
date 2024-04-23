@@ -9,30 +9,64 @@
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="card-body">
-                                        <carousel v-if="sliders.length > 0">
-                                            <div v-for="slide in sliders" :key="slide.id" class="image-contain">
-                                                <h5 style="text:center">{{ slide.name }}</h5>
-                                                <a :href="slide.url" target="_blank"><img :src="slide.file"
-                                                        style="height:300px"></a>
+                                        <div id="myCarousel" class="carousel slide" data-ride="carousel"
+                                            v-if="sliders.length > 0">
+                                            <div class="carousel-inner">
+                                                <div v-for="(slide, index) in sliders" :key="slide.id"
+                                                    :class="{ 'carousel-item': true, 'active': index === 0 }">
+                                                    <div class="image-contain">
+                                                        <h5 style="text-align: center;">{{ slide.name }}</h5>
+                                                        <a :href="slide.url" target="_blank"><img :src="slide.file"
+                                                                style="height: 400px"></a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </carousel>
-                                        <carousel v-if="sliders.length === 0">
-                                            <div class="image-contain">
-                                                <h5 style="text:center">FaceBook</h5>
-                                                <a href="https://www.facebook.com/" target="_blank"><img
-                                                        src="../../../public/images/facebook.png" style="height:300px"></a>
+                                            <a class="carousel-control-prev" href="#myCarousel" role="button"
+                                                data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#myCarousel" role="button"
+                                                data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
+                                        <div id="myCarousel" class="carousel slide" data-ride="carousel"
+                                            v-if="sliders.length === 0">
+                                            <div class="carousel-inner">
+                                                <div>
+                                                    <div class="image-contain">
+                                                        <h5 style="text-align: center">FaceBook</h5>
+                                                        <a href="https://www.facebook.com/" target="_blank"><img
+                                                                src="../../../public/images/facebook.png"
+                                                                style="height:400px"></a>
+                                                    </div>
+                                                    <div class="image-contain">
+                                                        <h5 style="text-align: center">Instagram</h5>
+                                                        <a href="https://www.instagram.com/" target="_blank"><img
+                                                                src="../../../public/images/Instagram.png"
+                                                                style="height:400px"></a>
+                                                    </div>
+                                                    <div class="image-contain">
+                                                        <h5 style="text-align: center">Tik Tok</h5>
+                                                        <a href="https://www.tiktok.com/en/" target="_blank"><img
+                                                                src="../../../public/images/tiktok.png"
+                                                                style="height:400px"></a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="image-contain">
-                                                <h5 style="text:center">Instagram</h5>
-                                                <a href="https://www.instagram.com/" target="_blank"><img
-                                                        src="../../../public/images/Instagram.png" style="height:300px"></a>
-                                            </div>
-                                            <div class="image-contain">
-                                                <h5 style="text:center">Tik Tok</h5>
-                                                <a href="https://www.tiktok.com/en/" target="_blank"><img
-                                                        src="../../../public/images/tiktok.png" style="height:300px"></a>
-                                            </div>
-                                        </carousel>
+                                            <a class="carousel-control-prev" href="#myCarousel" role="button"
+                                                data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#myCarousel" role="button"
+                                                data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -113,15 +147,14 @@
                                                 <div v-if="!product.price_currency">
                                                     <p>
                                                         {{ product.price_sale < product.price ? product.price_sale :
-                                                            product.price | formatNumber }} {{ initialValue.user_currency
-                                                    }}</p>
+                                                            product.price | formatNumber }} {{
+                                                            initialValue.user_currency }}</p>
                                                 </div>
                                                 <div v-if="product.price_currency">
                                                     <p>
                                                         {{ product.price_sale_currency < product.price_currency ?
                                                             product.price_sale_currency : product.price_currency |
-                                                            formatNumber }} {{ initialValue.user_currency }} 
-                                                    </p>
+                                                            formatNumber }} {{ initialValue.user_currency }} </p>
                                                 </div>
                                             </span>
                                         </div>
@@ -150,6 +183,7 @@
 <script>
 import carousel from 'vue-owl-carousel'
 import httpRequest from '../axios'
+import { isAuthenticated } from "../auth"
 export default {
     components: {
         carousel
@@ -247,9 +281,11 @@ export default {
     },
     created() {
         this.$Progress.start()
+        if (isAuthenticated()) {
+            this.getUser()
+        }
         this.getResult()
         this.getProductList(this.page)
-        this.getUser()
         this.$Progress.finish()
     },
 }
@@ -272,5 +308,24 @@ export default {
 .slider {
     display: block;
     justify-content: center;
+}
+.carousel-inner .carousel-item img {
+    width: 100%;
+    height: auto;
+    /* Đảm bảo tỷ lệ hình ảnh không bị biến đổi */
+}
+
+@keyframes zoomInOut {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.carousel-item {
+    animation: zoomInOut 1s ease-in-out forwards;
 }
 </style>

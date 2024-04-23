@@ -97,6 +97,7 @@
 </template>
 <script>
 import httpRequest from '../axios'
+import { isAuthenticated } from "../auth"
 export default {
 	data() {
 		return {
@@ -221,7 +222,9 @@ export default {
 		this.$Progress.start()
 		this.getMenuDetail(this.page)
 		this.getProductMenu(this.row, this.page)
-		this.getUser()
+		if (isAuthenticated()) {
+			this.getUser();
+		}
 		this.$Progress.finish()
 	},
 }

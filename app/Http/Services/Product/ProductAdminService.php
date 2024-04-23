@@ -97,11 +97,11 @@ class ProductAdminService
         return $this->product->sort($data)->with('menus')->paginate($paginate);
     }
 
-    public function getRelativeProduct($paginate, array $ids)
+    public function getRelativeProduct(array $params)
     {
-        return $this->product->with('menus')->whereHas('menus', function ($q) use ($ids) {
-            $q->whereIn('id', $ids);
-        })->orderByDesc('id')->paginate($paginate);
+        return $this->product->with('menus')->where('id', '!=', $params['product_id'])->whereHas('menus', function ($q) use ($params) {
+            $q->whereIn('id', $params['ids']);
+        })->orderByDesc('id')->paginate($params['limit'] ?? 3);
     }
 
     public function show($id)

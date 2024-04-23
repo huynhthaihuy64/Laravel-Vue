@@ -31,10 +31,10 @@
               </div>
             </div>
           </li>
-          <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
+          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
           </li>
-          <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
+          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user">
             <a-space>
               <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
                 <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
@@ -71,20 +71,20 @@
     </div>
     <div id="google_translate_element" class="col-1 mt-3"></div>
     <div class="d-flex text-black profile mr-5 col-2 d-flex justify-content-end">
-      <div class="flex-shrink-0" v-if="initialValue.edit_avatar">
-        <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
+      <div class="flex-shrink-0" v-if="user.avatar">
+        <img :src="user.avatar" alt="Generic placeholder image" class="avatar" />
       </div>
-      <div class="flex-shrink-0" v-if="!initialValue.edit_avatar">
+      <div class="flex-shrink-0" v-else>
         <img src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" alt="Generic placeholder image"
           class="image-contain avatar" />
       </div>
       <div class="info">
         <a-dropdown>
           <div class="ant-dropdown-link">
-            <div class="name mt-3 ml-2">{{ initialValue.edit_name || 'Admin' }}</div>
+            <div class="name mt-3 ml-2">{{ user.name || 'Guess' }}</div>
           </div>
           <template #overlay>
-            <a-menu>
+            <a-menu v-if="user">
               <a-menu-item class="menu-item ml-1">
                 <router-link :to="{ name: 'profile' }">
                   <IconProfile />{{ $store.getters.localizedStrings.profile.title }}
@@ -101,6 +101,18 @@
                 <div class="logout"><span> {{ $store.getters.localizedStrings.logout }} </span></div>
               </a-menu-item>
             </a-menu>
+            <a-menu v-else>
+              <a-menu-item class="menu-item ml-1">
+                <router-link :to="{ name: 'SignIn' }">
+                  <IconProfile />Login
+                </router-link>
+              </a-menu-item>
+              <a-menu-item class="menu-item ml-1">
+                <router-link :to="{ name: 'SignUp' }">
+                  <IconProfile />Register
+                </router-link>
+              </a-menu-item>
+            </a-menu>
           </template>
         </a-dropdown>
       </div>
@@ -112,8 +124,9 @@
 import IconProfile from "../../icon/icon-profile.vue";
 import IconLogout from "../../icon/icon-logout.vue"
 import IconLogo from "../../icon/icon-logo.vue";
-import { revokeUser, getUserInfo } from "../../../auth"
+import { revokeUser, isAuthenticated } from "../../../auth"
 import httpRequest from '../../../axios'
+import { onMounted, reactive } from "vue";
 export default {
   components: { IconProfile, IconLogout, IconLogo },
   props: {
@@ -122,28 +135,40 @@ export default {
       default: false
     }
   },
+  setup() {
+    const user = reactive({ 
+      name: null,
+      id: null,
+      avatar: null,
+      role_id: null 
+    });
+    if (isAuthenticated()) {
+      async function getUser() {
+        try {
+          const response = await httpRequest.get('/api/admin/users/currentUser');
+          user.name = response.data.data.name;
+          user.id = response.data.data.id;
+          user.avatar = response.data.data.avatar;
+          user.role_id = response.data.data.role_id;
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      }
+      onMounted(getUser);
+    }
+    console.log('hello',user)
+    return { user }
+  },
   data() {
     return {
       routeName: '',
       menus: {},
       listCurrency: {},
       name: '',
-      initialValue: {
-        edit_name: '',
-        edit_id: 1,
-        edit_avatar: [],
-        role: 10,
-      },
       searchText: '',
       searchArr: {},
       currency: ''
     }
-  },
-  computed: {
-    userInfo() {
-      const userInfo = JSON.parse(getUserInfo())
-      return userInfo
-    },
   },
   methods: {
     handleClick() {
@@ -166,7 +191,7 @@ export default {
     },
     async handleLogout() {
       try {
-        httpRequest.get('/api/admin/users/logout')
+        httpRequest.post('/api/admin/users/logout')
           .then(
             ({ response }) => {
               Toast.fire({
@@ -193,16 +218,6 @@ export default {
       this.$router.go();
     },
 
-    getUser() {
-      httpRequest
-        .get('/api/admin/users/currentUser')
-        .then((response) => {
-          this.initialValue.edit_name = response.data.data.name;
-          this.initialValue.edit_id = response.data.data.id;
-          this.initialValue.edit_avatar = response.data.data.avatar;
-          this.initialValue.role = response.data.data.role_id;
-        })
-    },
     goToMenuDetail(id) {
       const url = `/categories/${id}`;
       window.location.href = url;
@@ -256,16 +271,19 @@ export default {
             window.location.reload();
           }, 2000);
         });
-    }
+    },
   },
   mounted() {
-    this.getUser()
+    if (isAuthenticated()) {
+      this.getCurrency()
+      this.getListCurrency()
+    }
     this.getMenu()
-    this.getCurrency()
-    this.getListCurrency()
   },
   created() {
+    this.$Progress.start()
     this.routeName = this.$route.name
+    this.$Progress.finish()
   }
 }
 </script>

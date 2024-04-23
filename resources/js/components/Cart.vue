@@ -55,6 +55,7 @@
 </template>
 <script>
 import httpRequest from '../axios'
+import { isAuthenticated } from "../auth"
 export default {
     props: {
         isActive: {
@@ -129,8 +130,10 @@ export default {
         },
     },
     mounted() {
-        this.getCart();
-        this.getUser();
+        if (isAuthenticated()) {
+            this.getCart();
+            this.getUser();
+        }
     },
     created() {
     },

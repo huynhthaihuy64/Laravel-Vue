@@ -68,32 +68,20 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/admin/users/role', [UserRoleController::class, 'index'])->name('roles.list');
     Route::get('/export/{option}', [PageController::class, 'export'])->name('export');
     Route::post('/import', [PageController::class, 'import'])->name('import');
-    Route::post('/sendMailContact', [PageController::class, 'sendMailContact'])->name('page.mailContact');
     Route::post('/comment', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('/comment/{id}', [CommentController::class, 'commentProduct']);
     Route::prefix('menus')->group(function () {
         Route::post('add', [MenuController::class, 'store'])->name('menus.store');
-        Route::get('list', [MenuController::class, 'index'])->name('menus.list');
-        Route::get('edit/{id}', [MenuController::class, 'show'])->name('menus.show');
-        Route::get('menuProduct/{id}', [MenuController::class, 'getProductsWithMenu'])->name('menus.getProductWithMenu');
         Route::put('edit/{id}', [MenuController::class, 'update'])->name('menus.update');
         Route::delete('destroy/{id}', [MenuController::class, 'destroy'])->name('menus.delete');
     });
     Route::prefix('products')->group(function () {
         Route::post('add', [ProductController::class, 'store'])->name('products.store');
-        Route::get('list', [ProductController::class, 'index'])->name('products.list');
-        Route::get('productMenu', [ProductController::class, 'getProductMenu'])->name('products.productMenu');
-        Route::get('relative', [ProductController::class, 'relativeProducts'])->name('products.relativeProduct');
-        Route::get('edit/{id}', [ProductController::class, 'show'])->name('products.show');
         Route::put('edit/{id}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('destroy/{id}', [ProductController::class, 'destroy'])->name('products.delete');
-        Route::post('search', [SearchProducts::class, 'search'])->name('products.search');
         Route::post('/import-product', [ImportMultipleController::class, 'importMultiple'])->name('products.import');
     });
     Route::prefix('sliders')->group(function () {
         Route::post('add', [SliderController::class, 'store'])->name('sliders.store');
-        Route::get('list', [SliderController::class, 'index'])->name('sliders.list');
-        Route::get('edit/{id}', [SliderController::class, 'show'])->name('sliders.show');
         Route::put('edit/{id}', [SliderController::class, 'update'])->name('sliders.update');
         Route::delete('destroy/{id}', [SliderController::class, 'destroy'])->name('sliders.delete');
     });
@@ -139,3 +127,28 @@ Route::get('/san-pham/{id}', [App\Http\Controllers\ProductController::class, 'in
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+
+Route::prefix('products')->group(function () {
+    Route::get('list', [ProductController::class, 'index'])->name('products.list');
+    Route::get('productMenu', [ProductController::class, 'getProductMenu'])->name('products.productMenu');
+    Route::get('relative', [ProductController::class, 'relativeProducts'])->name('products.relativeProduct');
+    Route::get('edit/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::post('search', [SearchProducts::class, 'search'])->name('products.search');
+});
+
+ Route::prefix('sliders')->group(function () {
+    Route::get('list', [SliderController::class, 'index'])->name('sliders.list');
+    Route::get('edit/{id}', [SliderController::class, 'show'])->name('sliders.show');
+ });
+
+Route::prefix('menus')->group(function () {
+    Route::get('list', [MenuController::class, 'index'])->name('menus.list');
+    Route::get('edit/{id}', [MenuController::class, 'show'])->name('menus.show');
+    Route::get('menuProduct/{id}', [MenuController::class, 'getProductsWithMenu'])->name('menus.getProductWithMenu');
+});
+
+Route::prefix('comment')->group(function () {
+    Route::get('/{id}', [CommentController::class, 'commentProduct']);
+});
+
+Route::post('/sendMailContact', [PageController::class, 'sendMailContact'])->name('page.mailContact');

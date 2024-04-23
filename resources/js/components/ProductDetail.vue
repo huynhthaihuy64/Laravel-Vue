@@ -113,8 +113,14 @@
                                                             <a-input-number v-decorator="['qty', { initialValue: 1 }]"
                                                                 :min="1" :max="initialValue.edit_inventory_number" />
                                                         </a-form-item>
-                                                        <a-button html-type="submit"
+                                                        <a-button v-if="isLogin" html-type="submit"
                                                             class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
+                                                            {{ $store.getters.localizedStrings.product.detail.add_cart
+                                                            }}
+                                                        </a-button>
+                                                        <a-button v-else html-type="submit"
+                                                            class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 "
+                                                            disabled>
                                                             {{ $store.getters.localizedStrings.product.detail.add_cart
                                                             }}
                                                         </a-button>
@@ -276,7 +282,8 @@
                                                 <p class="mt-2 ml-5">
                                                     {{ item.body }}
                                                 </p>
-                                                <a-form :form="form" @submit.prevent="createComment($event, item.id)">
+                                                <a-form :form="form" @submit.prevent="createComment($event, item.id)"
+                                                    v-if="isLogin">
                                                     <a-form-item hidden>
                                                         <a-input v-decorator="[
                                                             'product_id', {
@@ -317,7 +324,7 @@
                                         </div>
                                     </div>
                                     <h4>{{ $store.getters.localizedStrings.comment.add_comment }}</h4>
-                                    <a-form>
+                                    <a-form v-if="isLogin">
                                         <a-form-item v-model="form2.product_id">
                                             <a-input :value="initialValue.edit_id" type="hidden">
                                             </a-input>
@@ -412,6 +419,7 @@
 </template>
 <script>
 import httpRequest from '../axios'
+import { isAuthenticated } from "../auth"
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -457,6 +465,7 @@ export default {
             form2: {
                 body: '',
             },
+            isLogin: false
         }
     },
     methods: {
@@ -501,7 +510,7 @@ export default {
                     return [...acc, item.id]
                 }, [])
                 httpRequest
-                    .get('/api/products/relative?limit=' + 3 + '&page=' + this.page, {
+                    .get('/api/products/relative?limit=' + 3 + '&page=' + this.page + '&product_id=' + this.$route.params.id, {
                         params: {
                             ids: MenuIds
                         }
@@ -509,8 +518,8 @@ export default {
                     .then(
                         ({ data }) => (
                             (this.products = data.data),
-                            (this.totalPage = data.total),
-                            (this.lastPage = data.last_page),
+                            (this.totalPage = data.meta.total),
+                            (this.lastPage = data.meta.last_page),
                             (this.checkPage()),
                             (this.checkRow())
                         )
@@ -629,10 +638,15 @@ export default {
                 });
         }
     },
+    mounted() {
+        if (isAuthenticated()) {
+            this.getUser()
+            isLogin = true;
+        }
+    },
     created() {
         this.$Progress.start()
         this.getProductDetail(this.page)
-        this.getUser()
         this.getComment()
         this.$Progress.finish()
     },

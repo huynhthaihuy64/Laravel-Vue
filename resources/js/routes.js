@@ -58,7 +58,7 @@ const routes = [
                 path: "/",
                 component: require("./components/HomeComponent.vue").default,
                 meta: {
-                    middleware: [permissionHome],
+                    middleware: [noAuth],
                 },
             },
             {
@@ -75,7 +75,7 @@ const routes = [
                 path: "/categories/:id",
                 component: require("./components/CategoryPage.vue").default,
                 meta: {
-                    middleware: [permissionHome],
+                    middleware: [noAuth],
                 },
             },
             {
@@ -91,7 +91,7 @@ const routes = [
                 path: "/contact",
                 component: require("./components/Contact.vue").default,
                 meta: {
-                    middleware: [permissionHome],
+                    middleware: [noAuth],
                 },
             },
             {
@@ -99,7 +99,7 @@ const routes = [
                 path: "/about",
                 component: require("./components/AboutComponent.vue").default,
                 meta: {
-                    middleware: [permissionHome],
+                    middleware: [noAuth],
                 },
             },
             {
@@ -107,7 +107,7 @@ const routes = [
                 path: "/productDetail/:id",
                 component: require("./components/ProductDetail.vue").default,
                 meta: {
-                    middleware: [permissionHome],
+                    middleware: [noAuth],
                 },
             },
             {

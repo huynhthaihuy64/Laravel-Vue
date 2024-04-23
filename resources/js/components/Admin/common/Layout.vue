@@ -19,7 +19,6 @@
 import MainHeader from './Header.vue'
 import MainFooter from './Footer.vue'
 import Cart from '../../Cart.vue'
-import httpRequest from '../../../axios'
 // import ChatBox from './ChatBox.vue'
 export default {
   components: { MainHeader, MainFooter, Cart },
@@ -46,16 +45,8 @@ export default {
         return ""
       }
     },
-    getUser() {
-      httpRequest
-        .get('/api/admin/users/currentUser')
-        .then((response) => {
-          this.user = response.data
-        })
-    },
   },
   mounted() {
-    this.getUser();
     this.bodyClasses();
   }
 }

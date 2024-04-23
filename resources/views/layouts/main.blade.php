@@ -12,14 +12,16 @@
 		rel="stylesheet" />
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-	</script>
 	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
 	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.0/echo.common.min.js"></script>
 	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<script src="{{ asset('js/app.js') }}" defer></script>
 	<meta name="csrf-token" value="{{ csrf_token() }}" />
 	<link rel="icon" type="image/png" href="/template/images/icons/icon-heart-01.png" />
@@ -170,6 +172,18 @@
 		function googleTranslateElementInit() {
 		new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
 	}
+	</script>
+	<script>
+		$(document).ready(function(){
+	        // Activate Carousel
+	        $('.carousel').on('slid.bs.carousel', function () {
+				$('.carousel-item.active').addClass('sliding');
+				interval(2000)
+			});
+	
+	        // Slowly show carousel after page load
+	        $('#myCarousel').fadeIn(2000); // Điều chỉnh thời gian hiển thị từ từ (2 giây)
+	    });
 	</script>
 
 	<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">

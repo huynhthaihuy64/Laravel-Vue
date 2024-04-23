@@ -110,7 +110,8 @@ class LoginController extends ResponseController
         if (!$authenticate) {
             throw new AuthenticationException(__('auth.logout.error'));
         }
-        return response()->json(['message' => __('messages.user.logout.success')]);
+        $cookie = \Cookie::forget(env('AUTH_COOKIE_NAME', 'login'), '/', 'localhost');
+        return response()->json(['message' => __('messages.user.logout.success')])->withCookie($cookie);
     }
 
 
