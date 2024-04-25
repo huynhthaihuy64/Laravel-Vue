@@ -5,7 +5,7 @@
       <div class="content-wrapper mx-0 px-0">
         <router-view :user="user"></router-view>
       </div>
-      <Cart v-if="isActive === true" :is-active="isActive" v-on:updateActive="updateActive" class="cart"/>
+      <Cart v-if="isActive === true" :is-active="isActive" v-on:updateActive="updateActive" class="cart" />
     </div>
     <!-- <button id=" fixedButton" class="bg-primary" @click="toggleChatBox">
           <img class="image-chat" src="../../../../../public/images/Chatbox-PR.png">

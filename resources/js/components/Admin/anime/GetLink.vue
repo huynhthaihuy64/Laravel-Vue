@@ -36,14 +36,17 @@
         <div class="row w-75 mt-5">
             <div v-for="(card, index) in searchArr" :key="index" class="col-md-4 mb-4">
                 <div class="card" style="width: 100%; height: 100%;">
-                    <img :src="card.image" class="card-img-top h-50" alt="...">
+                    <img :src="card.bannerImage" class="card-img-top h-50" alt="...">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">episode: {{ card.episode }}</h5>
-                        <p class="card-text flex-grow-1">{{ card.filename }}</p>
-                        <a :href="card.video" target="_blank" class="btn btn-primary mt-auto">Link Video</a>
+                        <h5 class="card-title">episode: {{ card.episodes }}</h5>
+                        <p class="card-text flex-grow-1">{{ card.title.english }}</p>
+                        <a :href="card.siteUrl" target="_blank" class="btn btn-primary mt-auto">Link Video</a>
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="isLoading" class="loading-icon d-flex justify-content-center align-items-center">
+            <span>Loading...</span>
         </div>
     </div>
 </template>
@@ -57,20 +60,21 @@ export default {
             searchArr: [],
             selectedTab: 'url',
             imageUrl: null,
-            selectedFile: null
+            selectedFile: null,
+            isLoading: false
         };
     },
     methods: {
         search() {
             const urlValue = this.form.getFieldValue('url');
-
+            this.isLoading = true;
             httpRequest.get('/api/files/getAnimeByUrl', {
                 params: {
                     url: urlValue
                 }
             })
                 .then((response) => {
-                    this.searchArr = response.data.data.result;
+                    this.searchArr = response.data.data.data.Page.media;
                     if (this.searchArr.length === 0) {
                         Toast.fire({
                             icon: 'error',
@@ -83,18 +87,27 @@ export default {
                         icon: 'error',
                         title: error
                     });
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Load Image Sucessfully'
+                    });
                 });
+                
         },
          searchImage() {
              if (!this.selectedFile) {
                 console.error('No image selected.');
                 return;
             }
+            this.isLoading = true;
             const formData = new FormData();
             formData.append('image', this.selectedFile);
             httpRequest.post('/api/files/getAnimeByImage', formData)
                 .then((response) => {
-                    this.searchArr = response.data.data.result;
+                    this.searchArr = response.data.data.data.Page.media;
                     if (this.searchArr.length === 0) {
                         Toast.fire({
                             icon: 'error',
@@ -106,6 +119,13 @@ export default {
                     Toast.fire({
                         icon: 'error',
                         title: error
+                    });
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Load Image Sucessfully'
                     });
                 });
         },
@@ -154,6 +174,21 @@ export default {
 
     .active {
         background-color: #1280bf;
+    }
+    .loading-icon {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #7983ff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 }
 </style>

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 class UploadService
 {
@@ -268,10 +268,76 @@ class UploadService
         return $fileInfo;
     }
 
-    public function getAnimeByUrl(array $param)
+    public function getAnimeBy(array $anilistId)
     {
-        $endPoint = "https://api.trace.moe/search?url=" . $param['url'];
-        $response = HTTP::get($endPoint);
-        return response()->json(['data' => $response->json()]);
+        $query = '
+                query ($ids: [Int]) {
+            Page(page: 1, perPage: 9) {
+              media(id_in: $ids, type: ANIME) {
+                id
+                title {
+                  native
+                  romaji
+                  english
+                }
+                type
+                format
+                status
+                startDate {
+                  year
+                  month
+                  day
+                }
+                endDate {
+                  year
+                  month
+                  day
+                }
+                season
+                episodes
+                duration
+                source
+                coverImage {
+                  large
+                  medium
+                }
+                bannerImage
+                genres
+                synonyms
+                studios {
+                  edges {
+                    isMain
+                    node {
+                      id
+                      name
+                      siteUrl
+                    }
+                  }
+                }
+                isAdult
+                externalLinks {
+                  id
+                  url
+                  site
+                }
+                siteUrl
+              }
+            }
+          }
+            ';
+        $http = new Client;
+        $variables = ['ids' => $anilistId];
+        $response2 = $http->post('https://graphql.anilist.co', [
+            'json' => [
+                'query' => $query,
+                'variables' => $variables,
+            ]
+        ]);
+        // $response2 = Http::withBody(
+        //     json_encode(['ids' => $anilistId]),
+        //     'application/json'
+        // )->post('https://trace.moe/anilist/');
+        $data = json_decode($response2->getBody()->getContents(), true);
+        return $data;
     }
 }

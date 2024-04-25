@@ -14,13 +14,13 @@ use App\Http\Controllers\Admin\FileHistoryController;
 use App\Http\Controllers\Admin\GetAnimeByUrlController;
 use App\Http\Controllers\Admin\ImportMultipleController;
 use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\SendMailAllUserController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\TwoFAController;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -102,13 +102,16 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('list', [CustomerController::class, 'index'])->name('customers.list');
         Route::get('purchase-history', [CustomerController::class, 'purchaseHistory']);
     });
-    Route::get('carts', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
-    Route::post('add-cart', [App\Http\Controllers\CartController::class, 'addCart'])->name('cart.store');
-    Route::get('cart/payment-success', [App\Http\Controllers\CartController::class, 'success'])->name('cart.success');
-    Route::get('cart/{id}', [App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
-    Route::post('cart', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-    Route::post('cart/payment', [App\Http\Controllers\CartController::class, 'payment'])->name('cart.payment');
-    Route::get('cart/remove/{id}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.delete');
+    Route::prefix('carts')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('cart.index');
+        Route::post('add-cart', [CartController::class, 'addCart'])->name('cart.store');
+        Route::get('payment-success', [CartController::class, 'success'])->name('cart.success');
+        Route::get('{id}', [CartController::class, 'show'])->name('cart.show');
+        Route::post('/', [CartController::class, 'update'])->name('cart.update');
+        Route::post('payment', [CartController::class, 'payment'])->name('cart.payment');
+        Route::get('remove/{id}', [CartController::class, 'remove'])->name('cart.delete');
+        Route::delete('removeAll', [CartController::class, 'removeAll'])->name('cart.delete');
+    });
     Route::get('list-friend', [ChatController::class, 'index'])->name('chat.listFriend');
     Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/history/{friendId}', [ChatController::class, 'history'])->name('chat.history');

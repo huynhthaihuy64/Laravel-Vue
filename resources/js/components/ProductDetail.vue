@@ -421,6 +421,7 @@
 import httpRequest from '../axios'
 import { isAuthenticated } from "../auth"
 import { ref, onMounted } from "vue";
+import { EventBus } from '../eventBus';
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -633,13 +634,14 @@ export default {
                     const formData = new FormData();
                     formData.append("qty", values.qty);
                     formData.append("product_id", values.product_id)
-                    httpRequest.post('/api/add-cart', formData).then((response) => {
+                    httpRequest.post('/api/carts/add-cart', formData).then((response) => {
                         this.info = response;
                         Toast.fire({
                             icon: 'success',
                             title: 'Add Cart Success'
                         });
                         this.form.resetFields();
+                        EventBus.$emit('update-cart');
                     })
                 }).catch(function (error) {
                     Toast.fire({

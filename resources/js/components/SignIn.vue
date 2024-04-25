@@ -203,16 +203,13 @@ export default {
     },
     created() {
         const token = new URLSearchParams(window.location.search).get('token');
-        console.log('token', token)
         if (token && !this.$store.state.userInfo) {
-            console.log('token_login', token)
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
             setAccessToken(token)
             if (isAuthenticated()) {
                 this.$router.push({ name: 'Home' })
                 httpRequest.get('/api/admin/users/currentUser')
                     .then(response => {
-                        console.log('data', response.data.data);
                         if (response.data.data) {
                             setUserInfo(JSON.stringify(response.data.data));
                         }

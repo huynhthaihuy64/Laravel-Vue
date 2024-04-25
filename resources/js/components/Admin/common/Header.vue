@@ -129,13 +129,14 @@ import IconLogo from "../../icon/icon-logo.vue";
 import { revokeUser, isAuthenticated } from "../../../auth"
 import httpRequest from '../../../axios'
 import { onMounted, reactive, ref } from "vue";
+import { EventBus } from '../../../eventBus';
 export default {
   components: { IconProfile, IconLogout, IconLogo },
   props: {
     isActive: {
       type: Boolean,
       default: false
-    }
+    },
   },
   setup() {
     const user = reactive({ 
@@ -168,9 +169,16 @@ export default {
           console.error('Error fetching carts:', error);
         }
       }
+
+      async function updateCart() {
+        EventBus.$on('update-cart', () => {
+          countCart()
+        });
+      }
       onMounted(() => {
         getUser();
         countCart();
+        updateCart();
       });
     }
     return { user, countCarts }

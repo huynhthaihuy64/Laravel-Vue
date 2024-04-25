@@ -29,10 +29,6 @@ class ProductAdminService
         $this->menu = $menu;
         $this->product = $product;
     }
-    public function getMenu()
-    {
-        return $this->menu->where('active', 1)->get();
-    }
 
     protected function isValidPrice($request)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
@@ -24,7 +25,7 @@ class Authenticate extends Middleware
     {
         //Check if login by account google or facebook ignore cookie
         if ($request->hasCookie(env('AUTH_COOKIE_NAME') ?? 'login') &&
-             !(auth()->user()->provider)) {
+             !(Auth::user()->provider)) {
             $request->headers->set('Authorization', 'Bearer ' . $request->cookie(env('AUTH_COOKIE_NAME') ?? 'login'));
         }
         $this->authenticate($request, $guards);

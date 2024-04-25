@@ -30,14 +30,6 @@ class ProductService
             ->paginate(4);
     }
 
-    public function getByMenu($id)
-    {
-        if($id == 0){
-            return $this->product->orderBy('created_at', 'desc')->paginate(4);
-        }
-        return $this->product->where('menu_id', $id)->orderBy('created_at', 'desc')->paginate(4);
-    }
-
     public function getAll()
     {
         return $this->product->all();

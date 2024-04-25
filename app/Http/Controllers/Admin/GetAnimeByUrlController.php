@@ -17,7 +17,10 @@ class GetAnimeByUrlController extends Controller
     }
     public function getAnimeByUrl(Request $request)
     {
-        return $this->uploadService->getAnimeByUrl($request->only('url'));
+        $endPoint = "https://api.trace.moe/search?url=" . $request->url;
+        $response = HTTP::get($endPoint);
+        $anilistId = array_column(($response->json()['result']), 'anilist');
+        return response()->json(['data' => $this->uploadService->getAnimeBy($anilistId)]);
     }
 
     public function getAnimeByImage(Request $request)
@@ -31,10 +34,11 @@ class GetAnimeByUrlController extends Controller
                 'image',
                 file_get_contents($tempImagePath),
                 $image->getClientOriginalName()
-            )->post('https://api.trace.moe/search?cutBorders');
+            )->post('https://api.trace.moe/search?cutBorders&');
+            $anilistId = array_column(($response->json()['result']), 'anilist');
+            $data = $this->uploadService->getAnimeBy($anilistId);
             unlink($tempImagePath);
-
-            return response()->json(['data' => $response->json()]);
+            return response()->json(['data' => $data]);
         } else {
             return response()->json(['error' => 'No image provided'], 400);
         }

@@ -42,6 +42,11 @@ class CartController extends Controller
         return $this->cartService->destroy($id);
     }
 
+    public function removeAll()
+    {
+        return $this->cartService->removeAll();
+    }
+
     public function addCart(Request $request)
     {
         return $this->cartService->store($request->all());

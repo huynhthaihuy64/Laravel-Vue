@@ -56,6 +56,7 @@
 <script>
 import httpRequest from '../axios'
 import { isAuthenticated } from "../auth"
+import { EventBus } from '../eventBus';
 export default {
     props: {
         isActive: {
@@ -66,9 +67,9 @@ export default {
     data() {
         return {
             carts: {},
-            totalPrice: 1,
-            tax: 1,
-            total_tax: 1,
+            totalPrice: 0,
+            tax: 0,
+            total_tax: 0,
             initialValue: {
                 user_currency: ''
             }
@@ -83,7 +84,7 @@ export default {
                 })
         },
         removeItem(rowId) {
-            httpRequest.get('/api/cart/remove/' + rowId)
+            httpRequest.get('/api/carts/remove/' + rowId)
                 .then(response => {
                     this.info = response
                     Toast.fire({
@@ -91,6 +92,7 @@ export default {
                         title: response.data.message
                     });
                     this.getCart();
+                    EventBus.$emit('update-cart');
                 }).catch(function (error) {
                     Toast.fire({
                         icon: 'error',
@@ -99,7 +101,7 @@ export default {
                 });
         },
         removeAll() {
-            httpRequest.delete('/api/cart/removeAll')
+            httpRequest.delete('/api/carts/removeAll')
                 .then(response => {
                     this.info = response
                     Toast.fire({
@@ -107,6 +109,7 @@ export default {
                         title: response.data.message
                     });
                     this.getCart();
+                    EventBus.$emit('update-cart');
                 }).catch(function (error) {
                     Toast.fire({
                         icon: 'error',

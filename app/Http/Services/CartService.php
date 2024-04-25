@@ -65,16 +65,21 @@ class CartService
             DB::beginTransaction();
             $checkCart = $this->cart->where('user_id', $user->id)->where('product_id', $product->id)->first();
             if ($checkCart) {
-                throw new Exception(__('messages.validation.cart.exists'));
+                $checkCart->update([
+                    'qty' => $checkCart->qty + $params['qty'],
+                    'total' => ($checkCart->qty + $params['qty']) * $checkCart->price
+                ]);
+                $cart = $checkCart;
+            } else {
+                $price = $product->price_sale < $product->price ? $product->price_sale : $product->price;
+                $cart = $this->cart->create([
+                    'user_id' => $user->id,
+                    'product_id' => $product->id,
+                    'qty' => $params['qty'],
+                    'price' => $price,
+                    'total' => $params['qty'] * $price
+                ]);
             }
-            $price = $product->price_sale < $product->price ? $product->price_sale : $product->price;
-            $cart = $this->cart->create([
-                'user_id' => $user->id,
-                'product_id' => $product->id,
-                'qty' => $params['qty'],
-                'price' => $price,
-                'total' => $params['qty'] * $price
-            ]);
             DB::commit();
             return $cart;
         } catch (\Exception $e) {
@@ -142,6 +147,23 @@ class CartService
             throw $e;
         }
     }
+
+    public function removeAll()
+    {
+        try {
+            DB::beginTransaction();
+            $carts = $this->cart->where('user_id', Auth::user()->id)->get();
+            if ($carts && count($carts) > 0) {
+                $carts->each->delete();
+            }
+            DB::commit();
+            return ['message' => __('messages.cart.delete.success')];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+    
     public function payment($data)
     {
         $amount = $this->cart->whereIn('id', array_column($data['carts'], 'id'))->select(DB::raw("CAST(SUM(total) AS UNSIGNED) as amount"))->value('amount');
