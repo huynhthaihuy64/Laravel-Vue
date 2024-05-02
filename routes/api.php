@@ -45,6 +45,8 @@ Route::get('/2fa/reset', [TwoFAController::class, 'resend'])->name('2fa.resend')
 Route::get('/redirect/{social}', [SocialAuthController::class, 'redirect'])->name('socialite.redirect');
 Route::get('/callback/{social}', [SocialAuthController::class, 'callback'])->name('socialite.callback');
 
+// Example Route middleware check role cho reporter
+// Route::group(['middleware' => ['auth:api', 'role:reporter']], function () {});
 Route::post('/admin/users/login/store', [LoginController::class, 'login']);
 Route::post('/admin/users/register/store', [LoginController::class, 'register']);
 Route::group(['middleware' => ['auth:api']], function () {
