@@ -24,7 +24,6 @@ class ProductController extends Controller
         $paginate = $request->limit ?? 5;
         $data = $this->productService->get($request->toArray(),$paginate);
         $listProducts = ProductResource::collection($data);
-        Log::channel('history')->info('Người dùng ' . Auth::user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($data) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . Auth::user()->name);
         return $listProducts;
     }
 

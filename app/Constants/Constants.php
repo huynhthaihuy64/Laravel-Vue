@@ -63,4 +63,10 @@ class Constants
     ];
 
     public const CONTENT_ERROR = 'Nội dung lỗi';
+
+    public const QUERY_WHERE = 'queries';
+    public const QUERY_WHERE_IN = 'in_queries';
+    public const QUERY_WHERE_NOT_IN = 'not_in_queries';
+    public const QUERY_WHERE_BETWEEN = 'between_queries';
+    public const QUERY_WHERE_DATE = 'date_queries';
 }

@@ -38,7 +38,7 @@ class SocialAuthController extends Controller
             'expires_in' => Carbon::parse($tokenInfo->expires_at)->toDateTimeString(),
             'user' => new UserResource($user),
         ];
-        return redirect()->to(env('APP_URL') . '/signIn?token=' . $data['access_token']);
+        return redirect()->to(env('APP_URL') . '/signIn?token=' . $data['access_token'] . '&expires_in=' . $data['expires_in']);
         // return redirect(env('APP_URL') . '/login/callback');
         // return response($script);
     }

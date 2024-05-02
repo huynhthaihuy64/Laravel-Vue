@@ -31,10 +31,10 @@
               </div>
             </div>
           </li>
-          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user">
+          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user.id">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
           </li>
-          <li class="nav-item ml-5" v-if="user">
+          <li class="nav-item ml-5" v-if="user.id">
             <a-space>
               <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
                 <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
@@ -84,7 +84,7 @@
             <div class="name mt-3 ml-2">{{ user.name || 'Guess' }}</div>
           </div>
           <template #overlay>
-            <a-menu v-if="user">
+            <a-menu v-if="user.id">
               <a-menu-item class="menu-item ml-1">
                 <router-link :to="{ name: 'profile' }">
                   <IconProfile />{{ $store.getters.localizedStrings.profile.title }}

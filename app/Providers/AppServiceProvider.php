@@ -134,13 +134,24 @@ class AppServiceProvider extends ServiceProvider
     protected function logResponse(RequestHandled $event, string $uuid): void
     {
         $response = $event->response;
-        if ($response instanceof JsonResponse && $response->getStatusCode() !== Response::HTTP_OK) {
+        $statusCode = $response->getStatusCode();
+        if ($statusCode >= 500) {
+            Log::error(
+                'INTERNAL_SERVER_ERROR',
+                [
+                    'uuid' => $uuid,
+                    'headers' => $response->headers->all(),
+                    'status' => $statusCode,
+                    'data' => $response->getContent(),
+                ],
+            );
+        } elseif ($response instanceof JsonResponse && $statusCode !== Response::HTTP_OK) {
             Log::info(
                 'RESPONSE',
                 [
                     'uuid' => $uuid,
                     'headers' => $response->headers->all(),
-                    'status' => $response->status(),
+                    'status' => $statusCode,
                     'data' => $response->getData(),
                 ],
             );

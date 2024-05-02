@@ -179,6 +179,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         BotMan\Tinker\TinkerServiceProvider::class,
+        /* 
+        *   Example custom Provider for Repository
+        */
+        // App\Providers\RepositoryServiceProvider::class,
 
     ],
 

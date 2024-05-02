@@ -129,7 +129,7 @@ export default {
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
                         if (response.data.data.user) {
                             setUserInfo(JSON.stringify(response.data.data.user))
-                            setAccessToken(response.data.data.access_token)
+                            setAccessToken(response.data.data.access_token, response.data.data.expires_in)
                             Toast.fire({
                                 icon: 'success',
                                 title: '' + this.$store.getters.localizedStrings.login_success
@@ -203,9 +203,10 @@ export default {
     },
     created() {
         const token = new URLSearchParams(window.location.search).get('token');
+        const expires_in = new URLSearchParams(window.location.search).get('expires_in');
         if (token && !this.$store.state.userInfo) {
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-            setAccessToken(token)
+            setAccessToken(token, expires_in)
             if (isAuthenticated()) {
                 this.$router.push({ name: 'Home' })
                 httpRequest.get('/api/admin/users/currentUser')
