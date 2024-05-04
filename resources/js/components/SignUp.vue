@@ -321,4 +321,9 @@ button {
 .form-item {
   height: 40px;
 }
+
+.ant-input {
+  color: #000;
+  /* Màu chữ đen */
+}
 </style>

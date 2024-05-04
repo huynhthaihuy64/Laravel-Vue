@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('/', [CartController::class, 'update'])->name('cart.update');
         Route::post('payment', [CartController::class, 'payment'])->name('cart.payment');
         Route::get('remove/{id}', [CartController::class, 'remove'])->name('cart.delete');
-        Route::delete('removeAll', [CartController::class, 'removeAll'])->name('cart.delete');
+        Route::delete('removeAll', [CartController::class, 'removeAll'])->name('cart.deleteAll');
     });
     Route::get('list-friend', [ChatController::class, 'index'])->name('chat.listFriend');
     Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');

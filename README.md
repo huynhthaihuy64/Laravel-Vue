@@ -132,3 +132,12 @@ A `reports` directory has been created for code coverage report. Open the dashbo
 ## License
 
 [MIT license](https://opensource.org/licenses/MIT).
+
+
+### install git hook: pre commit
+- before all, we need ``composer install``
+- after that copy ``git-hooks/pre-commit`` file to ``.git/hooks/pre-commit`` by command: ``cp git-hooks/pre-commit .git/hooks/pre-commit``
+- set permission: ``chmod +x .git/hooks/pre-commit``
+- if commit have errors, message like this:
+  0 file committed, 1 file failed to commit: tesst Checking PHP Lint... No syntax errors detected in D:\CODE\kpi-service/app/Http/Controllers/Controller.php Running Code Sniffer. Code standard PSR12. [32mE[0m 1 / 1 (100%) [1mFILE: D:\CODE\kpi-service\app\Http\Controllers\Controller.php[0m ---------------------------------------------------------------------- [1mFOUND 2 ERRORS AFFECTING 2 LINES[0m ---------------------------------------------------------------------- 1 | [31mERROR[0m | [x] End of line character is invalid; expected "\n" but | | found "\r\n" 12 | [31mERROR[0m | [x] Each imported trait must have its own "use" import | | statement ---------------------------------------------------------------------- [1mPHPCBF CAN FIX THE 2 MARKED SNIFF VIOLATIONS AUTOMATICALLY[0m ---------------------------------------------------------------------- Time: 509ms; Memory: 8MB Fix the error before commit! Run ./vendor/bin/phpcbf --standard=PSR12 D:\CODE\kpi-service/app/Http/Controllers/Controller.php for automatic fix or fix it manually.
+- please run command like: ``./vendor/bin/phpcbf --standard=PSR12 D:\CODE\kpi-service/app/Http/Controllers/Controller.php`` to fix it.

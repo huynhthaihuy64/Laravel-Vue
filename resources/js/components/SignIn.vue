@@ -62,9 +62,12 @@
             <div>
                 <a-button type="primary" @click="showModal">Login With Social</a-button>
                 <a-modal title="Login with Social" :visible="visible" @cancel="handleCancel" :footer="null">
-                    <a-button class="social-text" type="primary" @click="loginWithFacebook" icon="facebook">Login with Facebook</a-button>
-                    <a-button class="social-text" type="primary" @click="loginWithGoogle" icon="google">Login with Google</a-button>
-                    <a-button class="social-text" type="primary" @click="loginWithSlack" icon="slack">Login with Slack</a-button>
+                    <a-button class="social-text" type="primary" @click="loginWithFacebook" icon="facebook">Login with
+                        Facebook</a-button>
+                    <a-button class="social-text" type="primary" @click="loginWithGoogle" icon="google">Login with
+                        Google</a-button>
+                    <a-button class="social-text" type="primary" @click="loginWithSlack" icon="slack">Login with
+                        Slack</a-button>
                 </a-modal>
             </div>
         </a-form>
@@ -300,6 +303,11 @@ form * {
     letter-spacing: 0.5px;
     outline: none;
     border: none;
+    z-index: 1;
+}
+
+form input {
+    box-shadow: none;
 }
 
 form h3 {
@@ -364,5 +372,10 @@ button {
 
 .form-item {
     height: 40px;
+}
+
+.ant-input {
+    color: #000;
+    /* Màu chữ đen */
 }
 </style>
