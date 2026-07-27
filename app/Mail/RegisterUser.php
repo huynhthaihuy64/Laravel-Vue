@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -30,7 +29,7 @@ class RegisterUser extends Mailable
      */
     public function build()
     {
-        $this->subject('Mail from Huỳnh Thái Huy')
+        $this->subject('Mail from' . env('MAIL_NAME_FROM', 'Admin'))
             ->view('email-register', [
                 'detail' => $this->details
             ]);

@@ -17,29 +17,55 @@
                 <div class="col-md-6 col-lg-7 p-b-30">
                     <div class="p-l-25 p-r-30 p-lr-0-lg">
                         <div class="wrap-slick3 flex-sb flex-w">
-                            <div class="wrap-slick3-dots">
-                                <ul class="slick3-dots" style="" role="tablist">
-                                    <li class="slick-active" role="presentation">
-                                        <img :src="initialValue.edit_img" class="image-contain">
-                                        <div class="slick3-dot-overlay"></div>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted">
+                            <a-tabs v-if="initialValue.images.length > 0" tab-position="left"
+                                :style="{ height: '600px' }" class="w-100">
+                                <a-tab-pane v-for="(item, index) in initialValue.images" :key="index">
+                                    <template slot="tab">
+                                        <img :class="{ 'active': index === 0 }" :src="item.url"
+                                            :alt="'Tab ' + (index + 1)" style="width: 200px" />
+                                    </template>
+                                    <div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane"
+                                        :class="{ 'active show': index === 0 }">
+                                        <div class="slick-list draggable">
+                                            <div class="slick-track" style="opacity: 1; width: 400px;">
+                                                <div class="slick-track" style="opacity: 1; width: 400px;">
+                                                    <div class="item-slick3 slick-slide slick-current slick-active"
+                                                        data-slick-index="0" aria-hidden="false"
+                                                        style="width: 400px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
+                                                        tabindex="0" role="tabpanel" id="slick-slide10"
+                                                        aria-describedby="slick-slide-control10">
+                                                        <div class="wrap-pic-w pos-relative w-100">
+                                                            <img :src="item.url" class="image-contain" alt="IMG-PRODUCT"
+                                                                height="400px">
+                                                        </div>
+                                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 ml-5"
+                                                            :href="item.url" tabindex="0">
+                                                            <i class="fa fa-expand"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a-tab-pane>
+                            </a-tabs>
+                            <div v-if="initialValue.images.length === 0"
+                                class="slick3 gallery-lb slick-initialized slick-slider slick-dotted tab-pane"
+                                :class="{ 'active show': index === 0 }" id="pic-1">
                                 <div class="slick-list draggable">
-                                    <div class="slick-track" style="opacity: 1; width: 1539px;">
-                                        <div class="item-slick3 slick-slide slick-current slick-active"
-                                            data-thumb="images/product-detail-01.jpg" data-slick-index="0"
-                                            aria-hidden="false"
-                                            style="width: 513px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
-                                            tabindex="0" role="tabpanel" id="slick-slide10"
-                                            aria-describedby="slick-slide-control10">
-                                            <div class="wrap-pic-w pos-relative">
-                                                <img :src="initialValue.edit_img" class="image-contain" alt="IMG-PRODUCT"
-                                                    height="300px">
-
-                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                                    <div class="slick-track" style="opacity: 1; width: 400px;">
+                                        <div class="slick-track" style="opacity: 1; width: 400px;">
+                                            <div class="item-slick3 slick-slide slick-current slick-active"
+                                                data-thumb="images/product-detail-01.jpg" data-slick-index="0"
+                                                aria-hidden="false"
+                                                style="width: 400px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;"
+                                                tabindex="0" role="tabpanel" id="slick-slide10"
+                                                aria-describedby="slick-slide-control10">
+                                                <div class="wrap-pic-w pos-relative w-100">
+                                                    <img :src="initialValue.edit_img" class="image-contain"
+                                                        alt="IMG-PRODUCT" height="400px">
+                                                </div>
+                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 ml-5"
                                                     :href="initialValue.edit_img" tabindex="0">
                                                     <i class="fa fa-expand"></i>
                                                 </a>
@@ -58,64 +84,79 @@
                             {{ initialValue.edit_name }}
                         </h4>
 
-                        <span class="mtext-106 cl2">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">inventory:
+                            {{initialValue.edit_inventory_number}}</h4>
+
+                        <span class="mtext-106 cl2" v-if="!initialValue.edit_price_currency">
                             {{ initialValue.edit_price_sale < initialValue.edit_price ? initialValue.edit_price_sale :
-                                initialValue.edit_price | formatNumber }} </span>
+                                initialValue.edit_price | formatNumber }} {{ user_currency }}</span>
+                                <span class="mtext-106 cl2" v-if="initialValue.edit_price_currency">
+                                    {{ initialValue.edit_price_sale_currency < initialValue.edit_price_currency ?
+                                        initialValue.edit_price_sale_currency : initialValue.edit_price_currency |
+                                        formatNumber }} {{ user_currency }} </span>
+                                        <p class="stext-102 cl3 p-t-23">
+                                            {{ initialValue.edit_description | truncate(30, '...') }}
+                                        </p>
 
-                                <p class="stext-102 cl3 p-t-23">
-                                    {{ initialValue.edit_description | truncate(30, '...') }}
-                                </p>
-
-                                <!--  -->
-                                <div class="p-t-33">
-                                    <div class="flex-w flex-r-m p-b-10">
-                                        <div class="size-204 flex-w flex-m respon6-next">
-                                            <a-form :form="form" id="form-container" @submit="addToCart">
-                                                <!-- @if ($product->price !== NULL) -->
-                                                <a-form-item class="form-item">
-                                                    <a-input v-decorator="['product_id', {
-                                                        initialValue: initialValue.edit_id,
-                                                    }]" type="hidden"/>
-                                                </a-form-item>
-                                                <a-form-item name="input-number" no-style>
-                                                    <a-input-number v-decorator="['qty',{
-                                                        initialValue: 1,
-                                                    }]" :min="1" :max="100" />
-                                                </a-form-item>
-                                                <a-button html-type="submit"
-                                                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
-                                                    {{ $store.getters.localizedStrings.product.detail.add_cart }}
-                                                </a-button>
-                                            </a-form>
+                                        <!--  -->
+                                        <div class="p-t-33">
+                                            <div class="flex-w flex-r-m p-b-10">
+                                                <div class="size-204 flex-w flex-m respon6-next">
+                                                    <a-form :form="form" id="form-container" @submit="addToCart">
+                                                        <!-- @if ($product->price !== NULL) -->
+                                                        <a-form-item class="form-item">
+                                                            <a-input v-decorator="['product_id', {
+                                                                initialValue: initialValue.edit_id,
+                                                            }]" type="hidden" />
+                                                        </a-form-item>
+                                                        <a-form-item name="input-number" no-style>
+                                                            <a-input-number v-decorator="['qty', { initialValue: 1 }]"
+                                                                :min="1" :max="initialValue.edit_inventory_number" />
+                                                        </a-form-item>
+                                                        <a-button v-if="isLogin" html-type="submit"
+                                                            class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
+                                                            {{ $store.getters.localizedStrings.product.detail.add_cart
+                                                            }}
+                                                        </a-button>
+                                                        <a-button v-else html-type="submit"
+                                                            class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 "
+                                                            disabled>
+                                                            {{ $store.getters.localizedStrings.product.detail.add_cart
+                                                            }}
+                                                        </a-button>
+                                                    </a-form>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!--  -->
-                                <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                                    <div class="flex-m bor9 p-r-10 m-r-11">
-                                        <a href="#"
-                                            class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                            data-tooltip="Add to Wishlist">
-                                            <i class="zmdi zmdi-favorite"></i>
-                                        </a>
-                                    </div>
+                                        <!--  -->
+                                        <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+                                            <div class="flex-m bor9 p-r-10 m-r-11">
+                                                <a href="#"
+                                                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
+                                                    data-tooltip="Add to Wishlist">
+                                                    <i class="zmdi zmdi-favorite"></i>
+                                                </a>
+                                            </div>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Facebook">
-                                        <i class="fab fa-1x fa-facebook"></i>
-                                    </a>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Facebook">
+                                                <i class="fab fa-1x fa-facebook"></i>
+                                            </a>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Instagram">
-                                        <i class="fab fa-1x fa-instagram-square"></i>
-                                    </a>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Instagram">
+                                                <i class="fab fa-1x fa-instagram-square"></i>
+                                            </a>
 
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                        data-tooltip="Tik Tok">
-                                        <i class="fab fa-1x fa-tiktok"></i>
-                                    </a>
-                                </div>
+                                            <a href="#"
+                                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                                data-tooltip="Tik Tok">
+                                                <i class="fab fa-1x fa-tiktok"></i>
+                                            </a>
+                                        </div>
                     </div>
                 </div>
             </div>
@@ -162,7 +203,8 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price }}
+                                            {{ initialValue.edit_price_currency ? initialValue.edit_price_currency :
+                                            initialValue.edit_price | formatNumber }} {{ user_currency }}
                                         </span>
                                     </li>
 
@@ -172,7 +214,9 @@
                                         </span>
 
                                         <span class="stext-102 cl6 size-206">
-                                            {{ initialValue.edit_price_sale }}
+                                            {{ initialValue.edit_price_sale_currency ?
+                                            initialValue.edit_price_sale_currency : initialValue.edit_price_sale |
+                                            formatNumber }} {{ user_currency }}
                                         </span>
                                     </li>
 
@@ -226,7 +270,8 @@
                                             style="margin-left:40px;">
                                             <div v-if="item.parent_id == 0">
                                                 <div class="col-12">
-                                                    <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
+                                                    <img :src="item.user.avatar" height="50px" width="50px"
+                                                        class="image-contain">
                                                     <strong class="ml-2">
                                                         {{ item.user.name }}:
                                                     </strong>
@@ -237,7 +282,8 @@
                                                 <p class="mt-2 ml-5">
                                                     {{ item.body }}
                                                 </p>
-                                                <a-form :form="form" @submit.prevent="createComment($event, item.id)">
+                                                <a-form :form="form" @submit.prevent="createComment($event, item.id)"
+                                                    v-if="isLogin">
                                                     <a-form-item hidden>
                                                         <a-input v-decorator="[
                                                             'product_id', {
@@ -249,7 +295,8 @@
                                                         <a-input v-decorator="['body']"
                                                             placeholder="Write Something..."></a-input>
                                                     </a-form-item>
-                                                    <a-button type="primary" html-type="submit" class="login-form-button">
+                                                    <a-button type="primary" html-type="submit"
+                                                        class="login-form-button">
                                                         {{ $store.getters.localizedStrings.comment.reply }}
                                                     </a-button>
                                                 </a-form>
@@ -258,7 +305,8 @@
                                                         style="margin-left:40px;">
                                                         <div v-if="item.parent_id != 0">
                                                             <div class="col-12">
-                                                                <img :src="item.user.avatar" height="50px" width="50px" class="image-contain">
+                                                                <img :src="item.user.avatar" height="50px" width="50px"
+                                                                    class="image-contain">
                                                                 <strong class="ml-2">
                                                                     {{ item.user.name }}:
                                                                 </strong>
@@ -276,16 +324,18 @@
                                         </div>
                                     </div>
                                     <h4>{{ $store.getters.localizedStrings.comment.add_comment }}</h4>
-                                    <a-form>
+                                    <a-form v-if="isLogin">
                                         <a-form-item v-model="form2.product_id">
                                             <a-input :value="initialValue.edit_id" type="hidden">
                                             </a-input>
                                         </a-form-item>
 
                                         <a-form-item class="form-item">
-                                            <a-textarea v-model="form2.body" placeholder="Write Something..."></a-textarea>
+                                            <a-textarea v-model="form2.body"
+                                                placeholder="Write Something..."></a-textarea>
                                         </a-form-item>
-                                        <a-button type="primary" @click.prevent="createComment" class="login-form-button">
+                                        <a-button type="primary" @click.prevent="createComment"
+                                            class="login-form-button">
                                             {{ $store.getters.localizedStrings.comment.add_comment }}
                                         </a-button>
                                     </a-form>
@@ -332,11 +382,17 @@
                                         </a>
 
                                         <span class="stext-105 cl3">
-                                            <div v-if="product.price_sale != 0">
-                                                <p>{{ product.price_sale | formatNumber }}</p>
+                                            <div v-if="!product.price_currency">
+                                                <p>
+                                                    {{ product.price_sale < product.price ? product.price_sale :
+                                                        product.price | formatNumber }} {{ user_currency
+                                                        }}</p>
                                             </div>
-                                            <div v-if="product.price_sale == 0 || product.price_sale == null">
-                                                <p>{{ product.price | formatNumber }}</p>
+                                            <div v-if="product.price_currency">
+                                                <p>
+                                                    {{ product.price_sale_currency < product.price_currency ?
+                                                        product.price_sale_currency : product.price_currency |
+                                                        formatNumber }} {{ user_currency }} </p>
                                             </div>
                                         </span>
                                     </div>
@@ -363,6 +419,9 @@
 </template>
 <script>
 import httpRequest from '../axios'
+import { isAuthenticated } from "../auth"
+import { ref, onMounted } from "vue";
+import { EventBus } from '../eventBus';
 export default {
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'comment_form' })
@@ -372,6 +431,25 @@ export default {
             return text.substring(0, length) + suffix;
         },
     },
+    setup() {
+        let isLogin = false;
+        let user_currency = ref('');
+        if (isAuthenticated()) {
+            async function getUser() {
+                httpRequest
+                    .get('/api/admin/users/currentUser')
+                    .then((response) => {
+                        user_currency = response.data.data.currency;
+                    })
+            }
+            onMounted(getUser);
+            isLogin = true;
+        }
+        return {
+            isLogin,
+            user_currency,
+        }
+    },
     data() {
         return {
             products: {},
@@ -379,6 +457,7 @@ export default {
             CountData: 10,
             pageSize: 10,
             lastPage: '',
+            index: 0,
             totalPage: 2,
             page: 1,
             row: 10,
@@ -394,14 +473,18 @@ export default {
                 edit_price_sale: 30,
                 edit_img: [],
                 menus: [],
+                images: [],
                 menuName: '',
                 edit_active: 1,
                 edit_id: 1,
                 content: '',
+                edit_price_sale_currency: 20,
+                edit_price_currency: 10,
+                edit_inventory_number: 0,
             },
             form2: {
                 body: '',
-            },
+            }
         }
     },
     methods: {
@@ -415,14 +498,24 @@ export default {
                             this.initialValue.edit_description = data.data.description,
                             this.initialValue.edit_price = data.data.price,
                             this.initialValue.edit_price_sale = data.data.price_sale,
+                            this.initialValue.edit_price_currency = data.data.price_currency,
+                            this.initialValue.edit_price_sale_currency = data.data.price_sale_currency,
                             this.initialValue.content = data.data.content,
                             this.initialValue.edit_img = data.data.file,
                             this.initialValue.edit_active = data.data.active,
                             this.initialValue.edit_id = data.data.id,
                             this.initialValue.menuName = data.data.menuName,
+                            this.initialValue.edit_inventory_number = data.data.inventory_number,
                             this.initialValue.menus = data.data.menus.map((item) => {
                                 return {
                                     id: item.id,
+                                };
+                            }),
+                            this.initialValue.images = data.data.images.map((item) => {
+                                return {
+                                    id: item.id,
+                                    name: item.name,
+                                    url: item.url
                                 };
                             })
                         )
@@ -436,7 +529,7 @@ export default {
                     return [...acc, item.id]
                 }, [])
                 httpRequest
-                    .get('/api/products/relative?limit=' + 3 + '&page=' + this.page, {
+                    .get('/api/products/relative?limit=' + 3 + '&page=' + this.page + '&product_id=' + this.$route.params.id, {
                         params: {
                             ids: MenuIds
                         }
@@ -444,8 +537,8 @@ export default {
                     .then(
                         ({ data }) => (
                             (this.products = data.data),
-                            (this.totalPage = data.total),
-                            (this.lastPage = data.last_page),
+                            (this.totalPage = data.meta.total),
+                            (this.lastPage = data.meta.last_page),
                             (this.checkPage()),
                             (this.checkRow())
                         )
@@ -457,15 +550,6 @@ export default {
         goToDetail(id) {
             this.$router.push({ name: "productDetail", params: { id: id } });
             this.$router.go();
-        },
-        getUser() {
-            httpRequest
-                .get('/api/admin/users/currentUser')
-                .then((response) => {
-                    this.initialValue.user_name = response.data.name;
-                    this.initialValue.user_id = response.data.id;
-                    this.initialValue.user_avatar = response.data.avatar;
-                })
         },
         getComment() {
             httpRequest
@@ -550,13 +634,14 @@ export default {
                     const formData = new FormData();
                     formData.append("qty", values.qty);
                     formData.append("product_id", values.product_id)
-                    httpRequest.post('/api/add-cart', formData).then((response) => {
-                        this.info = response
+                    httpRequest.post('/api/carts/add-cart', formData).then((response) => {
+                        this.info = response;
                         Toast.fire({
                             icon: 'success',
                             title: 'Add Cart Success'
                         });
                         this.form.resetFields();
+                        EventBus.$emit('update-cart');
                     })
                 }).catch(function (error) {
                     Toast.fire({
@@ -566,13 +651,9 @@ export default {
                 });
         }
     },
-    mounted() {
-        console.log('Component mounted.')
-    },
     created() {
         this.$Progress.start()
         this.getProductDetail(this.page)
-        this.getUser()
         this.getComment()
         this.$Progress.finish()
     },
@@ -607,6 +688,4 @@ export default {
     display: block;
     justify-content: center;
 }
-
-
 </style>

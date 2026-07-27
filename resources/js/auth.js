@@ -2,8 +2,13 @@ export const setUserInfo = (data) => {
     window.localStorage.setItem('userInfo', data)
 }
 
-export const setAccessToken = (token) => {
-    window.localStorage.setItem('token', token)
+export const setAccessToken = (token, expiresIn) => {
+    if (token && expiresIn) {
+        window.localStorage.setItem('access_token', token)
+        window.localStorage.setItem('expires_in', expiresIn)
+    } else {
+        console.error('Invalid token or expiresIn: ', token, expiresIn);
+    }
 }
 
 export const getUserInfo = () => {
@@ -11,13 +16,33 @@ export const getUserInfo = () => {
 }
 
 export const getAccessToken = () => {
-    const userInfo = getUserInfo()
-    return userInfo && window.localStorage.getItem('token')
+    // const userInfo = getUserInfo()
+    const token = window.localStorage.getItem('access_token');
+    const expiresIn = window.localStorage.getItem('expires_in');
+    if(!token || !expiresIn) {
+        return null
+    }
+    console.log("true", Date.now() > Date.parse(expiresIn));
+    console.log('expires', expiresIn)
+    if (Date.now() > Date.parse(expiresIn))
+    {
+        clearAccessToken();
+        return null;
+    }
+    console.log('otken', token)
+    return token;
 }
+
+export const clearAccessToken = () => {
+    window.localStorage.removeItem('access_token');
+    window.localStorage.removeItem('expires_in');
+    window.localStorage.removeItem('userInfo');
+};
 
 export const revokeUser = () => {
     window.localStorage.removeItem('userInfo')
-    window.localStorage.removeItem('token')
+    window.localStorage.removeItem('access_token');
+    window.localStorage.removeItem('expires_in');
 }
 
 export const noAuth = (context) => {
@@ -30,6 +55,7 @@ export const noAuth = (context) => {
 
 export const permissionHome = (context) => {
     const { next, isLoggedIn } = context
+    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn) {
         return next()
     }
@@ -37,9 +63,10 @@ export const permissionHome = (context) => {
 }
 
 export const isAuthenticated = () => {
-    const userInfo = getUserInfo()
+    // const userInfo = getUserInfo()
     const token = getAccessToken()
-    return !!userInfo && !!token
+    // return !!userInfo && !!token
+    return !!token
 }
 
 export function middlewarePipeline(context, middleware, index) {

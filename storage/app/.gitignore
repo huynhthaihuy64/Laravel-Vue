@@ -1,3 +1,7 @@
-*
-!public/
-!.gitignore
+public/export
+public/import
+public/uploads
+!public/Slider/*
+temp/*
+upload/*
+var/*

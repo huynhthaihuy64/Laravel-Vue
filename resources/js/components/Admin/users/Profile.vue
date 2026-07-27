@@ -1,38 +1,39 @@
 <template v-bind:class="{ 'dark': darkMode }">
   <section>
     <div class="wrapper">
-      <!-- Content Wrapper. Contains page content -->
       <div class="content-fluid" style="background-color: #f4f6f9; margin-left: 15px;">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="text-black">{{ $store.getters.localizedStrings.profile.title }}</h1>
+                <h1 class="text-black text-left">{{ $store.getters.localizedStrings.profile.title }}</h1>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><router-link to="/">{{ $store.getters.localizedStrings.shop }}</router-link>
+                  <li class="breadcrumb-item"><router-link to="/">{{ $store.getters.localizedStrings.shop
+                      }}</router-link>
                   </li>
                   <li class="breadcrumb-item active">{{ $store.getters.localizedStrings.profile.title }}</li>
                 </ol>
               </div>
             </div>
-          </div><!-- /.container-fluid -->
+          </div>
         </section>
 
-        <!-- Main content -->
         <section class="content">
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-3">
 
-                <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                   <div class="card-body box-profile">
                     <div class="text-center">
-                      <a :href="initialValue.edit_avatar" target="_blank"><img
-                          class="image-contain profile-user-img img-fluid img-circle" :src="`${initialValue.edit_avatar}`" /></a>
+                      <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img
+                          class="image-contain profile-user-img img-fluid img-circle"
+                          :src="`${initialValue.edit_avatar}`" /></a>
+                      <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img
+                          class="image-contain profile-user-img img-fluid img-circle"
+                          src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" /></a>
                     </div>
 
                     <h3 class="profile-username text-center">{{ initialValue.edit_name }}</h3>
@@ -55,24 +56,20 @@
                     </ul>
 
                     <a href="#" class="btn btn-primary btn-block"><b>{{
-                      $store.getters.localizedStrings.profile.activity.follow }}</b></a>
+                        $store.getters.localizedStrings.profile.activity.follow }}</b></a>
                   </div>
-                  <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
 
-                <!-- About Me Box -->
                 <div class="card card-primary">
                   <div class="card-header">
                     <h3 class="card-title">{{ $store.getters.localizedStrings.profile.activity.about }}</h3>
                   </div>
-                  <!-- /.card-header -->
                   <div class="card-body">
                     <strong><i class="fas fa-venus-mars mr-1"></i> {{
                       $store.getters.localizedStrings.profile.profile.gender.title }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_gender == 0 ? 'Male' : 'Female' }}
+                      {{ initialValue.edit_gender ?? '' }}
                     </p>
 
                     <hr>
@@ -80,7 +77,7 @@
                     <strong><i class="fas fa-map-marker-alt mr-1"></i> {{
                       $store.getters.localizedStrings.profile.profile.address }}</strong>
 
-                    <p class="text-muted">{{ initialValue.edit_address }}</p>
+                    <p class="text-muted">{{ initialValue.edit_address ?? '' }}</p>
 
                     <hr>
 
@@ -88,50 +85,47 @@
                       $store.getters.localizedStrings.profile.profile.birthday }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_birthday }}
+                      {{ initialValue.edit_birthday ?? ''}}
                     </p>
 
                     <hr>
 
                     <strong><i class="fas fa-mobile mr-1"></i> {{ $store.getters.localizedStrings.profile.profile.phone
-                    }}</strong>
+                      }}</strong>
 
                     <p class="text-muted">
-                      {{ initialValue.edit_phone }}
+                      {{ initialValue.edit_phone ?? ''}}
                     </p>
                   </div>
-                  <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
               </div>
-              <!-- /.col -->
               <div class="col-md-9">
                 <div class="card">
                   <div class="card-header p-2">
                     <ul class="nav nav-pills">
                       <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.activity.title }}</a></li>
+                          $store.getters.localizedStrings.profile.activity.title }}</a></li>
                       <li class="nav-item"><a class="nav-link" href="#profile" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.profile.title }}</a></li>
+                          $store.getters.localizedStrings.profile.profile.title }}</a></li>
                       <li class="nav-item"><a class="nav-link" href="#setting" data-toggle="tab">{{
-                        $store.getters.localizedStrings.profile.setting }}</a></li>
+                          $store.getters.localizedStrings.profile.setting }}</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#history" data-toggle="tab">{{
+                          $store.getters.localizedStrings.profile.history.title }}</a></li>
                     </ul>
-                  </div><!-- /.card-header -->
+                  </div>
                   <div class="card-body">
                     <div class="tab-content">
                       <div class="active tab-pane" id="activity">
-                        <!-- Post -->
                         <div class="post">
                           <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user1-128x128.jpg"
-                              alt="user image">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user1-128x128.jpg" alt="user image">
                             <span class="username">
                               <a href="#">Jonathan Burke Jr.</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
                             </span>
                             <span class="description">Shared publicly - 7:30 PM today</span>
                           </div>
-                          <!-- /.user-block -->
                           <p>
                             Lorem ipsum represents a long-held tradition for designers,
                             typographers and the like. Some people hate it and argue for
@@ -152,20 +146,17 @@
 
                           <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
                         </div>
-                        <!-- /.post -->
 
-                        <!-- Post -->
                         <div class="post clearfix">
                           <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user7-128x128.jpg"
-                              alt="User Image">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user7-128x128.jpg" alt="User Image">
                             <span class="username">
                               <a href="#">Sarah Ross</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
                             </span>
                             <span class="description">Sent you a message - 3 days ago</span>
                           </div>
-                          <!-- /.user-block -->
                           <p>
                             Lorem ipsum represents a long-held tradition for designers,
                             typographers and the like. Some people hate it and argue for
@@ -183,43 +174,69 @@
                             </div>
                           </form>
                         </div>
-                        <!-- /.post -->
 
-                        <!-- Post -->
                         <div class="post">
-                          <div class="user-block">
-                            <img class="image-contain img-circle img-bordered-sm" src="../../../../../public/dist/img/user6-128x128.jpg"
-                              alt="User Image">
+                          <div v-if="user" class="user-block">
+                            <img class="image-contain img-circle img-bordered-sm" :src="user.avatar" alt="User Image">
+                            <span class="username">
+                              <a href="#">{{user.name}}</a>
+                              <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
+                            </span>
+                            <span class="description">Posted {{ user.images.length }} photos - {{ user.modified_at
+                              }}</span>
+                          </div>
+                          <div v-if="!user" class="user-block">
+                            <img class="image-contain img-circle img-bordered-sm"
+                              src="../../../../../public/dist/img/user6-128x128.jpg" alt="User Image">
                             <span class="username">
                               <a href="#">Adam Jones</a>
                               <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
                             </span>
                             <span class="description">Posted 5 photos - 5 days ago</span>
                           </div>
-                          <!-- /.user-block -->
-                          <div class="row mb-3">
+                          <div v-if="!user" class="row mb-3">
                             <div class="col-sm-6">
-                              <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                              <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
+                                alt="Photo">
                             </div>
-                            <!-- /.col -->
                             <div class="col-sm-6">
                               <div class="row">
                                 <div class="col-sm-6">
-                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo2.png" alt="Photo">
-                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3"
+                                    src="../../../../../public/dist/img/photo2.png" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo3.jpg"
+                                    alt="Photo">
                                 </div>
-                                <!-- /.col -->
                                 <div class="col-sm-6">
-                                  <img class="image-contain img-fluid mb-3" src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
-                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png" alt="Photo">
+                                  <img class="image-contain img-fluid mb-3"
+                                    src="../../../../../public/dist/img/photo4.jpg" alt="Photo">
+                                  <img class="image-contain img-fluid" src="../../../../../public/dist/img/photo1.png"
+                                    alt="Photo">
                                 </div>
-                                <!-- /.col -->
                               </div>
-                              <!-- /.row -->
                             </div>
-                            <!-- /.col -->
                           </div>
-                          <!-- /.row -->
+
+                          <div v-if="user.images.length > 0 " class="row mb-3">
+                            <!-- Hiển thị ảnh đầu tiên -->
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-flex align-items-stretch">
+                              <img class="image-contain img-fluid" :src="user.images[0].path" alt="Photo">
+                            </div>
+                            <!-- Hiển thị các cặp ảnh tiếp theo -->
+                            <div v-if="user.images.length > 1"
+                              class="col-xs-12 col-sm-6 col-md-6 col-lg-6 d-flex flex-column">
+                              <div v-for="(pair, index) in imagePairs" :key="'pair-' + index" class="row flex-grow-1">
+                                <div v-if="pair[0]" class="col-6">
+                                  <img class="image-contain img-fluid mb-3" :src="pair[0].path"
+                                    :alt="'Photo ' + (2 * index + 1)">
+                                </div>
+                                <div v-if="pair[1]" class="col-6">
+                                  <img class="image-contain img-fluid mb-3" :src="pair[1].path"
+                                    :alt="'Photo ' + (2 * index + 2)">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
                           <p>
                             <a href="#" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i> Share</a>
@@ -233,7 +250,6 @@
 
                           <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
                         </div>
-                        <!-- /.post -->
                       </div>
 
                       <div class="tab-pane" id="profile">
@@ -262,7 +278,7 @@
                                   'department',
                                   {
                                     initialValue: initialValue.edit_department,
-                                    rules: [{ required: true, message: 'Please input your name!' }],
+                                    rules: [{ required: true, message: 'Please input your department!' }],
                                   },
                                 ]" />
                               </a-form-item>
@@ -271,7 +287,7 @@
                                   'address',
                                   {
                                     initialValue: initialValue.edit_address,
-                                    rules: [{ required: true, message: 'Please input your name!' }],
+                                    rules: [{ required: true, message: 'Please input your address!' }],
                                   },
                                 ]" />
                               </a-form-item>
@@ -326,11 +342,16 @@
                             <a-upload name="avatar" v-decorator="['avatar']" :headers="headers"
                               :supportServerRender="false" :beforeUpload="beforeUpload"
                               action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
-                              <a-button> <a-icon
-                                  type="upload" />{{ $store.getters.localizedStrings.profile.profile.upload }}</a-button>
+                              <a-button> <a-icon type="upload" />{{
+                                $store.getters.localizedStrings.profile.profile.upload }}</a-button>
                             </a-upload>
-                            <a :href="initialValue.edit_avatar" target="_blank"><img class="image-contain fileUpdate"
-                                :src="`${initialValue.edit_avatar}`" height="100px" /></a>
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="initialValue.edit_avatar"><img
+                                class="ml-2 image-contain fileUpdate" :src="`${initialValue.edit_avatar}`"
+                                height="100px" /></a>
+                            <a :href="initialValue.edit_avatar" target="_blank" v-if="!initialValue.edit_avatar"><img
+                                class="image-contain fileUpdate"
+                                src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg"
+                                height="100px" /></a>
                           </a-form-item>
                           <a-form-item :label="$store.getters.localizedStrings.profile.profile.gender.album">
                             <a-upload v-decorator="['images']" name="images" :multiple="true"
@@ -383,46 +404,66 @@
                           </div>
                         </div>
                       </div>
-                      <!-- /.tab-pane -->
+                      <div class="tab-pane" id="history">
+                        <History />
+                      </div>
                     </div>
-                    <!-- /.tab-content -->
-                  </div><!-- /.card-body -->
+                  </div>
                 </div>
-                <!-- /.card -->
               </div>
-              <!-- /.col -->
             </div>
-            <!-- /.row -->
-          </div><!-- /.container-fluid -->
+          </div>
         </section>
-        <!-- /.content -->
       </div>
-      <!-- /.content-wrapper -->
-      <!-- Control Sidebar -->
       <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
       </aside>
-      <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
   </section>
-  <!-- jQuery -->
 </template>
 
 <script>
 import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
-import { reactive, computed, ref } from "vue";
+import { ref } from "vue";
 import httpRequest from '../../../axios'
+import { getUserInfo } from '../../../auth'
+import History from './History.vue'
 
 const isDark = ref();
 isDark.value = localStorage.getItem("darkMode") == "true";
 export default {
-  components: { IconDelete, IconEdit },
+  components: { IconDelete, IconEdit, History },
+  setup() {
+    const user = ref(JSON.parse(getUserInfo()));
+
+    return {
+      user
+    };
+  },
   computed: {
     currentLocale() {
       return this.$store.state.currentLocale;
     },
+    imagePairs() {
+      let pairs = [];
+      const images = this.user.images;
+      // Kiểm tra nếu chỉ có một hình ảnh hoặc không có ảnh nào
+      if (images.length <= 1) {
+        return pairs;
+      }
+
+      // Bỏ qua ảnh đầu tiên và bắt đầu từ ảnh thứ hai
+      for (let i = 1; i < images.length; i += 2) {
+        // Kiểm tra xem có ảnh kế tiếp hay không
+        if (i + 1 < images.length) {
+          pairs.push([images[i], images[i + 1]]);
+        } else {
+          // Trường hợp ảnh cuối cùng không có cặp
+          pairs.push([images[i]]);
+        }
+      }
+      return pairs;
+    }
   },
   data() {
     return {
@@ -478,17 +519,17 @@ export default {
       httpRequest
         .get('/api/admin/users/currentUser')
         .then((response) => {
-          this.initialValue.edit_name = response.data.name;
-          this.initialValue.edit_email = response.data.email;
-          this.initialValue.edit_password = response.data.password;
-          this.initialValue.edit_phone = response.data.phone;
-          this.initialValue.edit_department = response.data.department;
-          this.initialValue.edit_gender = response.data.gender;
-          this.initialValue.edit_birthday = response.data.birthday;
-          this.initialValue.edit_address = response.data.address;
-          this.initialValue.edit_id = response.data.id;
-          this.initialValue.edit_avatar = response.data.avatar;
-          response.data.images.map((item, index) => {
+          this.initialValue.edit_name = response.data.data.name;
+          this.initialValue.edit_email = response.data.data.email;
+          this.initialValue.edit_password = response.data.data.password;
+          this.initialValue.edit_phone = response.data.data.phone;
+          this.initialValue.edit_department = response.data.data.department;
+          this.initialValue.edit_gender = response.data.data.gender;
+          this.initialValue.edit_birthday = response.data.data.birthday;
+          this.initialValue.edit_address = response.data.data.address;
+          this.initialValue.edit_id = response.data.data.id;
+          this.initialValue.edit_avatar = response.data.data.avatar;
+          response.data.data.images.map((item, index) => {
             const file = {
               name: item.name,
               uid: item.id,
@@ -569,7 +610,6 @@ export default {
     },
   },
   mounted() {
-    console.log('Component mounted.')
     this.getUser()
   },
   created() {

@@ -8,6 +8,7 @@ services:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.2/app
         restart: unless-stopped
+        container_name: shop-php
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -25,6 +26,7 @@ services:
             - sail
         depends_on:
             - mysql
+            - redis
     mysql:
         image: 'mysql/mysql-server:8.0'
         restart: unless-stopped
@@ -52,14 +54,45 @@ services:
             timeout: 5s
     mailpit:
         image: 'axllent/mailpit:latest'
+        environment:
+            MP_UI_AUTH_FILE: '/mail_auth'
+        volumes:
+            - 'mail-data:/data'
+            - './mail_auth:/mail_auth'
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        ports:
+            - 8088:80
+        environment:
+            MYSQL_USERNAME: "${DB_USERNAME}"
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            PMA_HOST: mysql
+            PMA_ARBITRARY: 1
+        networks:
+            - sail
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge
 volumes:
     sail-mysql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-laravel_echo_server:
+        driver: local
+    mail-data:
         driver: local

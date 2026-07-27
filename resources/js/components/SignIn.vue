@@ -59,21 +59,55 @@
             <div class="social text-align-end">
                 <a><b><router-link to="/forgot">Forgot Password</router-link></b></a>
             </div>
+            <div>
+                <a-button type="primary" @click="showModal">Login With Social</a-button>
+                <a-modal title="Login with Social" :visible="visible" @cancel="handleCancel" :footer="null">
+                    <a-button class="social-text" type="primary" @click="loginWithFacebook" icon="facebook">Login with
+                        Facebook</a-button>
+                    <a-button class="social-text" type="primary" @click="loginWithGoogle" icon="google">Login with
+                        Google</a-button>
+                    <a-button class="social-text" type="primary" @click="loginWithSlack" icon="slack">Login with
+                        Slack</a-button>
+                </a-modal>
+            </div>
         </a-form>
     </div>
 </template>
 <script>
-import { setUserInfo, setAccessToken } from '../auth'
+import { setUserInfo, setAccessToken, isAuthenticated } from '../auth';
+import { Modal, Button } from 'ant-design-vue';
+import httpRequest from '../axios'
 
 const hasErrors = (fieldsError) => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
 export default {
+    components: {
+        'a-modal': Modal,
+        'a-button': Button
+    },
     name: 'ExampleComponent',
     beforeCreate() {
         this.form = this.$form.createForm(this, { name: 'login_form' })
     },
+    // setup() {
+    //     const getCookieValue = (name = 'login') => {
+    //         const cookies = document.cookie.split(';');
+    //         for (let cookie of cookies) {
+    //             const c = cookie.trim();
+    //             if (c.startsWith(name + '=')) {
+    //                 return c.substring(name.length + 1);
+    //             }
+    //         }
+    //         return ''; // Trả về chuỗi rỗng nếu không tìm thấy cookie
+    //     };
+    //     onMounted(() => {
+    //         const loginCookie = getCookieValue();
+    //         console.log('test', this.$cookies)
+    //         // Xử lý logic dựa trên giá trị của cookie 'login' ở đây
+    //     });
+    // },
     data() {
         return {
             formData: {
@@ -85,6 +119,7 @@ export default {
             hasErrors,
             textError: '',
             isShowPassword: false,
+            visible: false
         }
     },
     methods: {
@@ -95,10 +130,9 @@ export default {
                 if (!error) {
                     this.formData = { ...values }
                     axios.post('/api/admin/users/login/store', this.formData).then((response) => {
-                        console.log(response);
                         if (response.data.data.user) {
                             setUserInfo(JSON.stringify(response.data.data.user))
-                            setAccessToken(response.data.data.access_token)
+                            setAccessToken(response.data.data.access_token, response.data.data.expires_in)
                             Toast.fire({
                                 icon: 'success',
                                 title: '' + this.$store.getters.localizedStrings.login_success
@@ -130,17 +164,66 @@ export default {
         onToggleShowPassword() {
             this.isShowPassword = !this.isShowPassword
         },
-        getURL() {
-            Toast.fire({
-                icon: 'success',
-                title: 'OK'
-            });
-        }
+        showModal() {
+            this.visible = true;
+        },
+        handleCancel() {
+            this.visible = false;
+        },
+        loginWithFacebook() {
+            // Handle Facebook login
+            axios.get('/api/redirect/facebook')
+                .then(response => {
+                    if (response.data) {
+                        window.open(response.data, '_blank')
+                    }
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
+        },
+        loginWithGoogle() {
+            // Handle Google login
+            axios.get('/api/redirect/google')
+                .then(response => {
+                    if (response.data) {
+                        window.open(response.data, '_blank')
+                    }
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
+        },
+        loginWithSlack() {
+            // Handle Slack login
+            console.log("Login with Slack");
+        },
     },
     computed: {
         inputType() {
             return this.isShowPassword ? 'text' : 'password'
         },
+    },
+    created() {
+        const token = new URLSearchParams(window.location.search).get('token');
+        const expires_in = new URLSearchParams(window.location.search).get('expires_in');
+        if (token && !this.$store.state.userInfo) {
+            window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            setAccessToken(token, expires_in)
+            if (isAuthenticated()) {
+                this.$router.push({ name: 'Home' })
+                httpRequest.get('/api/admin/users/currentUser')
+                    .then(response => {
+                        if (response.data.data) {
+                            setUserInfo(JSON.stringify(response.data.data));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error while fetching current user:', error);
+                        // Handle error (e.g., redirect to sign-in page)
+                    });
+            }
+        }
     },
 }
 </script>
@@ -170,6 +253,14 @@ export default {
     top: 50%;
 }
 
+.a-button .anticon-facebook {
+  color: #3b5998; /* Màu của biểu tượng Facebook */
+}
+
+.a-button .anticon-google {
+  color: #db4437; /* Màu của biểu tượng Google */
+}
+
 .background .shape {
     height: 200px;
     width: 200px;
@@ -193,7 +284,6 @@ export default {
 }
 
 form {
-    height: 520px;
     width: 400px;
     background-color: rgba(255, 255, 255, 0.13);
     position: absolute;
@@ -213,6 +303,11 @@ form * {
     letter-spacing: 0.5px;
     outline: none;
     border: none;
+    z-index: 1;
+}
+
+form input {
+    box-shadow: none;
 }
 
 form h3 {
@@ -266,44 +361,21 @@ button {
 .social {
     margin-top: 30px;
     display: flex;
-}
-
-.social div {
-    background: red;
-    width: 150px;
-    border-radius: 3px;
-    padding: 5px 10px 10px 5px;
-    background-color: rgba(255, 255, 255, 0.27);
-    color: #eaf0fb;
     text-align: center;
 }
 
-.social div:hover {
-    background-color: rgba(255, 255, 255, 0.47);
-}
-
-.social .fb {
-    background: #56acfc !important;
-    margin-left: 25px;
-    text-align: center;
-    padding: 10px;
-    margin: 0 auto // căn giữa 
-}
-
-.social .go {
-    background: #FC9C56 !important;
-    margin-left: 25px;
-    text-align: center;
-    width: 100%;
-    padding: 10px;
-    margin: 0 auto // căn giữa 
-}
-
-.social i {
-    margin-right: 4px;
+.social-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .form-item {
     height: 40px;
+}
+
+.ant-input {
+    color: #000;
+    /* Màu chữ đen */
 }
 </style>

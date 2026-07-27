@@ -17,7 +17,7 @@
                                                   display:flex;
                                                   justify-content:center;
                                                   align-items:center;">
-                                            Bubble Cafe <img src="http://localhost:8000/images/Bubble_Cafe-removebg-preview.png" style="margin-left: 10px" height="50px"/>
+                                            Bubble Cafe <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP3XjcG8hnBIwF8bbaUUWRzR8Fmc2SZY5tcA&usqp=CAU" style="margin-left: 10px" height="50px"/>
                                         </p>
                                     </a>
                                 </td>
@@ -68,7 +68,7 @@
                    </h2>
                     <p>
                         <a href=
-"http://localhost:8000/contact"
+"{{ env('APP_URL') }}/contact"
                            style="text-decoration: none; 
                                   color:black; 
                                   border: 2px solid #4cb96b; 
@@ -113,7 +113,7 @@
 width="30" /> 
     </a>
       
-    <a href="https://www.tiktok.com/en/" 
+    <a href="https://www.fb.com/en/" 
     style="border:none;
     text-decoration: none;
     padding: 5px;"> 

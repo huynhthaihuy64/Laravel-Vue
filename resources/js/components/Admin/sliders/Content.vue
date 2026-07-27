@@ -20,25 +20,25 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>Url</th>
-            <th>Image</th>
-            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
-            <th>Action</th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Url</th>
+            <th class="center-text">Image</th>
+            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in sliders" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td><a :href="item.url" target="_blank"> {{ item.url }} </a></td>
-            <td><img class="file image-contain" :src="`${item.file}`" /></td>
-            <td v-if="item.active == 0"><span class="btn btn-danger btn-xs w-75">InActive</span></td>
-            <td v-if="item.active == 1"><span class="btn btn-success btn-xs w-75">Active</span></td>
-            <td>{{ item.created_at }}</td>
-            <td>
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text"><a :href="item.url" target="_blank"> {{ item.url }} </a></td>
+            <td class="center-text"><img class="file image-contain" :src="`${item.file}`" /></td>
+            <td class="center-text" v-if="item.active == 0"><span class="btn btn-danger btn-xs w-75">InActive</span></td>
+            <td class="center-text" v-if="item.active == 1"><span class="btn btn-success btn-xs w-75">Active</span></td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -274,12 +274,12 @@ export default {
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/sliders/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -294,7 +294,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -315,7 +315,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -323,7 +323,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -335,7 +335,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -344,9 +344,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {
@@ -374,7 +374,7 @@ export default {
           httpRequest.post('/api/sliders/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Create Success'
@@ -408,7 +408,7 @@ export default {
     deleteSlider() {
       httpRequest.delete('/api/sliders/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: 'Delete Success'
@@ -451,7 +451,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: 'Edit Success'
@@ -468,34 +468,33 @@ export default {
       this.form.resetFields()
     },
     exportSlider() {
-            httpRequest.get('/api/export/2', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'slider.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Export Success'
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
-        }
+      httpRequest.get('/api/export/2', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'slider.xlsx');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: 'Export Success'
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    }
   },
   mounted() {
-    console.log('Component mounted.')
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }
@@ -505,7 +504,6 @@ export default {
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 .sortType:hover {
@@ -692,7 +690,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
@@ -736,6 +734,11 @@ td {
   font-weight: 700;
   color: #000;
   margin-bottom: 18px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .pagination-wrapper {

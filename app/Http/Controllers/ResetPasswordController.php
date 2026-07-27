@@ -37,15 +37,12 @@ class ResetPasswordController extends Controller
         ];
         Mail::to($details['email'])->send(new ForgotMail($details));
         if (Mail::failures()) {
-            session()->flash('error', 'Send Failed');
+            session()->flash('error', __('messages.mail.send.failed'));
             return redirect()->back();
         } else {
-            session()->flash('success', 'Send Success');
+            session()->flash('success', __('messages.mail.send.success'));
             return redirect()->back();
         }
-        return response()->json([
-        'message' => 'We have e-mailed your password reset link!'
-        ]);
     }
 
     public function reset(UpdatePasswordRequest $request, $token)
@@ -55,7 +52,7 @@ class ResetPasswordController extends Controller
             $passwordReset->delete();
 
             return response()->json([
-                'message' => 'This password reset token is invalid.',
+                'message' => __('messages.reset-password.token'),
             ], 422);
         }
         $user = User::where('email', $request->email)

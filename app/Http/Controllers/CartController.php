@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartResource;
 use Illuminate\Http\Request;
 use App\Http\Services\CartService;
 use App\Http\Services\Product\ProductService;
-use App\Models\Product;
-use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
@@ -21,62 +20,45 @@ class CartController extends Controller
         $this->product = $product;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $carts = Cart::content();
+        $data = $this->cartService->index($request->all());
         $result = [
-            'data' => $carts,
-            'total' => Cart::priceTotal(),
-            'tax' => Cart::tax(),
-            'total_tax' => Cart::total(),
+            'carts' => CartResource::collection($data['carts']),
+            'total_all' => $data['total_all']
         ];
         return $result;
     }
 
-    public function show(string $rowId) {
-        $cart = Cart::get($rowId);
-        return $cart;
+    public function show($id) {
+        return $this->cartService->show($id);
     }
 
     public function update(Request $request) {
-        $data = $request->toArray();
-        foreach($data['carts'] as $value) {
-            Cart::update($value['rowId'], $value['qty']);
-        }
-        return Cart::content();
+        return $this->cartService->update($request->only(['carts']));
     }
 
-    public function remove(string $rowId) {
-        Cart::remove($rowId);
-        return response()->json(['message' => 'Remove Success']);
+    public function remove($id) {
+        return $this->cartService->destroy($id);
     }
 
-    public function removeAll() {
-        $cartItems = Cart::content();
-        if(count($cartItems) <= 0) {
-            return response()->json(['message' => 'Cart is Empty']);
-        }
-        Cart::destroy();
-        return response()->json(['message' => 'Remove All Items Success']);
-
+    public function removeAll()
+    {
+        return $this->cartService->removeAll();
     }
 
     public function addCart(Request $request)
     {
-        $product = Product::find($request->product_id);
-        $cart = Cart::instance('default')->add([
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price_sale < $product->price ? $product->price_sale : $product->price,
-            'qty' => $request->qty,
-            'weight' => 0,
-            'options' => ['image' => $product->file]
-        ]);
-        return $cart;
+        return $this->cartService->store($request->all());
     }
 
     public function payment(Request $request) {
         $data = $request->toArray();
         return $this->cartService->payment($data);
+    }
+
+    public function success(Request $request)
+    {
+        return $this->cartService->success($request);
     }
 }

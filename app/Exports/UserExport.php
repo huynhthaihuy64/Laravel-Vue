@@ -35,6 +35,7 @@ class UserExport implements FromArray, WithHeadings, WithMapping
             'Phone',
             'Department',
             'Gender',
+            'Avatar',
             'Birthday',
             'Address'
         ];
@@ -53,6 +54,7 @@ class UserExport implements FromArray, WithHeadings, WithMapping
             $item['phone'],
             $item['department'],
             $item['gender'] == 0 ? 'Male' : 'Female',
+            isset($item['avatar']) ? env('APP_URL'). $item['avatar'] : '',
             $item['birthday'],
             $item['address'],
         ];

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { get } from "lodash";
-import { getAccessToken } from "./auth";
+import { getAccessToken, revokeUser } from "./auth";
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json; charset=utf-8",
@@ -15,7 +15,6 @@ axiosInstance.interceptors.request.use(
     let params = config.params || {};
     const token = getAccessToken();
     if (token) {
-      console.log(token)
       config.headers["Authorization"] = "Bearer " + token;
     }
     return {
@@ -34,9 +33,9 @@ axiosInstance.interceptors.response.use(
     const status = get(error, "response.status");
     const errorData = get(error, "response.data");
     switch (status) {
-      case errorContants.StatusCode.Unauthorized: {
+      case 401: {
         revokeUser();
-        window.location.reload();
+        window.location.href = '/SignIn';
         break;
       }
       case errorContants.StatusCode.ValidationFailed:

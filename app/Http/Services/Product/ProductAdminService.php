@@ -3,27 +3,31 @@
 
 namespace App\Http\Services\Product;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Services\UploadService;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Log;
 use App\Models\Product;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Illuminate\Support\Facades\File;
 
 class ProductAdminService
 {
     protected $uploadService;
+    protected $menu;
+    protected $product;
 
     use Sortable;
 
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, Menu $menu, Product $product)
     {
         $this->uploadService = $uploadService;
-    }
-    public function getMenu()
-    {
-        return Menu::where('active', 1)->get();
+        $this->menu = $menu;
+        $this->product = $product;
     }
 
     protected function isValidPrice($request)
@@ -48,7 +52,8 @@ class ProductAdminService
         $request['file'] = $file['file_path'];
         if ($isValidPrice === false) return false;
         try {
-            $product = Product::create([
+            DB::beginTransaction();
+            $product = $this->product->create([
                 'name' => $request['name'],
                 'price' => $request['price'],
                 'price_sale' => $request['price_sale'],
@@ -56,55 +61,83 @@ class ProductAdminService
                 'content' => isset($request['content']) ? $request['content'] : null,
                 'file' => $request['file'],
                 'active' => $request['active'],
+                'inventory_number' => $request['inventory_number'] ?? 0,
             ]);
+            if (isset($request['images']) && !empty($request['images'])) {
+                $uploadFiles = [];
+                foreach ($request['images'] as $file) {
+                    $uploadFiles[] = $this->uploadService->uploadFile($file, 'album/' . $product->id);
+                }
+                if (!$uploadFiles || empty($uploadFiles)) {
+                    throw new BadRequestException(__('messages.upload-file.failed'));
+                }
+                foreach ($uploadFiles as $file) {
+                    $product->images()->create([
+                        "name" => $file['file_name'],
+                        "url" => $file['file_path']
+                    ]);
+                }
+            }
             $product->menus()->sync($request['menu_id']);
+            DB::commit();
             return $product;
         } catch (\Exception $err) {
-            Session::flash('error', 'Add Product Failed');
             Log::info($err->getMessage());
-            return  $err;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
-    public function get($data,$paginate)
+    public function get($data, $paginate)
     {
-        return Product::sort($data)->with('menus')->paginate($paginate);
+        return $this->product->sort($data)->with('menus')->paginate($paginate);
     }
 
-    public function getRelativeProduct($paginate,array $ids) {
-        return Product::with('menus')->whereHas('menus', function($q) use($ids) {
-            $q->whereIn('id', $ids);
-        })->orderByDesc('id')->paginate($paginate);
+    public function getRelativeProduct(array $params)
+    {
+        return $this->product->with('menus')->where('id', '!=', $params['product_id'])->whereHas('menus', function ($q) use ($params) {
+            $q->whereIn('id', $params['ids']);
+        })->orderByDesc('id')->paginate($params['limit'] ?? 3);
     }
 
     public function show($id)
     {
-        return Product::with('menus','comments')->find($id);
+        return $this->product->with('menus', 'comments', 'images')->find($id);
     }
 
-    public function getProductMenu($request, $paginate) {
-        $menu = Menu::find($request['menu_id']);
+    public function getProductMenu($request, $paginate)
+    {
+        $menu = $this->menu->find($request['menu_id']);
         $products = $menu->products()->paginate($paginate);
         return $products;
     }
 
     public function update($request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->product->findOrFail($id);
         $isValidPrice = $this->isValidPrice($request);
-        $file = $this->uploadService->uploadFile($request['file'], 'product');
-        $request['file'] = $file['file_path'];
+        if (isset($request['file'])) {
+            $file = $this->uploadService->uploadFile($request['file'], 'product');
+            $request['file'] = $file['file_path'];
+        }
         if ($isValidPrice === false) return false;
         try {
-            $product->update([
+            DB::beginTransaction();
+            $data = [
                 'name' => $request['name'],
                 'price' => $request['price'],
                 'price_sale' => $request['price_sale'],
                 'description' => $request['description'],
                 'content' => isset($request['content']) ? $request['content'] : null,
-                'file' => $request['file'],
                 'active' => $request['active'],
-            ]);
+                'inventory_number' => $request['inventory_number'] ?? 0,
+            ];
+            if (isset($request['file'])) {
+                $data['file'] = $request['file'];
+                $product->update($data);
+            } else  {
+                $product->update($data);
+            }
             $product->menus()->detach();
             $product->menus()->attach($request['menu_id']);
             // foreach($request['menu_id'] as $menu){
@@ -114,25 +147,31 @@ class ProductAdminService
             //         $product->menus()->attach($menu);
             //     }
             // }
+            DB::commit();
             return $product;
         } catch (\Exception $err) {
-            Session::flash('error', 'Update Product Failed');
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
-        return true;
     }
 
     public function delete($id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $path = str_replace('storage', 'public', $product->file);
-            Storage::delete($path);
+        try {
+            DB::beginTransaction();
+            $product = $this->product->find($id);
+            if (!$product) {
+                throw new NotFoundException(Product::class);
+            }
+            File::delete(public_path($product->file));
             $product->delete();
+            Log::channel('history')->info('Người dùng ' . Auth::user()->id . ' đã xóa: ' . "\n" . 'data trước thay đổi: ' . json_encode($product) . "\n" . "data sau thay đổi : đã xóa" . "\n" . "Thời gian thay đổi: " . Carbon::now() . "\n" . "Được thay đổi bởi: " . Auth::user()->name);
+            DB::commit();
             return true;
+        } catch (\Exception $err) {
+            DB::rollback();
+            return $err->getMessage();
         }
-
-        return false;
     }
 }

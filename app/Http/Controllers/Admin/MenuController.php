@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Menu\CreateFormRequest;
 use App\Http\Resources\MenuResource;
 use Illuminate\Http\Request;
 use App\Http\Services\Menu\MenuService;
-use App\Models\Menu;
 
 class MenuController extends Controller
 {
-    //
     protected $menuService;
 
     public function __construct(MenuService $menuService)
@@ -52,7 +49,7 @@ class MenuController extends Controller
         if ($result) {
             return response()->json([
                 'error' => false,
-                'message' => 'Delete Menu Success'
+                'message' => __('messages.menu.delete.success')
             ]);
         }
         return response()->json([
@@ -62,5 +59,6 @@ class MenuController extends Controller
 
     public function getProductsWithMenu(int $id) {
         $menu = $this->menuService->getProductsWithMenu($id);
+        return $menu;
     }
 }

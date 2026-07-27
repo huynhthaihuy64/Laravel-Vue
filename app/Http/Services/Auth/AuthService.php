@@ -3,17 +3,11 @@
 namespace App\Http\Services\Auth;
 
 use App\Events\SetRemember;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use App\Mail\ResetPasswordMail;
 
 class AuthService
 {
@@ -31,11 +25,11 @@ class AuthService
         $this->user = $user;
     }
 
-    public function login($request = [],$remember)
+    public function login($request = [],$remember = false)
     {
         $user = $this->user->where('email', $request['email'])->first();
         if ($user === null || !Auth::attempt($request)) {
-            return $this->_throwErrorAuthenticate(__('Login Failed'));
+            return $this->_throwErrorAuthenticate(__('messages.user.login.failed'));
         }
         return $this->_processAfterLogin($user,$remember);
     }
@@ -70,6 +64,15 @@ class AuthService
      */
     public function createUserToken($user)
     {
+        // Nếu dùng Sanctum:
+        // if($remember == true) {
+        //     $duration = Carbon::now()->addMinutes(config('sanctum.rm_expiration'));
+        // } else {
+        //     $duration = Carbon::now()->addMinutes(config('sanctum.expiration'));
+        // }
+        // $token = $user->createToken($user->email,['*'],$duration);
+        // $tokenResult['access_token'] = $token->plainTextToken;
+        // $tokenResult['expires_at'] = $token->accessToken->expires_at;
         $oldTokens = $user->token();
         if ($oldTokens !== null) {
             $oldTokens->revoke();
@@ -86,6 +89,14 @@ class AuthService
      */
     public function logout(): bool
     {
+        // Nếu dung sanctum:
+        // try {
+        //     $user = Auth::user();
+        //     $user->currentAccessToken()->delete();
+        //     return true;
+        // } catch (\Exception $e) {
+        //     throw $e;
+        // }
         try {
             $user = Auth::user();
             $user->token()->revoke();
@@ -108,65 +119,6 @@ class AuthService
         if ($message) {
             throw new AuthenticationException($message);
         }
-        throw new AuthenticationException('Login Failed');
+        throw new AuthenticationException(__('messages.user.login.failed'));
     }
-
-    // public function changePassword($request)
-    // {
-    //     $user = Auth::user();
-    //     if ((Hash::check($request->old_password, Auth::user()->password)) == false) {
-    //         throw new \Exception('Check your old password.');
-    //     } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
-    //         throw new \Exception('Please enter a password which is not similar then current password.');
-    //     } else {
-    //         return $this->user->where('id', $user->id)->update(['password' => Hash::make($request->new_password)]);
-    //     }
-    // }
-
-    // public function resetPasswordToken($request)
-    // {
-    //     $user = $this->user->where('email', $request->email)->first();
-    //     if ($user) {
-    //         DB::beginTransaction();
-    //         try {
-    //             $user->update([
-    //                 'password' => Hash::make($request->password),
-    //                 'password_hint' => $request->password_hint,
-    //             ]);
-    //             $mail = Mail::to($request['email'])->send(new ResetPasswordMail([
-    //                 'username' => $user->username,
-    //                 'email' => $request->email,
-    //                 'password' => $request->password,
-    //             ]));
-    //             DB::commit();
-    //             return __('messages.reset_password.success');
-    //         } catch (\Exception $e) {
-    //             DB::rollback();
-    //             throw new \Exception(__('messages.reset_password.fail'));
-    //         }
-    //     }
-    //     throw new \Exception(__('messages.user.email.exists'));
-    // }
-
-    // public function resetPassword($request)
-    // {
-    //     return DB::table('password_resets')->where('token', $request->token)->first();
-    // }
-
-    // public function forgotPassword($request)
-    // {
-    //     if (DB::table('password_resets')->where('token', $request->token)->where('email', $request->email)->first()) {
-    //         DB::beginTransaction();
-    //         try {
-    //             DB::table('password_resets')->where('token', $request->token)->where('email', $request->email)->delete();
-    //             $update = $this->user->where('email', $request->email)->update(['password' => Hash::make($request->password)]);
-    //             DB::commit();
-    //             return $update;
-    //         } catch (\Exception $e) {
-    //             throw new \Exception($e->getMessage());
-    //             DB::rollback();
-    //         }
-    //     }
-    //     throw new \Exception('New password creation failed');
-    // }
 }

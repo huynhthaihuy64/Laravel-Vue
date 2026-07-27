@@ -79,7 +79,6 @@
         <a class="go" href="/api/redirect/google" target="_blank"><font-awesome-icon :icon="['fab', 'google']"
             class="mr-1" />Google
         </a>
-        <a class="fb" href="/api/auth/facebook"><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a>
       </div>
     </a-form>
   </div>
@@ -171,7 +170,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// @import 'https://fonts.gstatic.com';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
 @import 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap';
 
@@ -308,14 +306,6 @@ button {
   background-color: rgba(255, 255, 255, 0.47);
 }
 
-.social .fb {
-  background: #56acfc !important;
-  margin-left: 25px;
-  text-align: center;
-  padding: 10px;
-  margin: 0 auto // căn giữa 
-}
-
 .social .go {
   background: #FC9C56 !important;
   margin-left: 25px;
@@ -330,5 +320,10 @@ button {
 
 .form-item {
   height: 40px;
+}
+
+.ant-input {
+  color: #000;
+  /* Màu chữ đen */
 }
 </style>

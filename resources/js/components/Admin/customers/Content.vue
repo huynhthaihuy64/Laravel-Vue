@@ -16,28 +16,24 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>User_ID</th>
-            <th>Phone</th>
-            <th class="sortType"><a @click="toggleSort('address')">Address <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('email')">Email <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('content')">Content <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('total_tax')">Total_Tax <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">User_ID</th>
+            <th class="center-text">Phone</th>
+            <th class="sortType center-text"><a @click="toggleSort('address')">Address <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('email')">Email <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('total_sum')">Total <i class="fas fa-sort"></i></a></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in customers" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td> {{ item.user_id }} </td>
-            <td>{{ item.phone }}</td>
-            <td>{{ item.address }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.content }}</td>
-            <td>{{ item.total_tax | formatNumber}}</td>
-            <td>{{ item.created_at }}</td>
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.user.name }}</td>
+            <td class="center-text"> {{ item.user.id }} </td>
+            <td class="center-text">{{ item.user.phone }}</td>
+            <td class="center-text">{{ item.user.address }}</td>
+            <td class="center-text">{{ item.user.email }}</td>
+            <td class="center-text">{{ item.total_sum | formatNumber }}</td>
           </tr>
         </tbody>
       </table>
@@ -88,12 +84,12 @@ export default {
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/customers/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -109,7 +105,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     showModalEdit(id) {
       this.getSlider(id);
@@ -120,7 +116,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -128,7 +124,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -140,7 +136,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -149,9 +145,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {
@@ -162,33 +158,32 @@ export default {
       }
     },
     exportCustomer() {
-            httpRequest.get('/api/export/5', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'customers.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Export Success'
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
-        }
+      httpRequest.get('/api/export/5', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'customers.xlsx');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: 'Export Success'
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    }
   },
   mounted() {
-    console.log('Component mounted.')
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }
@@ -198,7 +193,6 @@ export default {
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 .sortType:hover {
@@ -385,7 +379,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
@@ -422,6 +416,11 @@ td {
 .fileUpdate {
   width: 60%;
   height: 150px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .title {

@@ -94,6 +94,9 @@ export default {
                 icon: 'success',
                 title: 'Send Mail Success'
               });
+              setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
             })
             .catch(function (error) {
             Toast.fire({
@@ -104,7 +107,6 @@ export default {
         }
     },
     mounted() {
-        console.log('Component mounted.')
     },
     created() {
         this.$Progress.start()

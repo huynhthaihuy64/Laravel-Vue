@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory,Sortable;
+    use HasFactory,Sortable,SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -20,7 +21,8 @@ class Customer extends Model
         'total_tax',
     ];
 
-    public function carts(){
-        return $this->hasMany(Cart::class,'customer_id','id');
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

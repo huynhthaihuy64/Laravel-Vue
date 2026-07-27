@@ -10,7 +10,7 @@
                         </h4>
                         <ul>
                             <li class="p-b-10" v-for="(item) in menus" :key="item.id">
-                                <a href="#" target="_blank" class="stext-107 cl7 hov-cl1 trans-04">
+                                <a :href="'/categories/' + item.id " class="stext-107 cl7 hov-cl1 trans-04">
                                     {{item.name}}
                                 </a>
                             </li>
@@ -42,7 +42,8 @@
                         </h4>
 
                         <p class="stext-107 cl7 size-201">
-                            Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us
+                            Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call
+                            us
                             on (+1) 96 716 6879
                         </p>
 
@@ -115,9 +116,7 @@
             </div>
         </footer>
 
-
-        <!-- Back to top -->
-        <div class="btn-back-to-top" id="myBtn">
+        <div class="btn-back-to-top" id="myBtn" style="margin-right: 20%;">
             <span class="symbol-btn-back-to-top">
                 <i class="zmdi zmdi-chevron-up"></i>
             </span>
@@ -154,7 +153,6 @@ export default {
         },
     },
     mounted() {
-        console.log('Component mounted.')
         this.getSlider(),
         this.getMenu()
     },

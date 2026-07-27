@@ -32,6 +32,9 @@ export default {
         { key: 'products', icon: ['fas', 'shop'], desc: this.$store.getters.localizedStrings.side_bar.product  },
         { key: 'sliders', icon: ['fas', 'sliders'], desc: this.$store.getters.localizedStrings.side_bar.slide  },
         { key: 'customers', icon: ['fas', 'user-tie'], desc: this.$store.getters.localizedStrings.side_bar.customer  },
+        { key: 'uploadMultiple', icon: ['fas', 'file-upload'], desc: this.$store.getters.localizedStrings.side_bar.multipleFile  },
+        { key: 'files', icon: ['fas', 'file-upload'], desc: this.$store.getters.localizedStrings.file.name },
+        { key: 'getLink', icon: ['fas', 'link'], desc: this.$store.getters.localizedStrings.side_bar.link },
       ],
       routeName: null,
     }
@@ -108,8 +111,6 @@ export default {
   padding-top: 19px;
   padding-bottom: 13px;
 
-  // padding-left: 15px;
-  // padding-right: 15px;
   &::before {
     content: '';
     display: block;

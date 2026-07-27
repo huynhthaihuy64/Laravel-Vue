@@ -17,29 +17,29 @@
           </a-button></a-col>
         <a-modal title="Send All MAil" :visible="this.flagModelSendMail" @cancel="() => cancelModalSendMail()">
           <template #footer>
-          <a-button class="btn-button-cancel" @click="cancelModalSendMail">Cancel</a-button>
-          <a-button key="submit" type="primary" class="btn-button primary" @click="sendMailAll">Send</a-button>
-        </template>
+            <a-button class="btn-button-cancel" @click="cancelModalSendMail">Cancel</a-button>
+            <a-button key="submit" type="primary" class="btn-button primary" @click="sendMailAll">Send</a-button>
+          </template>
           <a-form :form="form">
             <a-form-item label="Subject">
-                <a-input v-decorator="[
-                  'subject',
-                  {
-                    initialValue: '',
-                    rules: [{ required: true, message: 'Please input your Subject!' }],
-                  },
-                ]" />
+              <a-input v-decorator="[
+                'subject',
+                {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Please input your Subject!' }],
+                },
+              ]" />
             </a-form-item>
             <a-form-item label="Content">
               <textarea v-decorator="[
-              'content',
-              {
-                initialValue: '',
-                rules: [{ required: true, message: 'Please input your Content!' }],
-              },
-            ]" type="text" class="textarea"></textarea>
+                'content',
+                {
+                  initialValue: '',
+                  rules: [{ required: true, message: 'Please input your Content!' }],
+                },
+              ]" type="text" class="textarea"></textarea>
             </a-form-item>
-        </a-form>
+          </a-form>
         </a-modal>
         <a-col :span="3">
           <a-button class="button-type" @click="exportUser">
@@ -51,26 +51,26 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">{{ $store.getters.localizedStrings.user_management.no }}</th>
-            <th class="sortType"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }}
+            <th scope="col" class="category-order center-text">{{ $store.getters.localizedStrings.user_management.no }}</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">{{ $store.getters.localizedStrings.user_management.name }}
                 <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email
+            <th class="sortType center-text"><a @click="toggleSort('email')">{{ $store.getters.localizedStrings.user_management.email
             }} <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone
+            <th class="sortType center-text"><a @click="toggleSort('phone')">{{ $store.getters.localizedStrings.user_management.phone
             }}<i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('created_at')">{{
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">{{
               $store.getters.localizedStrings.user_management.created }} <i class="fas fa-sort"></i></a></th>
             <th v-if="currentUser.role === 1"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in users" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.phone }}</td>
-            <td>{{ item.created_at }}</td>
-            <td v-if="currentUser.role === 1">
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text">{{ item.email }}</td>
+            <td class="center-text">{{ item.phone }}</td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text" v-if="currentUser.role === 1">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -344,7 +344,7 @@ export default {
     },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/users/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -359,7 +359,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row, this.page, name, this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(avatar) {
       const index = this.fileList.indexOf(avatar);
@@ -380,7 +380,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     handleNextPage() {
       this.btn = false;
@@ -388,7 +388,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -400,7 +400,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -409,9 +409,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {
@@ -443,7 +443,7 @@ export default {
           httpRequest.post('/api/users/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: '' + this.$store.getters.localizedStrings.user_management.add_user.success
@@ -464,10 +464,9 @@ export default {
             formData.append("avatar", item);
           });
           httpRequest.post('/api/sendMailAll', formData).then((response) => {
-            console.log(response);
             this.info = response
             this.flagModelSendMail = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Send Mail Success'
@@ -504,7 +503,7 @@ export default {
     deleteUser() {
       httpRequest.delete('/api/users/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: '' + this.$store.getters.localizedStrings.user_management.delete.success
@@ -565,7 +564,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: '' + this.$store.getters.localizedStrings.user_management.edit_user.success
@@ -587,7 +586,7 @@ export default {
           var fileURL = window.URL.createObjectURL(new Blob([response.data]));
           var fileLink = document.createElement('a');
           fileLink.href = fileURL;
-          fileLink.setAttribute('download', 'user.csv');
+          fileLink.setAttribute('download', 'user.xlsx');
           document.body.appendChild(fileLink);
           fileLink.click();
           Toast.fire({
@@ -604,14 +603,13 @@ export default {
     }
   },
   mounted() {
-    console.log('Component mounted.')
     this.getCurrentUser()
     this.getRole()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
   },
 }
@@ -621,7 +619,6 @@ export default {
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 table {
@@ -798,6 +795,11 @@ td {
   padding: 0 35px;
 }
 
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
+}
+
 .primary {
   background: #1280bf;
 
@@ -808,7 +810,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);

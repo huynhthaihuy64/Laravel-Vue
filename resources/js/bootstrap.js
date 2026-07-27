@@ -1,4 +1,7 @@
-window._ = require('lodash');
+import _ from 'lodash';
+window._ = _;
+import Echo from 'laravel-echo'
+import { getAccessToken, revokeUser } from "./auth";
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -20,9 +23,11 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios');
+import axios from "axios";
+window.axios = axios;
 
-// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.baseURL = window._base_url;
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -37,3 +42,18 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+import Pusher from "pusher-js";
+window.Pusher = Pusher;
+const accessToken = getAccessToken();
+window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    auth: {
+        headers: {
+            Authorization: "Bearer " + accessToken,
+        },
+    },
+});

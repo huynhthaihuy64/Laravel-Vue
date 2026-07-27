@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light header">
-    <div class="col-5 d-flex justify-content-center">
+    <div class="col-6 d-flex justify-content-center">
       <router-link to="/">
         <img src="../../../../../public/images/image.png" height="60px" width="80px" class="image-contain">
       </router-link>
@@ -20,8 +20,8 @@
             <router-link to="/contact" class="nav-link">{{ $store.getters.localizedStrings.contact }}</router-link>
           </li>
           <li class="nav-item ml-5">
-          <div class="dropdown w-50 d-flex justify-content-center w-100">
-            <button @click="listCategory()" class="nav-link">Category</button>
+            <div class="dropdown w-50 d-flex justify-content-center w-100">
+              <button @click="listCategory()" class="nav-link">Category</button>
               <div id="myCategory" class="dropdown-category scrollable-menu mt-5 w-25" role="menu">
                 <div class="content-dropdown container mt-4 w-100 mb-2" v-for="(item) in menus" :key="item.id">
                   <a @click="goToMenuDetail(item.id)" class="w-100 content-dropdown ">
@@ -29,21 +29,30 @@
                   </a>
                 </div>
               </div>
-          </div>
+            </div>
           </li>
-          <li class="nav-item ml-5" v-if="initialValue.role === 1 || initialValue.role === 2">
+          <li class="nav-item ml-5" v-if="(user.role_id === 1 || user.role_id === 2) && user.id">
             <router-link to="/admin" class="nav-link">{{ $store.getters.localizedStrings.admin }}</router-link>
+          </li>
+          <li class="nav-item ml-5" v-if="user.id">
+            <a-space>
+              <a-select :value="currency" ref="select" style="width: 120px" @change="handleChange">
+                <a-select-option v-for="(item, index) in listCurrency" :value="item.code" :key="index">{{ item.code
+                  }}</a-select-option>
+              </a-select>
+            </a-space>
           </li>
         </ul>
       </div>
     </div>
-    <div class="col-5">
+    <div class="col-3">
       <div class="dropdown w-50 d-flex justify-content-center w-100">
         <button @click="searchToggle()">Search<i class="zmdi zmdi-search ml-2"></i></button>
         <div id="myDropdown" class="dropdown-content scrollable-menu mt-4 w-100" role="menu">
           <input type="text" placeholder="Search.." v-model="searchText" id="myInput" @keyup="search()">
-          <div class="content-dropdown container mt-4 w-100" v-for="(item) in searchArr" :key="item.id">
-            <a @click="goToDetail(item.id)" class="w-100 content-dropdown ">
+          <div class="content-dropdown container border border-primary mt-4 w-100" v-for="(item) in searchArr"
+            :key="item.id">
+            <a @click="goToDetail(item.id)" class="w-100 content-dropdown-item ">
               <div class="col-12">
                 <div class="row">
                   <div class="col-6">
@@ -60,31 +69,50 @@
         </div>
       </div>
     </div>
+    <div id="google_translate_element" class="col-1 mt-3"></div>
     <div class="d-flex text-black profile mr-5 col-2 d-flex justify-content-end">
-      <div class="flex-shrink-0" v-if="initialValue.edit_avatar">
-        <img :src="initialValue.edit_avatar" alt="Generic placeholder image" class="avatar" />
+      <div class="flex-shrink-0" v-if="user.avatar">
+        <img :src="user.avatar" alt="Generic placeholder image" class="avatar" />
       </div>
-      <div class="flex-shrink-0" v-if="!initialValue.edit_avatar">
-        <img src="../../../../../public/images/avatar.png" alt="Generic placeholder image" class="image-contain avatar" />
+      <div class="flex-shrink-0" v-else>
+        <img src="../../../../../storage/app/public/avatar/reynolds.immanuel.jpg" alt="Generic placeholder image"
+          class="image-contain avatar" />
       </div>
       <div class="info">
         <a-dropdown>
           <div class="ant-dropdown-link">
-            <div class="name mt-3 ml-2">{{ initialValue.edit_name || 'Admin' }}</div>
+            <div class="name mt-3 ml-2">{{ user.name || 'Guess' }}</div>
           </div>
           <template #overlay>
-            <a-menu>
+            <a-menu v-if="user.id">
               <a-menu-item class="menu-item ml-1">
                 <router-link :to="{ name: 'profile' }">
                   <IconProfile />{{ $store.getters.localizedStrings.profile.title }}
                 </router-link>
               </a-menu-item>
-              <a-menu-item class="menu-item js-show-cart">
-                <a @click="handleClick"><font-awesome-icon :icon="['fas', 'cart-shopping']" />Show Cart</a>
+              <a-menu-item class="menu-item js-show-cart" style="position: relative;">
+                <a @click=" handleClick"><font-awesome-icon :icon="['fas', 'cart-shopping']" />
+                  <span class="bubble">{{ countCarts }}</span>
+                  Show Cart</a>
+              </a-menu-item>
+              <a-menu-item class="menu-item ml-1 menu-item">
+                <a @click="handleChat"><font-awesome-icon :icon="['fas', 'message']" />Chat</a>
               </a-menu-item>
               <a-menu-item class="menu-item ml-1 menu-item-last" @click="handleLogout">
                 <IconLogout />
                 <div class="logout"><span> {{ $store.getters.localizedStrings.logout }} </span></div>
+              </a-menu-item>
+            </a-menu>
+            <a-menu v-else>
+              <a-menu-item class="menu-item ml-1">
+                <router-link :to="{ name: 'SignIn' }">
+                  <IconProfile />Login
+                </router-link>
+              </a-menu-item>
+              <a-menu-item class="menu-item ml-1">
+                <router-link :to="{ name: 'SignUp' }">
+                  <IconProfile />Register
+                </router-link>
               </a-menu-item>
             </a-menu>
           </template>
@@ -98,36 +126,73 @@
 import IconProfile from "../../icon/icon-profile.vue";
 import IconLogout from "../../icon/icon-logout.vue"
 import IconLogo from "../../icon/icon-logo.vue";
-import { revokeUser, getUserInfo } from "../../../auth"
+import { revokeUser, isAuthenticated } from "../../../auth"
 import httpRequest from '../../../axios'
+import { onMounted, reactive, ref } from "vue";
+import { EventBus } from '../../../eventBus';
 export default {
   components: { IconProfile, IconLogout, IconLogo },
   props: {
     isActive: {
       type: Boolean,
       default: false
+    },
+  },
+  setup() {
+    const user = reactive({ 
+      name: null,
+      id: null,
+      avatar: null,
+      role_id: null 
+    });
+
+    const countCarts = ref(0);
+
+    if (isAuthenticated()) {
+      async function getUser() {
+        try {
+          const response = await httpRequest.get('/api/admin/users/currentUser');
+          user.name = response.data.data.name;
+          user.id = response.data.data.id;
+          user.avatar = response.data.data.avatar;
+          user.role_id = response.data.data.role_id;
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      }
+
+      async function countCart() {
+        try {
+          const response = await httpRequest.get('/api/carts');
+          countCarts.value = response.data.carts.length;
+        } catch (error) {
+          console.error('Error fetching carts:', error);
+        }
+      }
+
+      async function updateCart() {
+        EventBus.$on('update-cart', () => {
+          countCart()
+        });
+      }
+      onMounted(() => {
+        getUser();
+        countCart();
+        updateCart();
+      });
     }
+    return { user, countCarts }
   },
   data() {
     return {
       routeName: '',
       menus: {},
+      listCurrency: {},
       name: '',
-      initialValue: {
-        edit_name: '',
-        edit_id: 1,
-        edit_avatar: [],
-        role: 10,
-      },
       searchText: '',
       searchArr: {},
+      currency: ''
     }
-  },
-  computed: {
-    userInfo() {
-      const userInfo = JSON.parse(getUserInfo())
-      return userInfo
-    },
   },
   methods: {
     handleClick() {
@@ -150,7 +215,7 @@ export default {
     },
     async handleLogout() {
       try {
-        httpRequest.get('/api/admin/users/logout')
+        httpRequest.post('/api/admin/users/logout')
           .then(
             ({ response }) => {
               Toast.fire({
@@ -168,41 +233,81 @@ export default {
         });
       }
     },
+    handleChat() {
+      this.$router.push({ name: "listFriend" });
+      this.$router.go();
+    },
     goToDetail(id) {
       this.$router.push({ name: "productDetail", params: { id: id } });
       this.$router.go();
     },
 
-    getUser() {
-      httpRequest
-        .get('/api/admin/users/currentUser')
-        .then((response) => {
-          this.initialValue.edit_name = response.data.name;
-          this.initialValue.edit_id = response.data.id;
-          this.initialValue.edit_avatar = response.data.avatar;
-          this.initialValue.role = response.data.role_id;
-        })
-    },
     goToMenuDetail(id) {
-          this.$router.push({ name: "Category", params: { id: id } });
+      const url = `/categories/${id}`;
+      window.location.href = url;
     },
     getMenu() {
-        httpRequest
-            .get('/api/menus/list')
-            .then(
-                ({ data }) => (
-                    (this.menus = data.data)
-                )
-            );
+      httpRequest
+        .get('/api/menus/list')
+        .then(
+          ({ data }) => (
+            (this.menus = data.data)
+          )
+        );
+    },
+    getCurrency() {
+      httpRequest
+        .get('/api/currency/current-currency')
+        .then(
+          ({ data }) => (
+            (this.currency = data.currency)
+          )
+        );
+    },
+    getListCurrency() {
+      httpRequest
+        .get('/api/currency')
+        .then(
+          ({ data }) => (
+            (this.listCurrency = data.currency)
+          )
+        );
+    },
+    handleChange(value) {
+      httpRequest.post('/api/currency', {
+        currency: value
+      })
+        .then(response => {
+          this.info = response
+          Toast.fire({
+            icon: 'success',
+            title: 'Change Currency Success'
+          });
+          setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        }).catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: 'Change Currency Error'
+          });
+          setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        });
     },
   },
   mounted() {
-    console.log('Component mounted.')
-    this.getUser()
+    if (isAuthenticated()) {
+      this.getCurrency()
+      this.getListCurrency()
+    }
     this.getMenu()
   },
   created() {
+    this.$Progress.start()
     this.routeName = this.$route.name
+    this.$Progress.finish()
   }
 }
 </script>
@@ -251,23 +356,6 @@ export default {
   cursor: pointer;
 }
 
-/* Dropdown Button */
-.dropbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-/* Dropdown button on hover & focus */
-.dropbtn:hover,
-.dropbtn:focus {
-  background-color: #3e8e41;
-}
-
-/* The search field */
 #myInput {
   box-sizing: border-box;
   background-position: 14px 12px;
@@ -278,19 +366,16 @@ export default {
   border-bottom: 1px solid #ddd;
 }
 
-/* The search field when it gets focus/clicked on */
 #myInput:focus {
   outline: 3px solid #ddd;
 }
 
-/* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
   display: inline-block;
   z-index: 999;
 }
 
-/* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -299,6 +384,7 @@ export default {
   border: 1px solid #ddd;
   z-index: 1;
 }
+
 .dropdown-category {
   display: none;
   position: absolute;
@@ -307,7 +393,7 @@ export default {
   border: 1px solid #ddd;
   z-index: 1;
 }
-/* Links inside the dropdown */
+
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -315,15 +401,44 @@ export default {
   display: block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {
   background-color: #f1f1f1
 }
+
 .content-dropdown {
   max-height: 150px;
 }
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+
+.content-dropdown-item {
+  max-height: 145px;
+}
+
+.content-dropdown.container:hover {
+  border-color: transparent;
+  /* Đặt màu border khi hover thành transparent để không hiển thị */
+}
+
 .show {
   display: block;
+}
+
+.bubble {
+  position: absolute;
+  top: -5px;
+  /* Điều chỉnh vị trí theo ý của bạn */
+  right: -10px;
+  /* Điều chỉnh vị trí theo ý của bạn */
+  background-color: red;
+  /* Màu sắc của bong bóng */
+  color: white;
+  border-radius: 50%;
+  /* Làm cho bong bóng tròn */
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  /* Để chữ hiển thị ở giữa */
+  font-size: 15px;
+  /* Kích thước của chữ */
 }
 </style>

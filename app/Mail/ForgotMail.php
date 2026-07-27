@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -11,6 +10,7 @@ class ForgotMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $details;
     /**
      * Create a new message instance.
      *
@@ -28,7 +28,7 @@ class ForgotMail extends Mailable
      */
     public function build()
     {
-        $this->subject('Mail from Huỳnh Thái Huy')
+        $this->subject('Mail from'. env('MAIL_NAME_FROM', 'Admin'))
             ->view('email-forgot', [
                 'details' => $this->details
             ]);

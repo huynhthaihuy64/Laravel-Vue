@@ -33,9 +33,9 @@ class MenuImport implements ToCollection
 
         if ($key == 0) {
             if ($row[0] != $this->header[0] || $row[1] != $this->header[1]) {
-                throw new Exception("Header Title Incorrect");
+                throw new Exception(__('messages.validation.import.header-title'));
             } else if (!empty(array_diff($header,$this->header))) {
-                throw new Exception("Header Incorrect");
+                throw new Exception(__('messages.validation.import.header'));
             }
         }
     }

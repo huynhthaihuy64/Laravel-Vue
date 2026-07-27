@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Http\Services\Product\ProductAdminService;
-use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -26,16 +28,14 @@ class ProductController extends Controller
     }
 
     public function relativeProducts(Request $request) {
-        $paginate = $request->limit ?? 5;
-        $ids = $request->ids;
-        $data = $this->productService->getRelativeProduct($paginate, $ids);
+        $data = $this->productService->getRelativeProduct($request->all());
         $listProducts = ProductResource::collection($data);
         return $listProducts;
     }
 
     public function store(Request $request)
     {
-        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content');
+        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content','images','inventory_number');
         $product = $this->productService->insert($data);
         return $product;
     }
@@ -49,7 +49,7 @@ class ProductController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content');
+        $data = $request->only('name', 'description', 'menu_id', 'price', 'price_sale', 'active', 'file', 'content', 'inventory_number');
         $result = $this->productService->update($data, $id);
         if (!$result) {
             return false;
@@ -72,7 +72,7 @@ class ProductController extends Controller
         if ($result) {
             return response()->json([
                 'error' => false,
-                'message' => 'Delete Product Success'
+                'message' => __('messages.product.delete.success')
             ]);
         }
 

@@ -5,21 +5,29 @@ namespace App\Http\Services\User;
 use App\Http\Services\UploadService;
 use App\Models\User;
 use App\Models\UserAlbum;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserService
 {
     protected $uploadService;
-    public function __construct(UploadService $uploadService)
+    protected $user;
+    protected $userAlbum;
+    public function __construct(UploadService $uploadService, User $user, UserAlbum $userAlbum)
     {
         $this->uploadService = $uploadService;
+        $this->user = $user;
+        $this->userAlbum = $userAlbum;
     }
     public function update($data, $id)
     {
-        $userOrigin = User::find($id);
+        $userOrigin = $this->user->find($id);
         try {
+            DB::beginTransaction();
             if (isset($data['avatar'])) {
                 $avatar = $this->uploadService->uploadFile($data['avatar'], 'avatar');
                 $avatar_path = $avatar['file_path'];
@@ -33,26 +41,32 @@ class UserService
                     $uploadFiles[] = $this->uploadService->uploadFile($file, 'album/' . $id);
                 }
                 if (!$uploadFiles || empty($uploadFiles)) {
-                    throw new \Exception('Upload File failed');
+                    throw new BadRequestException(__('messages.upload-file.failed'));
                 }
                 foreach ($uploadFiles as $file) {
-                    $userOrigin->userAlbums()->save(new UserAlbum([
+                    $userOrigin->userAlbums()->create([
                         "name" => $file['file_name'],
                         "path" => $file['file_path']
-                    ]));
+                    ]);
                 }
+            }
+
+            if (isset($data['gender']) && !empty($data['gender'])) {
+                $gender = $data['gender'] === 'Male' ? 0 : 1;
             }
             $result = [
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
-                'password' => Hash::make($data['password']),
                 'avatar' => $avatar_path,
                 'department' => $data['department'],
                 'birthday' => $data['birthday'],
                 'address' => $data['address'],
-                'gender' => $data['gender'],
+                'gender' => $gender,
             ];
+            if ($data['password']) {
+                $result['password'] = Hash::make($data['password']);
+            }
             $userOrigin->update($result);
             if (isset($data['removeFiles'])) {
                 foreach ($data['removeFiles'] as $file) {
@@ -60,12 +74,14 @@ class UserService
                 }
             }
             if (!$userOrigin) {
-                return response()->json('failed');
+                return response()->json(__('messages.user.update.failed'));
             }
+            DB::commit();
             return $userOrigin;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return null;
+            DB::rollback();
+            return $e->getMessage();
         }
     }
 
@@ -77,13 +93,32 @@ class UserService
     public function removeFile(int $id)
     {
         try {
-            $postFile = UserAlbum::find($id);
+            DB::beginTransaction();
+            $postFile = $this->userAlbum->find($id);
             File::delete(public_path($postFile['path']));
             $postFile->delete();
+            DB::commit();
             return $postFile;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return null;
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * get online user
+     *
+     */
+    public function getOnlineUsers()
+    {
+        try {
+            $users = $this->user->where('id', '!=', Auth::user()->id)->with('unseenMessages')->get();
+            return $users;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return $e->getMessage();
         }
     }
 }

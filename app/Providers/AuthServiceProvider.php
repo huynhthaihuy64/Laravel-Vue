@@ -6,6 +6,7 @@ namespace App\Providers;
 use App\Events\SetRemember;
 use App\Listeners\SetTokenExpiration;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -24,5 +25,12 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app['events']->listen(SetRemember::class, SetTokenExpiration::class);
+        $this->registerPolicies();
+
+        // MISSING HERE
+        if (!$this->app->routesAreCached()) {
+            Passport::routes();
+        }
+        Passport::tokensExpireIn(now()->addDays(2));
     }
 }

@@ -8,8 +8,15 @@
             <a-icon type="plus" />
             Add Product
           </a-button></a-col>
-        <a-col :span="5"></a-col>
-        <a-col :span="5">
+        <a-col :span="5" class="d-flex justify-content-end mr-2">
+          <a-upload :beforeUpload="beforeUpload" :headers="headers" action="//jsonplaceholder.typicode.com/posts/">
+            <a-button class="button-type" @click="importProduct">
+              <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
+              Import Excel
+            </a-button>
+          </a-upload>
+        </a-col>
+        <a-col :span="3">
           <a-button class="button-type" @click="exportProduct">
             <font-awesome-icon :icon="['fas', 'file-excel']" class="mr-2" />
             Export Excel
@@ -19,31 +26,36 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="category-order">No</th>
-            <th class="sortType"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
-            <th>Description</th>
-            <th>Category</th>
-            <th class="sortType"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('price_sale')">Price_Sale <i class="fas fa-sort"></i></a></th>
-            <th class="sortType"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a></th>
-            <th>Image</th>
-            <th class="sortType"><a @click="toggleSort('created_at')">Created <i class="fas fa-sort"></i></a></th>
-            <th>Action</th>
+            <th scope="col" class="category-order center-text">No</th>
+            <th class="sortType center-text"><a @click="toggleSort('name')">Name <i class="fas fa-sort"></i></a></th>
+            <th class="center-text">Description</th>
+            <th class="center-text">Category</th>
+            <th class="sortType center-text"><a @click="toggleSort('price')">Price <i class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('price_sale')">Price_Sale <i
+                  class="fas fa-sort"></i></a></th>
+            <th class="sortType center-text"><a @click="toggleSort('active')">Status <i class="fas fa-sort"></i></a>
+            </th>
+            <th class="center-text">Image</th>
+            <th class="sortType center-text"><a @click="toggleSort('created_at')">Created <i
+                  class="fas fa-sort"></i></a></th>
+            <th class="center-text">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in products" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ item.name }}</td>
-            <td>{{ item.description | truncate(30, '...') }}</td>
-            <td>{{ item.menuName }}</td>
-            <td>{{ item.price | formatNumber }}</td>
-            <td>{{ item.price_sale | formatNumber }}</td>
-            <td v-if="item.active == 0"><span class="btn btn-danger btn-xs">InActive</span></td>
-            <td v-if="item.active == 1"><span class="btn btn-success btn-xs">Active</span></td>
-            <td><img class="file image-contain" :src="`${item.file}`" /></td>
-            <td>{{ item.created_at }}</td>
-            <td>
+            <th scope="row" class="center-text">{{ index + 1 }}</th>
+            <td class="center-text">{{ item.name }}</td>
+            <td class="center-text">{{ item.description !== null ? item.description.length > 30 ?
+              item.description.slice(0, 30) + '...' :
+              item.description : '' }}</td>
+            <td class="center-text">{{ item.menuName }}</td>
+            <td class="center-text">{{ item.price | formatNumber }}</td>
+            <td class="center-text">{{ item.price_sale | formatNumber }}</td>
+            <td class="center-text" v-if="item.active == 0"><span class="btn btn-danger btn-xs">InActive</span></td>
+            <td class="center-text" v-if="item.active == 1"><span class="btn btn-success btn-xs">Active</span></td>
+            <td class="center-text"><img class="file image-contain" :src="`${item.file}`" /></td>
+            <td class="center-text">{{ item.created_at }}</td>
+            <td class="center-text">
               <a @click="showModalEdit(item.id)">
                 <IconEdit class="icon-edit" />
               </a><a @click="showModalDelete(item.id)">
@@ -83,34 +95,34 @@
             <a-col :span="12">
               <a-form-item label="Name">
                 <a-input v-decorator="[
-                  'name',
-                  {
-                    initialValue: '',
-                    rules: [{ required: true, message: 'Please input your name!' }],
-                  },
-                ]" />
+          'name',
+          {
+            initialValue: '',
+            rules: [{ required: true, message: 'Please input your name!' }],
+          },
+        ]" />
               </a-form-item>
               <a-form-item label="Price">
                 <a-input v-decorator="['price',
-                  {
-                    initialValue: '',
-                  }
-                ]" />
+          {
+            initialValue: '',
+          }
+        ]" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item label="Menu">
                 <a-select v-decorator="[
-                  'menu_id',
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Menu is not null',
-                      },
-                    ],
-                  },
-                ]" mode="multiple" placeholder="Choose Menu" labelInValue optionFilterProp="filterProps" showSearch>
+          'menu_id',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Menu is not null',
+              },
+            ],
+          },
+        ]" mode="multiple" placeholder="Choose Menu" labelInValue optionFilterProp="filterProps" showSearch>
                   <a-select-option v-for="(menu) in menus" :value="menu.id" :key="menu.id" :filterProps="menu.name">
                     {{ menu.name }}
                   </a-select-option>
@@ -118,25 +130,27 @@
               </a-form-item>
               <a-form-item label="Price_Sale">
                 <a-input v-decorator="['price_sale',
-                  {
-                    initialValue: '',
-                  }
-                ]" />
+          {
+            initialValue: '',
+          }
+        ]" />
               </a-form-item>
             </a-col>
           </a-row>
           <a-form-item label="Description">
             <textarea v-decorator="[
-              'description',
-              {
-                initialValue: '',
-                rules: [{ required: true, message: 'Please input your description!' }],
-              },
-            ]" type="text" class="textarea"></textarea>
+          'description',
+          {
+            initialValue: '',
+            rules: [{ required: true, message: 'Please input your description!' }],
+          },
+        ]" type="text" class="textarea"></textarea>
           </a-form-item>
           <a-form-item label="Content"></a-form-item>
           <div :class="{ error: contentIsError, content: true }">
-            <VueEditor v-model="content" :placeholder="placeholderContent" @text-change="handleChangeContent" />
+            <VueEditor v-model="content" :placeholder="placeholderContent" @text-change="handleChangeContent"
+              :init-value="''"
+              />
           </div>
           <p class="msg-error" v-if="contentIsError">Content is not null</p>
           <a-row :gutter="20">
@@ -152,17 +166,17 @@
             <a-col :span="12">
               <a-form-item label="Status">
                 <a-select v-decorator="[
-                  'active',
-                  {
-                    initialValue: '',
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Status is not null',
-                      },
-                    ],
-                  },
-                ]" placeholder="Choose Status">
+          'active',
+          {
+            initialValue: 0,
+            rules: [
+              {
+                required: true,
+                message: 'Status is not null',
+              },
+            ],
+          },
+        ]" placeholder="Choose Status">
                   <a-select-option :value="0">
                     InActive
                   </a-select-option>
@@ -170,6 +184,24 @@
                     Active
                   </a-select-option>
                 </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="Album Product">
+                <a-upload v-decorator="['images']" name="images" :multiple="true"
+                  :default-file-list="initialValue.fileList" :headers="headers"
+                  action="//jsonplaceholder.typicode.com/posts/" list-type="picture">
+                  <a-button> <a-icon type="upload" />Choose Your Album</a-button>
+                </a-upload>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="Inventory">
+                <a-input v-decorator="['inventory_number',
+                    {
+                      initialValue: '',
+                    }
+                  ]" type="number" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -212,36 +244,36 @@
           <a-col :span="12">
             <a-form-item label="Name">
               <a-input v-decorator="[
-                'name',
-                {
-                  initialValue: initialValue.edit_name,
-                  rules: [{ required: true, message: 'Please input your name!' }],
-                },
-              ]" />
+          'name',
+          {
+            initialValue: initialValue.edit_name,
+            rules: [{ required: true, message: 'Please input your name!' }],
+          },
+        ]" />
             </a-form-item>
             <a-form-item label="Price">
               <a-input v-decorator="[
-                'price',
-                {
-                  initialValue: initialValue.edit_price,
-                },
-              ]" />
+          'price',
+          {
+            initialValue: initialValue.edit_price,
+          },
+        ]" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="Menu">
               <a-select v-decorator="[
-                'menu_id',
-                {
-                  initialValue: initialValue.menus,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Menu is not null'
-                    }
-                  ]
-                }
-              ]" mode="multiple" placeholder="Choose Menu" labelInValue>
+          'menu_id',
+          {
+            initialValue: initialValue.menus,
+            rules: [
+              {
+                required: true,
+                message: 'Menu is not null'
+              }
+            ]
+          }
+        ]" mode="multiple" placeholder="Choose Menu" labelInValue>
                 <a-select-option v-for="(menu) in menus" :value="menu.id" :key="menu.id">
                   {{ menu.name }}
                 </a-select-option>
@@ -249,22 +281,22 @@
             </a-form-item>
             <a-form-item label="Price_Sale">
               <a-input v-decorator="[
-                'price_sale',
-                {
-                  initialValue: initialValue.edit_price_sale,
-                },
-              ]" />
+          'price_sale',
+          {
+            initialValue: initialValue.edit_price_sale,
+          },
+        ]" />
             </a-form-item>
           </a-col>
         </a-row>
         <a-form-item label="Description">
           <textarea v-decorator="[
-            'description',
-            {
-              initialValue: initialValue.edit_description,
-              rules: [{ required: true, message: 'Please input your description!' }],
-            },
-          ]" type="text" class="textarea"></textarea>
+          'description',
+          {
+            initialValue: initialValue.edit_description,
+            rules: [{ required: true, message: 'Please input your description!' }],
+          },
+        ]" type="text" class="textarea"></textarea>
         </a-form-item>
         <a-form-item label="Content"></a-form-item>
         <div :class="{ error: contentIsError, content: true }">
@@ -273,7 +305,7 @@
         <p class="msg-error" v-if="contentIsError">Content is not null</p>
         <a-row :gutter="20">
           <a-col :span="12">
-            <a-form-item llabel="Image">
+            <a-form-item label="Image">
               <a-upload name="file" v-decorator="['file']" action="//jsonplaceholder.typicode.com/posts/"
                 :headers="headers" @remove="handleRemove" :beforeUpload="beforeUpload">
                 <a-button> <a-icon type="upload" />Image</a-button>
@@ -285,17 +317,17 @@
           <a-col :span="12">
             <a-form-item label="Status">
               <a-select v-decorator="[
-                'active',
-                {
-                  initialValue: initialValue.edit_active,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Status is not null',
-                    },
-                  ],
-                },
-              ]" placeholder="Choose Status">
+          'active',
+          {
+            initialValue: initialValue.edit_active,
+            rules: [
+              {
+                required: true,
+                message: 'Status is not null',
+              },
+            ],
+          },
+        ]" placeholder="Choose Status">
                 <a-select-option :value="0">
                   InActive
                 </a-select-option>
@@ -305,12 +337,21 @@
               </a-select>
             </a-form-item>
           </a-col>
+          <a-col :span="12">
+            <a-form-item label="Inventory">
+              <a-input v-decorator="['inventory_number',
+          {
+            initialValue: initialValue.edit_inventory_number ?? 0,
+          }
+        ]" type="number" />
+            </a-form-item>
+          </a-col>
         </a-row>
       </a-form>
     </a-modal>
   </div>
 </template>
-  
+
 <script>
 import IconDelete from '../../icon/icon-delete.vue'
 import IconEdit from '../../icon/icon-edit.vue'
@@ -356,19 +397,20 @@ export default {
         edit_file: [],
         menus: [],
         edit_active: 1,
-        edit_id: 1
+        edit_id: 1,
+        edit_inventory_number: 1
       },
       isSorter: false,
       field: '',
     }
   },
   computed: {
-      inputType() {
-          return this.isSorter ? 'asc' : 'desc'
-      },
+    inputType() {
+      return this.isSorter ? 'asc' : 'desc'
+    },
   },
   methods: {
-    getResuilt(row, page, name = '', sorter = 'desc') {
+    getResult(row, page, name = '', sorter = 'desc') {
       httpRequest
         .get('/api/products/list?limit=' + row + '&page=' + page + '&field=' + name + '&sortType=' + sorter)
         .then(
@@ -392,7 +434,7 @@ export default {
     },
     toggleSort(name) {
       this.isSorter = !this.isSorter
-      this.getResuilt(this.row,this.page,name,this.inputType);
+      this.getResult(this.row, this.page, name, this.inputType);
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
@@ -413,7 +455,7 @@ export default {
         this.page = this.page - 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page, this.field, this.inputType);
+      this.getResult(this.row, this.page, this.field, this.inputType);
     },
     handleNextPage() {
       this.btn = false;
@@ -421,7 +463,7 @@ export default {
         this.page = this.page + 1;
       }
       this.checkPage();
-      this.getResuilt(this.row, this.page);
+      this.getResult(this.row, this.page, this.field, this.inputType);
     },
     rowPerPage(pageSize) {
       this.pageSize = pageSize
@@ -433,7 +475,7 @@ export default {
       }
       this.page = 1;
       this.checkPage();
-      this.getResuilt(this.row, 1);
+      this.getResult(this.row, 1);
     },
     checkPage() {
       if (this.page == this.lastPage) {
@@ -442,9 +484,9 @@ export default {
         this.btnNext = true;
       }
       if (this.page == 1) {
-        this.btnPrew = false;
+        this.btnPrev = false;
       } else {
-        this.btnPrew = true;
+        this.btnPrev = true;
       }
     },
     checkRow() {
@@ -473,16 +515,25 @@ export default {
           formData.append("description", values.description);
           formData.append("content", this.content);
           formData.append("active", values.active);
+          formData.append("inventory_number", values.inventory_number);
           values.menu_id.forEach((item, index) => {
             formData.append('menu_id[]', item.key);
           });
           this.fileList.forEach((item, index) => {
             formData.append("file", item);
           });
+          if (values.images) {
+            const listFileUpload = values.images.fileList.filter(
+              (e) => e.originFileObj
+            );
+            listFileUpload.forEach((item, index) => {
+              formData.append('images[]', item.originFileObj);
+            });
+          }
           httpRequest.post('/api/products/add', formData).then((response) => {
             this.info = response
             this.flagModalAdd = false
-            this.getResuilt(this.row, this.page)
+            this.getResult(this.row, this.page)
             Toast.fire({
               icon: 'success',
               title: 'Create Success'
@@ -516,7 +567,7 @@ export default {
     deleteProduct() {
       httpRequest.delete('/api/products/destroy/' + this.delete_id).then((response) => {
         this.info = response
-        this.getResuilt(this.row, this.page)
+        this.getResult(this.row, this.page)
         Toast.fire({
           icon: 'success',
           title: 'Delete Success'
@@ -550,12 +601,13 @@ export default {
           this.initialValue.edit_file = response.data.data.file,
           this.initialValue.edit_active = response.data.data.active
           this.initialValue.edit_id = response.data.data.id
+          this.initialValue.edit_inventory_number = response.data.data.inventory_number
           this.initialValue.menus = response.data.data.menus.map((item) => {
-          return {
-            key: item.id,
-            label: item.name
-          };
-        });
+            return {
+              key: item.id,
+              label: item.name
+            };
+          });
         })
     },
     editProduct(e) {
@@ -579,6 +631,7 @@ export default {
           formData.append("description", values.description);
           formData.append("content", this.content);
           formData.append("active", values.active);
+          formData.append("inventory_number", values.inventory_number);
           values.menu_id.forEach((item, index) => {
             formData.append('menu_id[]', item.key);
           });
@@ -591,7 +644,7 @@ export default {
               this.info = response
               this.flagModalEdit = false
               this.form.resetFields()
-              this.getResuilt(this.row, this.page)
+              this.getResult(this.row, this.page)
               Toast.fire({
                 icon: 'success',
                 title: 'Edit Success'
@@ -608,50 +661,72 @@ export default {
       this.form.resetFields()
     },
     exportProduct() {
-            httpRequest.get('/api/export/1', {responseType: 'arraybuffer'})
-            .then((response) => {
-                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'product.csv');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Export Success'
-                });
-            })
-            .catch(function (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: error
-                });
-            })
+      httpRequest.get('/api/export/1', { responseType: 'arraybuffer' })
+        .then((response) => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'product.xlsx');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          Toast.fire({
+            icon: 'success',
+            title: 'Export Success'
+          });
+        })
+        .catch(function (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error
+          });
+        })
+    },
+    async beforeImport(file) {
+      this.fileList = [...this.fileList, file];
+      this.importProduct(this.fileList);
+      return new Promise((resolve) => { })
+    },
+
+    async importProduct(file) {
+      try {
+        const uploadFileIds = [];
+        for (const item of this.fileList) {
+          const formData = new FormData();
+          formData.append("file", item);
+          formData.append("type", 1);
+          const responseUpload = await httpRequest.post('/api/files/upload-file', formData)
+          uploadFileIds.push(responseUpload.data.data.id);
         }
+        const responseImport = await httpRequest.post('/api/products/import-product', { ids: uploadFileIds, type: 1 });
+        this.info = responseImport;
+        Toast.fire({
+          icon: 'success',
+          title: 'Import Success'
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error
+        });
+      }
+    }
   },
   mounted() {
-    console.log('Component mounted.')
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.getMenu()
   },
   created() {
     this.$Progress.start()
-    this.getResuilt(this.row, this.page)
+    this.getResult(this.row, this.page)
     this.$Progress.finish()
-  },
-  filters: {
-    truncate: function (text, length, suffix) {
-      return text.substring(0, length) + suffix;
-    },
   },
 }
 </script>
-  
+
 <style lang="scss" scoped>
 .table {
   overflow-y: auto;
   max-height: calc(100vh - 380px);
-  // display: block;
 }
 
 table {
@@ -793,6 +868,7 @@ td {
 .sortType:hover {
   background-color: yellow;
 }
+
 .category-value {
   display: flex;
   margin-bottom: 10px;
@@ -841,7 +917,7 @@ td {
 
 .category-content {
   min-height: calc(100vh - 96px);
-  margin-left: calc(20% + 26px);
+  margin-left: calc(20% + 10px);
   padding: 20px 24px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
@@ -885,6 +961,11 @@ td {
   font-weight: 700;
   color: #000;
   margin-bottom: 18px;
+}
+
+.center-text {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .pagination-wrapper {

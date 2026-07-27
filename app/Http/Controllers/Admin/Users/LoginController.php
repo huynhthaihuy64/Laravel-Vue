@@ -11,21 +11,11 @@ use App\Http\Resources\UserResource;
 use App\Http\Services\UploadService;
 use App\Http\Services\User\UserService;
 use App\Models\User;
-use App\Notifications\SendNotification;
 use App\Http\Services\Auth\AuthService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Tymon\JWTAuth\JWTManager as JWT;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\Traits\Sortable;
 use Illuminate\Auth\AuthenticationException;
 
@@ -58,20 +48,22 @@ class LoginController extends ResponseController
     protected $uploadService;
     protected $userService;
     protected $authService;
+    protected $user;
 
     public $successStatus = 200;
 
     use Sortable;
-    public function __construct(UploadService $uploadService, UserService $userService, AuthService $authService)
+    public function __construct(UploadService $uploadService, UserService $userService, AuthService $authService, User $user)
     {
         $this->uploadService = $uploadService;
         $this->userService = $userService;
         $this->authService = $authService;
+        $this->user = $user;
     }
 
     public function checkAuth()
     {
-        $auth = auth()->user();
+        $auth = Auth::user();
         return $auth;
     }
 
@@ -80,7 +72,7 @@ class LoginController extends ResponseController
         try {
             $remember = $request->input('remember');
             $data = $this->authService->login($request->only('email', 'password'),$remember);
-            $response = Response::success($data, 'Login Success');
+            $response = Response::success($data, __('messages.user.login.success'));
             return $response->withCookie(cookie(env('AUTH_COOKIE_NAME','login'), $data['access_token'], env('COOKIE_LIFETIME',60*24*7)));
         } catch (\Exception $ex) {
             $code = $ex->getCode() ? $ex->getCode() : HTTPStatus::NOT_FOUND->value;
@@ -97,7 +89,7 @@ class LoginController extends ResponseController
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-        $user = User::create($input);
+        $user = $this->user->create($input);
         return response()->json(
             [
                 'user' => $user,
@@ -118,14 +110,15 @@ class LoginController extends ResponseController
         if (!$authenticate) {
             throw new AuthenticationException(__('auth.logout.error'));
         }
-        return response()->json(['message' => 'Logout Success']);
+        $cookie = \Cookie::forget(env('AUTH_COOKIE_NAME', 'login'), '/', 'localhost');
+        return response()->json(['message' => __('messages.user.logout.success')])->withCookie($cookie);
     }
 
 
     public function listUser(Request $request)
     {
         $paginate = $request->limit ?? 10;
-        $users = User::sort($request->toArray())->paginate($paginate);
+        $users = $this->user->sort($request->toArray())->paginate($paginate);
 
         $listUsers = UserResource::collection($users);
         return $listUsers;
@@ -133,13 +126,13 @@ class LoginController extends ResponseController
 
     public function editUser($id)
     {
-        $user = User::with('role')->find($id);
+        $user = $this->user->with('role')->find($id);
         return $user;
     }
 
     public function updateUser(Request $request, $id)
     {
-        $userOrigin = User::find($id);
+        $userOrigin = $this->user->find($id);
         if ($request->hasFile('avatar')) {
             $avatar = $this->uploadService->uploadFile($request['avatar'], 'avatar');
             $avatar_path = $avatar['file_path'];
@@ -156,15 +149,15 @@ class LoginController extends ResponseController
         ];
         $userOrigin->update($data);
         if (!$userOrigin) {
-            return response()->json('failed');
+            return response()->json(__('messages.user.update.failed'));
         }
 
-        return response()->json('success');
+        return response()->json(__('messages.user.update.success'));
     }
 
     public function updateCurrentUser(Request $request)
     {
-        $id = auth()->user()->id;
+        $id = Auth::user()->id;
         return $this->userService->update($request->only(
             'name',
             'email',
@@ -182,12 +175,12 @@ class LoginController extends ResponseController
 
     public function destroy($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = $this->user->where('id', $id)->first();
         if ($user) {
             $user->delete();
             return response()->json([
                 'error' => false,
-                'message' => 'Delete User Success'
+                'message' => __('messages.user.delete.success')
             ]);
         }
 
@@ -250,7 +243,7 @@ class LoginController extends ResponseController
 
         if ($userId == "" || $userId == null) {
             $response['error'] = 1;
-            $response['message'] = 'You are logged out, Login again.';
+            $response['message'] = __('messages.user.sms.messages.logged');
             $response['loggedIn'] = 0;
         } else {
             $OTP = $request->session()->get('OTP');
@@ -258,7 +251,7 @@ class LoginController extends ResponseController
 
                 // Updating user's status "isVerified" as 1.
 
-                User::where('id', $userId)->update(['isVerified' => 1]);
+                $this->user->where('id', $userId)->update(['isVerified' => 1]);
 
                 //Removing Session variable
                 Session::forget('OTP');
@@ -266,12 +259,12 @@ class LoginController extends ResponseController
                 $response['error'] = 0;
                 $response['isVerified'] = 1;
                 $response['loggedIn'] = 1;
-                $response['message'] = "Your Number is Verified.";
+                $response['message'] = __('messages.user.sms.messages.number');
             } else {
                 $response['error'] = 1;
                 $response['isVerified'] = 0;
                 $response['loggedIn'] = 1;
-                $response['message'] = "OTP does not match.";
+                $response['message'] = __('messages.user.sms.messages.otp');
             }
         }
         echo json_encode($response);
@@ -279,22 +272,13 @@ class LoginController extends ResponseController
 
     public function getCurrentUser()
     {
-        $user = User::find(auth()->user()->id);
-        $listUsers = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'password' => $user->password,
-            'avatar' => $user->avatar,
-            'images' => $user->userAlbums()->get(),
-            'department' => $user->department,
-            'birthday' => Carbon::parse($user->birthday)->format('Y/m/d'),
-            'gender' => $user->gender,
-            'address' => $user->address,
-            'role_id' => $user->role_id,
-            'created_at' => Carbon::parse($user->created_at)->format('Y/m/d'),
-        ];
+        $user = $this->user->find(Auth::user()->id);
+        $listUsers = UserResource::make($user);
         return $listUsers;
+    }
+
+    public function getOnlineUsers() {
+        $users = $this->userService->getOnlineUsers();
+        return UserResource::collection($users);
     }
 }

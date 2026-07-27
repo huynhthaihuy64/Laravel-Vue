@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -17,15 +17,25 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-        $path = '/avatar/' . $faker->userName . '.jpg';
-        Storage::disk('public')->put('/uploads/' . $path, file_get_contents($faker->imageUrl(400, 400, 'people')));
+        // $faker = Faker::create();
+
+        // for ($i = 0; $i < 10000000; $i++) {
+        //     DB::table('users')->insert([
+        //         'role_id' => '3',
+        //         'email' => $faker->email,
+        //         'name' => $faker->name,
+        //         'gender' => 0,
+        //         'password' => Hash::make('12345678'),
+        //         'phone' => $faker->phoneNumber,
+        //         'address' => $faker->address,
+        //         'birthday' => $faker->date
+        //     ]);
+        // }
         User::create([
             'role_id' => '1',
-            'email' => 'huynhthaihu64@gmail.com',
+            'email' => 'huynhthaihuy64@gmail.com',
             'name' => 'Huy Huỳnh',
             'gender' => 0,
-            'avatar' => '/storage/uploads'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Da Nang',
@@ -40,7 +50,6 @@ class UserSeeder extends Seeder
             'email' => 'ch4ut1nhtr1@gmail.com',
             'name' => 'Huỳnh Huy',
             'gender' => 0,
-            'avatar' => '/storage/uploads'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Sài Gòn',
@@ -55,7 +64,6 @@ class UserSeeder extends Seeder
             'email' => 'kinsatthu123@gmail.com',
             'name' => 'Huỳnh Thái Huy',
             'gender' => 0,
-            'avatar' => '/storage/uploads'. $path,
             'password' => Hash::make('12345678'),
             'phone' => '0905463037',
             'address' => 'Hà Nội',

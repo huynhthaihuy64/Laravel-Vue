@@ -32,7 +32,9 @@ export default {
         product: 'Product Management',
         menu: 'Menu Management',
         slide: 'Slide Management',
-        customer: 'Customer Management'
+        customer: 'Customer Management',
+        multipleFile: 'Upload File',
+        link: 'Get Link Search'
     },
     comment: {
         display: 'Display Comments',
@@ -127,6 +129,9 @@ export default {
             upload: 'Avatar',
             album: 'Album',
             save: 'Save',
+        },
+        history: {
+            title: 'History'
         }
     },
     dark_mode: {
@@ -155,5 +160,8 @@ export default {
         total_tax: 'Total With Tax',
         customer: 'Customer Information',
         payment: 'Payment'
+    },
+    file: {
+        name: 'List File Upload'
     }
 }

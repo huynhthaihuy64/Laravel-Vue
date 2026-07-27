@@ -7,38 +7,45 @@ use App\Models\Slider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Sortable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class SliderService
 {
     protected $uploadService;
+    protected $slider;
 
     use Sortable;
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, Slider $slider)
     {
         $this->uploadService = $uploadService;
+        $this->slider = $slider;
     }
     public function insert($data)
     {
         $file = $this->uploadService->uploadFile($data['file'], 'slider');
         $data['file'] = $file['file_path'];
         try {
-            $slider = Slider::create([
+            DB::beginTransaction();
+            $slider = $this->slider->create([
                 'name' => $data['name'],
                 'file' => $data['file'],
                 'url' => $data['url'],
                 'sort_by' => 1,
                 'active' => $data['active'],
             ]);
+            DB::commit();
             return $slider;
         } catch (\Exception $err) {
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
-    public function get($data,$paginate)
+    public function get($data, $paginate)
     {
-        return Slider::sort($data)->paginate($paginate);
+        return $this->slider->sort($data)->paginate($paginate);
     }
 
     public function update($data, $id)
@@ -46,7 +53,8 @@ class SliderService
         $file = $this->uploadService->uploadFile($data['file'], 'slider');
         $data['file'] = $file['file_path'];
         try {
-            $slider = Slider::find($id);
+            DB::beginTransaction();
+            $slider = $this->slider->find($id);
             $slider->update([
                 'name' => $data['name'],
                 'file' => $data['file'],
@@ -54,27 +62,35 @@ class SliderService
                 'sort_by' => 1,
                 'active' => $data['active'],
             ]);
+            DB::commit();
             return $slider;
         } catch (\Exception $err) {
             Log::info($err->getMessage());
-            return false;
+            DB::rollback();
+            return $err->getMessage();
         }
     }
 
     public function destroy(int $id)
     {
-        $slider = Slider::find($id);
+        $slider = $this->slider->find($id);
         if ($slider) {
-            $path = str_replace('storage', 'public', $slider->file);
-            Storage::delete($path);
-            $slider->delete();
-            return true;
+            try {
+                DB::beginTransaction();
+                File::delete(public_path($slider->path));
+                $slider->delete();
+                DB::commit();
+                return true;
+            } catch (\Exception $err) {
+                DB::rollback();
+                return $err->getMessage();
+            }
         }
         return false;
     }
 
     public function show($id)
     {
-        return Slider::find($id);
+        return $this->slider->find($id);
     }
 }

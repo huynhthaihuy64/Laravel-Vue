@@ -126,7 +126,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// @import 'https://fonts.gstatic.com';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
 @import 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap';
 
@@ -268,7 +267,7 @@ button {
     margin-left: 25px;
     text-align: center;
     padding: 10px;
-    margin: 0 auto // căn giữa 
+    margin: 0 auto
 }
 
 .social .go {
@@ -277,7 +276,7 @@ button {
     text-align: center;
     width: 100%;
     padding: 10px;
-    margin: 0 auto // căn giữa 
+    margin: 0 auto
 }
 
 .social i {

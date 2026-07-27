@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SlideResource;
 use App\Http\Services\Slider\SliderService;
-use App\Models\Slider;
 use Illuminate\Http\Request;
 
 class SliderController extends Controller
@@ -25,7 +24,6 @@ class SliderController extends Controller
             'file' => 'required',
             'url' => 'required',
         ]);
-        $paginate = $request->limit ?? 5;
         $data = $request->toArray();
         $slider = $this->slider->insert($data);
 
@@ -65,7 +63,7 @@ class SliderController extends Controller
         if ($result) {
             return response()->json([
                 'error' => false,
-                'message' => 'Delete Slider Success'
+                'message' => __('messages.slider.delete.success')
             ]);
         }
 

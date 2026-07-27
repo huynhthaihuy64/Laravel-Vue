@@ -2,25 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Http\Services\Auth\AuthService;
 use App\Http\Services\SocialAccountService;
+use Carbon\Carbon;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
     public $successStatus = 200;
-    public function __construct()
+    protected $authService;
+    protected $socialAccountService;
+    public function __construct(AuthService $authService, SocialAccountService $socialAccountService)
     {
+        $this->authService = $authService;
+        $this->socialAccountService = $socialAccountService;
         // $this->middleware('auth:api', ['except' => ['login', 'register']]);
 
     }
 
     public function redirect($social)
     {
-        return Socialite::driver($social)->stateless()->redirect();
+        return Socialite::driver($social)->redirect()->getTargetUrl();
     }
 
     public function callback($social)
     {
-        return SocialAccountService::createOrGetUser(Socialite::driver($social)->stateless()->user(), $social);
+        $user = $this->socialAccountService->createOrGetUser(Socialite::driver($social)->stateless()->user(), $social);
+        $token = $this->authService->createUserToken($user);
+        $tokenInfo = $token->token;
+        auth()->login($user);
+        $data =  [
+            'access_token' => $token->accessToken,
+            'token_type' => 'Bearer',
+            'expires_in' => Carbon::parse($tokenInfo->expires_at)->toDateTimeString(),
+            'user' => new UserResource($user),
+        ];
+        return redirect()->to(env('APP_URL') . '/signIn?token=' . $data['access_token'] . '&expires_in=' . $data['expires_in']);
+        // return redirect(env('APP_URL') . '/login/callback');
+        // return response($script);
     }
 }

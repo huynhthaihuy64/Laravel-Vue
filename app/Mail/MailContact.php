@@ -5,7 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MailContact extends Mailable
 {
@@ -30,7 +29,7 @@ class MailContact extends Mailable
      */
     public function build()
     {
-        $this->subject('Mail from Huỳnh Thái Huy')
+        $this->subject('Mail from' . env('MAIL_NAME_FROM', 'Admin'))
             ->view('email-contact', [
                 'detail' => $this->details
             ]);
